@@ -7,7 +7,7 @@ a script by running:
 from sys import argv, path
 from textwrap import dedent
 
-import __version__
+from . import __version__
 
 
 def main():

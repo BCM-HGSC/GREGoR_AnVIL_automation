@@ -4,13 +4,8 @@ a script by running:
 `python -m minimalhello [args...]`
 """
 
-from sys import argv, path
-from textwrap import dedent
 from argparse import ArgumentParser
 from pathlib import Path
-
-from addict import Dict
-from yaml import safe_load
 
 from . import __version__
 
@@ -25,16 +20,32 @@ def command_line_parser():
         epilog="See '<command> --help' to read about a specific sub-command.",
     )
     parser.add_argument(
-        "tables_dir", type=Path, help="Path to the pm's directory"
+        "tables_dir", type=Path, help="Path to directory containing the TSV table files."
     )
-    # --config_file?
     parser.add_argument(
         "-c", "--config_file", default="~/.config/gregor_anvil_automation.yaml", 
         type=Path, help="Path to the config YAML file"
     )
+    parser.add_argument(
+        "-v","--version", action='version', version=__version__
+    )
+    subparsers = parser.add_subparsers(dest="act", help="Sub-commands")
+    subparsers.add_parser(
+        "short_reads",
+        description="Takes in short read files",
+        type=Path,
+        help="Takes in a given short read file",
+        parents=[parser],
+    )
+    subparsers.add_parser(
+        "long_reads",
+        description="Takes in long read files",
+        type=Path,
+        help="Takes in a given long read file",
+        parents=[parser],
+    )
     args = parser.parse_args()
     return args
-
 
 if __name__ == "__main__":
     main()

@@ -6,23 +6,35 @@ a script by running:
 
 from sys import argv, path
 from textwrap import dedent
+from argparse import ArgumentParser
+from pathlib import Path
+
+from addict import Dict
+from yaml import safe_load
 
 from . import __version__
 
 
 def main():
-    print(
-        dedent(
-            f"""\
-            {__package__=} (v{__version__})
-            {__name__=} @ {__file__}
+    args = command_line_parser()
+    print(args)
 
-            {argv=}
-            """  # This f-string syntax requires 3.8+
-        )
+def command_line_parser():
+    parser = ArgumentParser(
+        description="gregor anvil automation",
+        prog="gregor_anvil_automation",
+        epilog="See '<command> --help' to read about a specific sub-command.",
     )
-    for p in path:
-        print(p)
+    parser.add_argument(
+        "tables_dir", type=Path, help="Path to the pm's directory"
+    )
+    # --config_file?
+    parser.add_argument(
+        "-c", "--config_file", default="~/.config/gregor_anvil_automation.yaml", 
+        type=Path, help="Path to the config YAML file"
+    )
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == "__main__":

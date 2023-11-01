@@ -1,0 +1,21 @@
+family_id:
+  type: string
+  required: True
+  allowed: [] # participant.family_id 
+consanguinity:
+  type: string
+  required: True
+  allowed: ["None suspected, Suspected, Present,Unknown"]
+consanguinity_detail:
+  type: string
+  required: False 
+family_history_detail:
+  type: string
+  required: False
+pedigree_file:
+  type: string
+  required: False
+  allowed: [] # google bucket path usually NA 
+pedigree_file_detail:
+  type: string
+  required: False

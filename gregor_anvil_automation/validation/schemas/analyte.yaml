@@ -1,0 +1,79 @@
+analyte_id:
+  type: string
+  required: True
+  allowed: [] # "BCM_’[subject_id]’batch_id’
+
+age_at_collection:
+  type: string
+  required:
+  allowed: []
+
+analyte_processing_details:
+  type: string
+  required:
+  allowed: []
+
+analyte_type:
+  type: string
+  required:
+  allowed: []
+
+hours_since_last_meal:
+  type: string
+  required:
+  allowed: []
+
+participant_drugs_intake:
+  type: string
+  required:
+  allowed: []
+
+participant_id:
+  type: string
+  required:
+  allowed: []
+
+participant_special_diet:
+  type: string
+  required:
+  allowed: []
+
+passage_number:
+  type: string
+  required:
+  allowed: []
+
+primary_biosample:
+  type: string
+  required:
+  allowed: []
+
+primary_biosample_details:
+  type: string
+  required:
+  allowed: []
+
+primary_biosample_id:
+  type: string
+  required:
+  allowed: []
+
+quality_issues:
+  type: string
+  required:
+  allowed: []
+
+sample_transformation_detail:
+  type: string
+  required:
+  allowed: []
+
+time_to_freeze:
+  type: string
+  required:
+  allowed: []
+
+tissue_affected_status:
+  type: string
+  required:
+  allowed: []

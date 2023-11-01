@@ -1,0 +1,38 @@
+phenotype_id:
+  type: string
+  required: False 
+  allowed: #will be generated so this needs to be empty unless generated from a previous share
+
+additional_details:
+  type: string
+  required: False
+
+additional_modifiers:
+  type: string
+  required: False
+  allowed: [] # follows pattern "HP:#######"
+
+onset_age_range:
+  type: string
+  required: False
+  allowed: [] # follows pattern "HP:#######"
+
+ontology:
+  type: string
+  required: True
+  allowed: ["HPO","MONDO", "OMIM", "ORPHANET", "SNOMED", "ICD10"]
+
+participant_id:
+  type: string
+  required: True
+  allowed: [] # references participant.participant_id
+
+presence:
+  type: string
+  required: True
+  allowed: ["Present","Absent","Unknown"]
+
+term_id:
+  type: string
+  required: True
+  allowed: [] # Follows pattern: HP:#######

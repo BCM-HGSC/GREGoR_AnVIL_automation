@@ -1,0 +1,54 @@
+aligned_dna_short_read_id:
+  type: string
+  required: True
+  allowed: [] # follows pattern
+  # ex. BCM_[participant_id]_A4
+  depends_on: 
+aligned_dna_short_read_file:
+  type: string
+  required: True
+  allowed: [] # bucket path with *.cram
+  # ex. gs://[google_bucket_name]/BCM_[participant_id]_[bucket_id].hgv.cram
+
+aligned_dna_short_read_index_file:
+  type: string
+  required: True
+  allowed: [] # bucket path with *.cram.crai 
+# ex. gs://[google_bucket_name]/BCM_[participant_id]_[bucket_id].hgv.cram.crai
+alignment_software:
+  type: string
+  required: True
+
+analysis_details:
+  type: string
+  required: False
+
+experiment_dna_short_read_id:
+  type: string
+  required: True
+  allowed: [] #  experiment_dna_short_read.experiment_dna_short_read_id
+  # ‘BCM_”[sample_id]”
+md5sum:
+  type: string
+  required: True
+  allowed: [] # i'd like to make sure this is populated from its respective cram file
+mean_coverage:
+  type: string
+  required: False
+  allowed: []
+quality_issues:
+  type: string
+  required: False 
+  allowed: []
+reference_assembly:
+  type: string
+  required: True
+  allowed: [GRCh38] # may be more values... maybe a warning message for verification? 
+reference_assembly_details:
+  type: string
+  required: False
+
+reference_assembly_uri:
+  type: string
+  required: False 
+  allowed: [] # will be a bucket path gs:// etc ... 

@@ -7,7 +7,6 @@ from .types import Sample
 
 def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
     """Reads the given excel file path and gets the sample directories"""
-    # logger.info(“Getting paths from excel”)
     workbook: Workbook = load_workbook(input_file)
     table_samples = {}
     for _, sheet_name in enumerate(workbook.sheetnames):

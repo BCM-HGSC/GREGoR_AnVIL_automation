@@ -2,8 +2,10 @@ from pathlib import Path
 
 from openpyxl import Workbook, load_workbook
 
+from .types import Sample
 
-def get_table_samples(input_file: Path) -> dict[str, list[Path]]:
+
+def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
     """Reads the given excel file path and gets the sample directories"""
     # logger.info(“Getting paths from excel”)
     workbook: Workbook = load_workbook(input_file)

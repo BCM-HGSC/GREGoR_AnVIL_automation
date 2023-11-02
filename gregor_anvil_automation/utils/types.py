@@ -1,0 +1,1 @@
+Sample = dict[str, str]

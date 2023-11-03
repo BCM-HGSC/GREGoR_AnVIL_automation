@@ -11,9 +11,6 @@ from . import __version__
 
 def main():
     command_line_parser()
-    # REMOVE
-    # args = command_line_parser()
-    # print(args)
 
 def command_line_parser():
     parser = ArgumentParser(

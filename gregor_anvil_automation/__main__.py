@@ -5,13 +5,19 @@ a script by running:
 """
 
 from argparse import ArgumentParser
+from logging import basicConfig, getLogger, INFO
 from pathlib import Path
 
 from . import __version__
 
 
+logger = getLogger(__name__)
+
+
 def main():
-    command_line_parser()
+    args = command_line_parser()
+    basicConfig(level=INFO)
+    logger.info(f"{args=}")
 
 
 def command_line_parser():

@@ -1,0 +1,52 @@
+This is an example of the workflow that is used for this project.
+
+1. Project manager (Shalini) will provide data files 
+- There may be external sources that will share data into the directory you provide. 
+    -ex. '/stornext/snfs130/submissions/gregor/[batch]' filepath on the cluster is what i provide to the PM 
+
+2. Permissions for cloud 
+    - This requires permissions. Email Ben Heavner or anyone at University of Washington at the GREGoR DCC (ask Sarah to do this part for permissions.)
+        - bheavner@uw.edu
+        - gregor_data_wg@u.washington.edu
+    - DCC will provide instructions to connect you to GREGoR ANvIL and consortium site 
+        - https://gregorconsortium.org/
+        - setting up terra account : https://docs.google.com/document/d/1uSSD1l3X_j2ENn27RIIB9JVextmBKpvCGBEE0D-6S5M/view#heading=h.784kyziw443h
+
+
+3. Google cloud 
+- DCC will require a connection, uploads, and at HGSC we will require you to set up a virtual environment with google_sdk packages.
+
+Setting up a virtual environment:
+
+a. log into a working node (can also be analysis1)
+ssh production-cpa1:
+
+
+b. create virtual env
+conda create -n google_sdk
+                ^ name whatever your heart desires.
+
+c. add google_sdk package to that virtual env
+conda install -c conda-forge google-cloud-sdk
+
+d. activate virtual env
+conda activate google_sdk
+
+or simply
+ca google_sdk
+
+
+
+Uploading to the cloud 
+    - Once shalini and other external collaborators provides paths, upload them to the google cloud. 
+
+a. Make sure you have access to the cloud (after DCC gives you access)
+
+    - gcloud config set account [your bcm email]
+    - gcloud auth list # to check
+
+4. Validations
+    - most recent tutorial provided by DCC
+        - https://vimeo.com/808494511/30d963beb7
+
+    - importing tables into workspace: https://vimeo.com/808494460/a2b285b528

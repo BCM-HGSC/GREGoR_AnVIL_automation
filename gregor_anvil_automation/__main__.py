@@ -4,25 +4,47 @@ a script by running:
 `python -m minimalhello [args...]`
 """
 
-from sys import argv, path
-from textwrap import dedent
+from argparse import ArgumentParser
+from logging import basicConfig, getLogger, INFO
+from pathlib import Path
 
 from . import __version__
 
 
-def main():
-    print(
-        dedent(
-            f"""\
-            {__package__=} (v{__version__})
-            {__name__=} @ {__file__}
+logger = getLogger(__name__)
 
-            {argv=}
-            """  # This f-string syntax requires 3.8+
-        )
+
+def main():
+    args = command_line_parser()
+    basicConfig(level=INFO)
+    logger.info(f"{args=}")
+
+
+def command_line_parser():
+    parser = ArgumentParser(
+        description="gregor anvil automation",
     )
-    for p in path:
-        print(p)
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s {}".format(__version__)
+    )
+    parser.add_argument(
+        "command",
+        choices=["short_reads", "long_reads"],
+        help="which type of submission to do",
+    )
+    parser.add_argument(
+        "data_dir",
+        type=Path,
+        help="Path to directory containing the TSV table files.",
+    )
+    parser.add_argument(
+        "--config_file",
+        default="~/.config/gregor_anvil_automation.yaml",
+        type=Path,
+        help="Path to the config YAML file",
+    )
+    args = parser.parse_args()
+    return args
 
 
 if __name__ == "__main__":

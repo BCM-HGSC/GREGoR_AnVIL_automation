@@ -4,7 +4,7 @@ a script by running:
 `python -m minimalhello [args...]`
 """
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from logging import basicConfig, getLogger, INFO
 from pathlib import Path
 
@@ -20,7 +20,7 @@ def main():
     logger.info(f"{args=}")
 
 
-def command_line_parser():
+def command_line_parser() -> Namespace:
     parser = ArgumentParser(
         description="gregor anvil automation",
     )

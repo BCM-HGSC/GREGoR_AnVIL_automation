@@ -8,24 +8,39 @@ from argparse import ArgumentParser, Namespace
 from logging import basicConfig, getLogger, INFO
 from pathlib import Path
 
-from . import __version__
+import addict
 
+from . import __version__
+from .short_reads import validate
+from .utils.utils import parse_yaml
 
 logger = getLogger(__name__)
 
 
-def main():
+def main() -> int:
+    """Main method of gregor workflow"""
     args = command_line_parser()
     basicConfig(level=INFO)
-    logger.info(f"{args=}")
+    config = parse_yaml(args.config_file)
+    return run_command(config, args)
+
+
+def run_command(config: addict.Dict, args) -> int:
+    """Runs the command given by the user"""
+    # TODO: This will be updated once we have validation/upload workflows established
+    return_code = 0
+    if args.command == "short_reads":
+        return_code = validate.run(config, args.excel_path)
+    return return_code
 
 
 def command_line_parser() -> Namespace:
+    """Parses the arguments provided by the user"""
     parser = ArgumentParser(
         description="gregor anvil automation",
     )
     parser.add_argument(
-        "--version", action="version", version="%(prog)s {}".format(__version__)
+        "--version", action="version", version=f"gregor_anvil_automation {__version__}"
     )
     parser.add_argument(
         "command",
@@ -33,9 +48,9 @@ def command_line_parser() -> Namespace:
         help="which type of submission to do",
     )
     parser.add_argument(
-        "data_dir",
+        "excel_path",
         type=Path,
-        help="Path to directory containing the TSV table files.",
+        help="Path to excel provided by the PM",
     )
     parser.add_argument(
         "--config_file",

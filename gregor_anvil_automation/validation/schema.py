@@ -4,7 +4,7 @@ from pathlib import Path
 
 import addict
 
-from .utils import parse_yaml
+from ..utils.utils import parse_yaml
 
 
 def get_schema(table_name: str) -> addict.Dict:
@@ -16,8 +16,8 @@ def get_schema(table_name: str) -> addict.Dict:
 def get_schema_path(table_name: str) -> Path:
     """Returns the path of the schema associated with the given table name. If
     it does not exist, it will return a SchemaDoesNotExist error."""
-    parent_dir = Path(__file__).resolve().parent.parent
-    schema_path = parent_dir / "validation/schemas" / f"{table_name}.yaml"
+    parent_dir = Path(__file__).resolve().parent
+    schema_path = parent_dir / "schemas" / f"{table_name}.yaml"
     schema_path = schema_path.resolve()
     if not schema_path.exists():
         raise SchemaDoesNotExist(table_name)

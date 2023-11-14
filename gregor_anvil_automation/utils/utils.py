@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import addict
+import yaml
 from openpyxl import Workbook, load_workbook
 
 from .types import Sample
@@ -31,3 +33,9 @@ def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
             samples.append(sample)
         table_samples[sheet_name] = samples
     return table_samples
+
+
+def parse_yaml(yaml_path: Path) -> addict.Dict:
+    """Parses a yaml file and return Iterator"""
+    with open(yaml_path, encoding="utf-8") as fin:
+        return addict.Dict(yaml.safe_load(fin.read()))

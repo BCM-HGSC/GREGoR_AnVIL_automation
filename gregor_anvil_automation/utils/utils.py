@@ -5,6 +5,7 @@ import yaml
 from openpyxl import Workbook, load_workbook
 
 from .types import Sample
+from .mappings import TABLE_NAME_MAPPINGS
 
 
 def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
@@ -31,6 +32,7 @@ def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
                 for idx, header in enumerate(headers)
             }
             samples.append(sample)
+            sheet_name = TABLE_NAME_MAPPINGS.get(sheet_name) or sheet_name.lower()
         table_samples[sheet_name] = samples
     return table_samples
 

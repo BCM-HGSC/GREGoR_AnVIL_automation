@@ -5,7 +5,8 @@ family_id:
 consanguinity:
   type: string
   required: True
-  allowed: ["None suspected, Suspected, Present,Unknown"]
+  allowed: ["None suspected", "Suspected", "Present","Unknown"]
+  # normalization would also need to verify 'None suspected' does not have a capitalized 's'
 consanguinity_detail:
   type: string
   required: False 

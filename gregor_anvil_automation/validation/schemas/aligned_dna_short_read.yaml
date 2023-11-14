@@ -3,7 +3,7 @@ aligned_dna_short_read_id:
   required: True
   allowed: [] # follows pattern
   # ex. BCM_[participant_id]_A4
-  depends_on: 
+
 aligned_dna_short_read_file:
   type: string
   required: True

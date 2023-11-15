@@ -6,23 +6,26 @@ class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
     def _check_with_is_number(self, field: str, value: str):
-        """Checks taht the field's value is a valid intenger"""
-        # TODO: Add code
+        """Checks that the field's value is a valid integer"""
+        if isinstance(value, int):
+            self._error(field, "Value requires an int")
 
     def _check_with_must_start_with_bcm_fam(self, field: str, value: str):
         """Checks that field's value starts with `BCM_Fam`"""
-        # TODO: Add code
+        if not value.startswith("BCM_Fam"):
+            self._error(field, "Value must start with BCM_Fam")
 
     def _check_with_must_start_with_bcm_subject(self, field: str, value: str):
         """Checks that field's value starts with `BCM_Subject`"""
-        # TODO: Add code
+        if not value.startswith("BCM_Subject"):
+            self._error(field, "Value must start with BCM_Subject")
 
     def _normalize_coerce_uppercase(self, value: str) -> str:
         """Coerces value to camelcase"""
-        # TODO: Add code
+        value = value[0].upper() + value[1:].lower()
         return value
 
     def _normalize_coerce_uppercase(self, value: str) -> str:
         """Coerces value to uppercase"""
-        # TODO: Add code
+        value = value.upper()
         return value

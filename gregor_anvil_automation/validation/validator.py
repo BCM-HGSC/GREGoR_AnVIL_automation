@@ -14,7 +14,7 @@ class SampleValidator(Validator):
 
     def _check_with_is_number_or_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
-        if not value != "NA" and not isinstance(value, int):
+        if value != "NA" and not isinstance(value, int):
             self._error(field, "Value must be NA or an int")
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):

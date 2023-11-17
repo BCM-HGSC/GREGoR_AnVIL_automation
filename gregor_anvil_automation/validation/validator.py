@@ -36,10 +36,7 @@ class SampleValidator(Validator):
         """Checks that field's value starts with `HP:` or `MONDO:`"""
         ontology = ["HP:", "MONDO:"]
         if not value.startswith(tuple(ontology)):
-            self._error(
-                field,
-                "Value must start with HP: or MONDO:",
-            )
+            self._error(field, "Value must start with HP: or MONDO:")
 
     def _normalize_coerce_camelcase(self, value: str) -> str:
         """Coerces value to camelcase"""

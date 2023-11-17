@@ -43,5 +43,6 @@ class SampleValidator(Validator):
         return value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
+        """Coerces value to YYY-MM-DD format"""
         value = datetime.strptime(value, "%Y-%m-%d")
         return value

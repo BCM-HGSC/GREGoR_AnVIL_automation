@@ -20,7 +20,7 @@ class SampleValidator(Validator):
         if not value.startswith("BCM_Subject"):
             self._error(field, "Value must start with BCM_Subject")
 
-    def _normalize_coerce_uppercase(self, value: str) -> str:
+    def _normalize_coerce_camelcase(self, value: str) -> str:
         """Coerces value to camelcase"""
         value = value[0].upper() + value[1:].lower()
         return value

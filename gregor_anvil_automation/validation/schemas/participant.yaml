@@ -1,21 +1,31 @@
 participant_id:
   type: string
   required: True
+  empty: False
+  check_with: must_start_with_bcm_subject
 internal_project_id:
   type: string
   required: False
 gregor_center:
   type: string
   required: True
-  allowed: [BCM]  # need to convert uppercase
+  empty: False
+  coerce: uppercase
+  allowed: [BCM]
 consent_code:
   type: string
   required: True
-  allowed: [GRU, HMB] # need to convert uppercase
+  empty: False
+  allowed:
+    - GRU
+    - HMB
 recontactable:
   type: string
   required: False
-  allowed: [Yes, No] # Possibly Camelcase YES, NO
+  cooerce: camelcase # CRC
+  allowed:
+    - Yes
+    - No
 prior_testing:
   type: string
   required: False

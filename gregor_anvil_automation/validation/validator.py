@@ -1,4 +1,6 @@
 """Custom cerberus validator for GREGoR project"""
+from datetime import datetime
+
 from cerberus import Validator
 
 
@@ -11,8 +13,14 @@ class SampleValidator(Validator):
             self._error(field, "Value requires an int")
 
     def _check_with_is_number_or_na(self, field: str, value: str):
+        """Checks that the field's value is the string `NA` or a valid integer"""
         if not value != "NA" and not isinstance(value, int):
             self._error(field, "Value must be NA or an int")
+
+    def _check_with_must_start_with_bcm(self, field: str, value: str):
+        """Checks that field's value starts with `BCM_`"""
+        if not value.startswith("BCM_"):
+            self._error(field, "Value must start with BCM_")
 
     def _check_with_must_start_with_bcm_fam(self, field: str, value: str):
         """Checks that field's value starts with `BCM_Fam`"""
@@ -20,7 +28,7 @@ class SampleValidator(Validator):
             self._error(field, "Value must start with BCM_Fam")
 
     def _check_with_must_start_with_bcm_subject_bh(self, field: str, value: str):
-        """Checks that field's value starts with `BCM_Subject`"""
+        """Checks that field's value starts with `BCM_Subject_BH`"""
         if not value.startswith("BCM_Subject_BH"):
             self._error(field, "Value must start with BCM_Subject_BH")
 
@@ -32,4 +40,8 @@ class SampleValidator(Validator):
     def _normalize_coerce_uppercase(self, value: str) -> str:
         """Coerces value to uppercase"""
         value = value.upper()
+        return value
+
+    def _normalize_coerce_year_month_date(self, value: str) -> str:
+        value = datetime.strptime(value, "%Y-%m-%d")
         return value

@@ -27,10 +27,10 @@ class SampleValidator(Validator):
         if not value.startswith("BCM_Fam"):
             self._error(field, "Value must start with BCM_Fam")
 
-    def _check_with_must_start_with_bcm_subject_bh(self, field: str, value: str):
-        """Checks that field's value starts with `BCM_Subject_BH`"""
-        if not value.startswith("BCM_Subject_BH"):
-            self._error(field, "Value must start with BCM_Subject_BH")
+    def _check_with_must_start_with_bcm_subject(self, field: str, value: str):
+        """Checks that field's value starts with `BCM_Subject`"""
+        if not value.startswith("BCM_Subject"):
+            self._error(field, "Value must start with BCM_Subject")
 
     def _normalize_coerce_camelcase(self, value: str) -> str:
         """Coerces value to camelcase"""

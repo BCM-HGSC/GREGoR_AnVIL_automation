@@ -32,6 +32,15 @@ class SampleValidator(Validator):
         if not value.startswith("BCM_Subject"):
             self._error(field, "Value must start with BCM_Subject")
 
+    def _check_with_must_start_with_ontology(self, field: str, value: str):
+        """Checks that field's value starts with `HPO`, `MONDO`, `OMIM`, `ORPHANET`, `SNOMED`, or `ICD10`"""
+        ontology = ["HPO", "MONDO", "OMIM", "ORPHANET", "SNOMED", "ICD10"]
+        if not value.startswith(tuple(ontology)):
+            self._error(
+                field,
+                "Value must start with HPO, MONDO, OMIM, ORPHANET, SNOMED, or ICD10",
+            )
+
     def _normalize_coerce_camelcase(self, value: str) -> str:
         """Coerces value to camelcase"""
         value = value[0].upper() + value[1:].lower()

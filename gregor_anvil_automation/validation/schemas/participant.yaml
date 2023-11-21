@@ -55,9 +55,25 @@ proband_relationship:
   allowed:
     - Self
     - Mother
-    - Child
     - Father
     - Sibling
+    - Child
+    - Maternal Half Sibling
+    - Paternal Half Sibling
+    - Maternal Grandmother
+    - Maternal Grandfather
+    - Paternal Grandmother
+    - Paternal Grandfather
+    - Maternal Aunt
+    - Maternal Uncle
+    - Paternal Aunt
+    - Paternal Uncle
+    - Niece
+    - Nephew
+    - Maternal 1st Cousin
+    - Paternal 1st Cousin
+    - Other
+    - Unknown
   coerce: camelcase
 proband_relationship_detail:
   type: string
@@ -65,7 +81,10 @@ proband_relationship_detail:
 sex:
   type: string
   required: True
-  allowed: [Female, Male, Unknown] # Camelcase
+  allowed:
+    - Female
+    - Male
+    - Unknown
   coerce: camelcase
 sex_detail:
   type: string
@@ -73,39 +92,58 @@ sex_detail:
 reported_race:
   type: string
   required: False
-  allowed: [American Indian or Alaska Native, Asian, Black or African American, Native Hawaiian, Other Pacific Islander, Middle Eastern or North African, White]
+  allowed:
+    - American Indian or Alaska Native
+    - Asian
+    - Black or African American
+    - Native Hawaiian
+    - Other Pacific Islander
+    - Middle Eastern or North African
+    - White
 reported_ethnicity:
   type: string
   required: False
-  allowed: [Hispanic or Latino, Not Hispanic or Latino]
+  allowed:
+    - Hispanic or Latino
+    - Not Hispanic or Latino
 ancestry_detail:
   type: string
   required: False
 age_at_last_observation:
   type: string
-  required: False # Rule: Make sure its a number
-  check_with: is_number
+  required: False
+  check_with: is_number_or_na
 affected_status:
   type: string
   required: True
-  allowed: [Affected, Unaffected, Possibly affected, Unknown]
-  coerce: camelcase
+  allowed:
+    - Affected
+    - Unaffected
+    - Possibly affected
+    - Unknown
 phenotype_description:
   type: string
   required: False
 age_at_enrollment:
   type: string
-  required: False # Check if number
-  check_with: is_number
+  required: False
+  check_with: is_number_or_na
 solve_status:
   type: string
   required: True
-  allowed: [Yes, Likely, No, Partial]
+  allowed:
+    - Yes
+    - Likely
+    - No
+    - Partial
   coerce: camelcase
 missing_variant_case:
   type: string
   required: True
-  allowed: [Yes, No, Unknown]
+  allowed:
+    - Yes
+    - No
+    - Unknown
   coerce: camelcase
 missing_variant_details:
   type: string

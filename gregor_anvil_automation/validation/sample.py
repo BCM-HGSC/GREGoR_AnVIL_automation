@@ -22,6 +22,41 @@ class SampleValidator(Validator):
         if value != "NA" and not isinstance(value, int):
             self._error(field, "Value must be NA or an int")
 
+    def _check_with_maternal_id_is_valid(self, field: str, value: str):
+        """Checks that maternal id is valid.
+        A valid maternal id is:
+            - starts with BCM_Subject_
+            - ends with _2
+            - the subject id matches the subject id in `participant_id`
+        Special Condition:
+            - "0" must be accepted as valid input
+        """
+        # TODO: Please fill out.
+
+    def _check_with_paternal_id_is_valid(self, field: str, value: str):
+        """Checks that paternal id is valid.
+        A valid paternal id is:
+            - starts with BCM_Subject_
+            - ends with _3
+            - the subject id matches the subject id in `participant_id`
+        Special Condition:
+            - "0" must be accepted as valid input
+        """
+        # TODO: Please fill out.
+
+    def _check_with_twin_id_is_valid(self, field: str, value: str):
+        """Checks that twin id is valid.
+        A valid twin id is:
+            - the `participant_id` must be one of the twin ids
+            - the other id must end with either a _1 or _4
+            - both ids must start with BCM_Subject_
+            - both ids must contain the same subject_id
+        Special Condition:
+            - "NA" must be accepted as valid input
+        """
+        # TODO: Please fill out.
+        # NOTE: Twin ID field looks like this for reference: BCM_Subject_BH10325_1 BCM_Subject_BH10325_4
+
     def _check_with_must_start_with_bcm(self, field: str, value: str):
         """Checks that field's value starts with `BCM_`"""
         if not value.startswith("BCM_"):

@@ -11,7 +11,8 @@ gregor_center:
   required: True
   empty: False
   coerce: uppercase
-  allowed: [BCM]
+  allowed:
+    - BCM
 consent_code:
   type: string
   required: True
@@ -22,36 +23,33 @@ consent_code:
 recontactable:
   type: string
   required: False
-  cooerce: camelcase # CRC
+  cooerce: camelcase
   allowed:
     - Yes
     - No
 prior_testing:
   type: string
   required: False
-  allowed: [NA] # Check to accept strings in general
 pmid_id:
   type: string
   required: False
-  allowed: [NA] # Check to accept strings in general
 family_id:
   type: string
-  required: True # Additional rules, needed BCM_FAM_####
+  required: True
   check_with: must_start_with_bcm_fam
 paternal_id:
   type: string
-  required: True # Rule: BCM_Subject_BH####
-  check_with: must_start_with_bcm_subject
+  required: True
+  check_with: paternal_id_is_valid
 maternal_id:
   type: string
-  required: True # BCM_Subject_BH#### - RULES DEPENDENT
-  check_with: must_start_with_bcm_subject
-  depends_on: family_id
+  required: True
+  check_with: maternal_id_is_valid
 twin_id:
   type: string
   required: False
   depends_on: # Ref CSV
-  check_with: must_start_with_bcm_subject_or_is_na
+  check_with: twin_id_is_valid
 proband_relationship:
   type: string
   required: True

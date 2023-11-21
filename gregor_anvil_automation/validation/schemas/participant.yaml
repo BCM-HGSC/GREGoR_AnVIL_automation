@@ -48,12 +48,16 @@ maternal_id:
 twin_id:
   type: string
   required: False
-  depends_on: # Ref CSV
   check_with: twin_id_is_valid
 proband_relationship:
   type: string
   required: True
-  allowed: [Self, Mother, Child, Father, Sibling] # Check cammelcase
+  allowed:
+    - Self
+    - Mother
+    - Child
+    - Father
+    - Sibling
   coerce: camelcase
 proband_relationship_detail:
   type: string

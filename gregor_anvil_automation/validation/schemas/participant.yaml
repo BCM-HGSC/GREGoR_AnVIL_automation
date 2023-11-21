@@ -1,47 +1,64 @@
 participant_id:
   type: string
   required: True
+  empty: False
+  check_with: must_start_with_bcm_subject
 internal_project_id:
   type: string
   required: False
 gregor_center:
   type: string
   required: True
-  allowed: [BCM]  # need to convert uppercase
+  empty: False
+  coerce: uppercase
+  allowed:
+    - BCM
 consent_code:
   type: string
   required: True
-  allowed: [GRU, HMB] # need to convert uppercase
+  empty: False
+  allowed:
+    - GRU
+    - HMB
 recontactable:
   type: string
   required: False
-  allowed: [Yes, No] # Possibly Camelcase YES, NO
+  cooerce: camelcase
+  allowed:
+    - Yes
+    - No
 prior_testing:
   type: string
   required: False
-  allowed: [NA] # Check to accept strings in general
 pmid_id:
   type: string
   required: False
-  allowed: [NA] # Check to accept strings in general
 family_id:
   type: string
-  required: True # Additional rules, needed BCM_FAM_####
+  required: True
+  check_with: must_start_with_bcm_fam
 paternal_id:
   type: string
-  required: True # Rule: BCM_Subject_BH####
+  required: True
+  check_with: paternal_id_is_valid
 maternal_id:
   type: string
-  required: True # BCM_Subject_BH#### - RULES DEPENDENT
-  depends_on: family_id
+  required: True
+  check_with: maternal_id_is_valid
 twin_id:
   type: string
   required: False
-  depends_on: # Ref CSV
+  check_with: twin_id_is_valid
 proband_relationship:
   type: string
   required: True
-  allowed: [Self, Mother, Child, Father, Sibling] # Check cammelcase
+  allowed:
+    - Self
+    - Mother
+    - Child
+    - Father
+    - Sibling
+  coerce: camelcase
 proband_relationship_detail:
   type: string
   required: False
@@ -49,6 +66,7 @@ sex:
   type: string
   required: True
   allowed: [Female, Male, Unknown] # Camelcase
+  coerce: camelcase
 sex_detail:
   type: string
   required: False
@@ -66,24 +84,29 @@ ancestry_detail:
 age_at_last_observation:
   type: string
   required: False # Rule: Make sure its a number
+  check_with: is_number
 affected_status:
   type: string
   required: True
   allowed: [Affected, Unaffected, Possibly affected, Unknown]
+  coerce: camelcase
 phenotype_description:
   type: string
   required: False
 age_at_enrollment:
   type: string
   required: False # Check if number
+  check_with: is_number
 solve_status:
   type: string
   required: True
   allowed: [Yes, Likely, No, Partial]
+  coerce: camelcase
 missing_variant_case:
   type: string
   required: True
   allowed: [Yes, No, Unknown]
+  coerce: camelcase
 missing_variant_details:
   type: string
   required: False

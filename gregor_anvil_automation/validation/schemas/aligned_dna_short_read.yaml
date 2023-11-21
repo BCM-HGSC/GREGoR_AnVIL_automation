@@ -2,6 +2,7 @@ aligned_dna_short_read_id:
   type: string
   required: True
   allowed: [] # follows pattern
+  check_with: must_start_with_bcm_subject
   # ex. BCM_[participant_id]_A4
 
 aligned_dna_short_read_file:
@@ -13,7 +14,7 @@ aligned_dna_short_read_file:
 aligned_dna_short_read_index_file:
   type: string
   required: True
-  allowed: [] # bucket path with *.cram.crai 
+  allowed: [] # bucket path with *.cram.crai
 # ex. gs://[google_bucket_name]/BCM_[participant_id]_[bucket_id].hgv.cram.crai
 alignment_software:
   type: string
@@ -27,6 +28,7 @@ experiment_dna_short_read_id:
   type: string
   required: True
   allowed: [] #  experiment_dna_short_read.experiment_dna_short_read_id
+  check_with: must_start_with_bcm_subject
   # ‘BCM_”[sample_id]”
 md5sum:
   type: string
@@ -38,17 +40,17 @@ mean_coverage:
   allowed: []
 quality_issues:
   type: string
-  required: False 
+  required: False
   allowed: []
 reference_assembly:
   type: string
   required: True
-  allowed: [GRCh38] # may be more values... maybe a warning message for verification? 
+  allowed: [GRCh38] # may be more values... maybe a warning message for verification?
 reference_assembly_details:
   type: string
   required: False
 
 reference_assembly_uri:
   type: string
-  required: False 
-  allowed: [] # will be a bucket path gs:// etc ... 
+  required: False
+  allowed: [] # will be a bucket path gs:// etc ...

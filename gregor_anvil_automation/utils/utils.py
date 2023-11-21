@@ -5,6 +5,7 @@ import yaml
 from openpyxl import Workbook, load_workbook
 
 from .types import Sample
+from .mappings import TABLE_NAME_MAPPINGS
 
 
 def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
@@ -20,7 +21,9 @@ def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
             if header := sheet.cell(row=1, column=i).value:
                 headers.append(header.strip().lower().replace(" ", "_"))
         for row_cells in sheet.iter_rows(min_row=2):
-            if all(cell.value is None for cell in row_cells):
+            if all(
+                cell.value is None or cell.value.strip() == "" for cell in row_cells
+            ):
                 continue
             sample = {
                 header: (
@@ -30,7 +33,9 @@ def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
                 )
                 for idx, header in enumerate(headers)
             }
+            sample["row_number"] = row_cells[0].row
             samples.append(sample)
+            sheet_name = TABLE_NAME_MAPPINGS.get(sheet_name) or sheet_name.lower()
         table_samples[sheet_name] = samples
     return table_samples
 

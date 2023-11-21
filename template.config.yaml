@@ -4,3 +4,7 @@ email:
     - hgsc-submit@hgsc.bcm.edu
   # Where the email is coming from; should be the "owner" of the app.
   sender: hgsc-submit@hgsc.bcm.edu
+
+destination:
+  gcp:
+    bucket_name: some-bucket

@@ -2,6 +2,7 @@ analyte_id:
   type: string
   required: True
   allowed: [] # "BCM_’[subject_id]’batch_id’
+  check_with: must_start_with_bcm_subject
 
 age_at_collection:
   type: string

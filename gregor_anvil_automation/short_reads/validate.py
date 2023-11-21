@@ -8,6 +8,7 @@ from ..utils.types import Sample
 from ..utils.issue import Issue
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
+from ..validation.checks import *
 
 
 def run(config: Dict, excel_path: Path) -> int:

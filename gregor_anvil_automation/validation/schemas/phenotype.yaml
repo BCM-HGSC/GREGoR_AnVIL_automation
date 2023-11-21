@@ -1,6 +1,6 @@
 phenotype_id:
   type: string
-  required: False 
+  required: False
   allowed: #will be generated so this needs to be empty unless generated from a previous share
 
 additional_details:
@@ -11,28 +11,32 @@ additional_modifiers:
   type: string
   required: False
   allowed: [] # follows pattern "HP:#######"
+  check_with: must_start_with_ontology
 
 onset_age_range:
   type: string
   required: False
   allowed: [] # follows pattern "HP:#######"
+  check_with: must_start_with_ontology
 
 ontology:
   type: string
   required: True
-  allowed: ["HPO","MONDO", "OMIM", "ORPHANET", "SNOMED", "ICD10"]
+  allowed: [HPO, MONDO, OMIM, ORPHANET, SNOMED, ICD10]
 
 participant_id:
   type: string
   required: True
   allowed: [] # references participant.participant_id
+  check_with: must_start_with_bcm_subject
 
 presence:
   type: string
   required: True
-  allowed: ["Present","Absent","Unknown"]
+  allowed: [Present, Absent, Unknown]
 
 term_id:
   type: string
   required: True
   allowed: [] # Follows pattern: HP:#######
+  check_with: must_start_with_ontology

@@ -1,7 +1,8 @@
 experiment_dna_short_read_id:
-  type: string 
+  type: string
   required: True
-  allowed: [] # BCM_HY7HVDSX5-2-IDUDI0088 
+  allowed: [] # BCM_HY7HVDSX5-2-IDUDI0088
+  check_with: must_start_with_bcm
 
 analyte_id:
   type: string
@@ -12,7 +13,8 @@ analyte_id:
 date_data_generation:
   type: string
   required: False # not needed but issue with date. change to YYYY-MM-DD
-  
+  coerce: year_month_date
+
 experiment_sample_id:
   type: string
   required: False
@@ -26,14 +28,13 @@ read_length:
   type: string
   required: False
 
-
 seq_library_prep_kit_method:
   type: string
   required: False
 
 sequencing_platform:
   type: string
-  required: False 
+  required: False
 
 target_insert_size:
   type: string

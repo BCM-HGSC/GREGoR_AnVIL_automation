@@ -7,7 +7,7 @@ from gregor_anvil_automation.utils.utils import get_table_samples
 from ..utils.types import Sample
 from ..utils.issue import Issue
 from ..validation.schema import get_schema
-from ..validation.validator import SampleValidator
+from ..validation.sample import SampleValidator
 
 
 def run(config: Dict, excel_path: Path) -> int:

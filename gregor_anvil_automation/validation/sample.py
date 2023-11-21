@@ -7,12 +7,17 @@ from cerberus import Validator
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
+    def _check_with_is_na(self, field: str, value: str):
+        """Checks that the field's value is the string `NA`"""
+        if value != "NA":
+            self._error(field, "Value must be NA")
+
     def _check_with_is_number(self, field: str, value: str):
         """Checks that the field's value is a valid integer"""
         if not isinstance(value, int):
             self._error(field, "Value requires an int")
 
-    def _check_with_is_number_or_na(self, field: str, value: str):
+    def _check_with_is_number_or_is_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
         if value != "NA" and not isinstance(value, int):
             self._error(field, "Value must be NA or an int")
@@ -31,6 +36,11 @@ class SampleValidator(Validator):
         """Checks that field's value starts with `BCM_Subject`"""
         if not value.startswith("BCM_Subject"):
             self._error(field, "Value must start with BCM_Subject")
+
+    def _check_with_must_start_with_bcm_subject_or_is_na(self, field: str, value: str):
+        """Checks that field's value starts with `BCM_Subject` or is na"""
+        if value != "NA" and not value.startswith("BCM_Subject"):
+            self._error(field, "Value must be NA or start with BCM_Subject")
 
     def _check_with_must_start_with_ontology(self, field: str, value: str):
         """Checks that field's value starts with `HP:` or `MONDO:`"""

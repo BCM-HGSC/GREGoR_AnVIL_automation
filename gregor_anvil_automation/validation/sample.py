@@ -31,14 +31,18 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        if value != 0 and (
-            not value.startswith("BCM_Subject_")
-            or not value.endswith("_2")
-            or value != self.document["participant_id"]
-        ):
+        participant_id = self.document["participant_id"]
+        maternal_id = "_".join(participant_id.split("_")[:-1]) + "_2"
+        if not self.document["participant_id"].endswith("_1"):
+            if value != "0":
+                self._error(
+                    field,
+                    'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in participant_id',
+                )
+        elif value != maternal_id:
             self._error(
                 field,
-                "Value must be 0 or match the format of BCM_Subject_######_2, and match the subject id in participant_id",
+                'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in participant_id',
             )
 
     def _check_with_paternal_id_is_valid(self, field: str, value: str):
@@ -50,14 +54,18 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        if value != 0 and (
-            not value.startswith("BCM_Subject_")
-            or not value.endswith("_3")
-            or value != self.document["participant_id"]
-        ):
+        participant_id = self.document["participant_id"]
+        paternal_id = "_".join(participant_id.split("_")[:-1]) + "_3"
+        if not self.document["participant_id"].endswith("_1"):
+            if value != "0":
+                self._error(
+                    field,
+                    'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in participant_id',
+                )
+        elif value != paternal_id:
             self._error(
                 field,
-                "Value must be 0 or match the format of BCM_Subject_######_3, and match the subject id in participant_id",
+                'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in participant_id',
             )
 
     def _check_with_twin_id_is_valid(self, field: str, value: str):
@@ -70,32 +78,28 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
-        error = [
-            "Value must be NA or:",
-            "Value must contain two strings separated by a space.",
-            "One string must match the format of BCM_Subject_######_1.",
-            "The other string must match the format of BCM_Subject_######_4.",
-            "Both strings must have the same subject_id.",
-            "One of the strings must be the same as participant_id.",
-        ]
+        participant_id = self.document["participant_id"]
+        subject_id = participant_id.split("_")[2]
+        matching = f"BCM_Subject_{subject_id}_"
+        ids = value.split(" ")
         if value != "NA":
-            if value.count(" ") == 1:
-                id1 = value.split(" ")[0]
-                id2 = value.split(" ")[1]
-                if (
-                    not id1.startswith("BCM_Subject_")
-                    or not id2.startswith("BCM_Subject_")
-                    or not (
-                        (id1.endswith("_4") and id2.endswith("_1"))
-                        or (id1.endswith("_1") and id2.endswith("_4"))
-                    )
-                    or id1[: len(id1) - 2] != id2[: len(id2) - 2]
-                    or not (
-                        id1 == self.document["participant_id"]
-                        or id2 == self.document["participant_id"]
-                    )
-                ):
-                    self._error(field, "\n".join(error))
+            if len(ids) != 2:
+                self._error(field, "value does not have exactly two ids")
+            if not (
+                (ids[0].endswith("_1") and ids[1].endswith("_4"))
+                or (ids[0].endswith("_4") and ids[1].endswith("_1"))
+            ):
+                self._error(
+                    field, "ids do not end with _1 and _4 or _4 and _1 respectively."
+                )
+            for twin_id in ids[:2]:
+                if participant_id == twin_id:
+                    participant_id_exist = True
+                    continue
+                if matching not in twin_id:
+                    self._error(field, f"{value} does not contain {matching}")
+            if not participant_id_exist:
+                self._error(field, "value does not coantian `participant_id`")
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):
         """Checks that field's value starts with `BCM_`"""

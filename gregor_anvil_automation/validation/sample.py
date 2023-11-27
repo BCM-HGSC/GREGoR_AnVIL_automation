@@ -1,5 +1,6 @@
 """Custom cerberus validator for GREGoR project"""
 from datetime import datetime
+from string import capwords
 
 from cerberus import Validator
 
@@ -89,8 +90,8 @@ class SampleValidator(Validator):
 
     def _normalize_coerce_initialcase(self, value: str) -> str:
         """Coerces value to initialcase"""
-        if len(value.strip()) > 0:
-            value = " ".join([idx.title() for idx in value.strip().split(" ")])
+        if value.strip():
+            value = capwords(value)
         return value
 
     def _normalize_coerce_uppercase(self, value: str) -> str:

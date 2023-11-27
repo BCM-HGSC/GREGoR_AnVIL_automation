@@ -82,9 +82,6 @@ class SampleValidator(Validator):
             if value.count(" ") == 1:
                 id1 = value.split(" ")[0]
                 id2 = value.split(" ")[1]
-                start_idx = len("BCM_Subject_")
-                end_idx1 = len(id1) - len("_#")
-                end_idx2 = len(id2) - len("_#")
                 if (
                     not id1.startswith("BCM_Subject_")
                     or not id2.startswith("BCM_Subject_")
@@ -92,7 +89,7 @@ class SampleValidator(Validator):
                         (id1.endswith("_4") and id2.endswith("_1"))
                         or (id1.endswith("_1") and id2.endswith("_4"))
                     )
-                    or id1[start_idx:end_idx1] != id2[start_idx:end_idx2]
+                    or id1[: len(id1) - 2] != id2[: len(id2) - 2]
                     or not (
                         id1 == self.document["participant_id"]
                         or id2 == self.document["participant_id"]

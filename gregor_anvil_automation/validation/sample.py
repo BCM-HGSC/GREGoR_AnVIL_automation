@@ -31,10 +31,11 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        # TODO: Please fill out.
         if value != 0 and (
-            not value.startswith("BCM_Subject_") or not value.endswith("_2")
-        ):  # add and not the subject id match, WIP
+            not value.startswith("BCM_Subject_")
+            or not value.endswith("_2")
+            or value != self.document["participant_id"]
+        ):
             self._error(
                 field,
                 "Value must be 0 or match the format of BCM_Subject_######_2, and match the subject id in participant_id",
@@ -49,10 +50,11 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        # TODO: Please fill out.
         if value != 0 and (
-            not value.startswith("BCM_Subject_") or not value.endswith("_3")
-        ):  # add and not the subject id match, WIP
+            not value.startswith("BCM_Subject_")
+            or not value.endswith("_3")
+            or value != self.document["participant_id"]
+        ):
             self._error(
                 field,
                 "Value must be 0 or match the format of BCM_Subject_######_3, and match the subject id in participant_id",
@@ -68,8 +70,6 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
-        # TODO: Please fill out.
-        # NOTE: Twin ID field looks like this for reference: BCM_Subject_BH10325_1 BCM_Subject_BH10325_4
         error = [
             "Value must be NA or:",
             "Value must contain two strings separated by a space.",
@@ -93,8 +93,11 @@ class SampleValidator(Validator):
                         or (id1.endswith("_1") and id2.endswith("_4"))
                     )
                     or id1[start_idx:end_idx1] != id2[start_idx:end_idx2]
+                    or not (
+                        id1 == self.document["participant_id"]
+                        or id2 == self.document["participant_id"]
+                    )
                 ):
-                    # Need to add check for being same as participant_id
                     self._error(field, "\n".join(error))
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):

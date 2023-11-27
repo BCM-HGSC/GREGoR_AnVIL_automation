@@ -37,12 +37,12 @@ class SampleValidator(Validator):
             if value != "0":
                 self._error(
                     field,
-                    'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in participant_id',
+                    'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`',
                 )
         elif value != maternal_id:
             self._error(
                 field,
-                'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in participant_id',
+                'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`',
             )
 
     def _check_with_paternal_id_is_valid(self, field: str, value: str):
@@ -60,12 +60,12 @@ class SampleValidator(Validator):
             if value != "0":
                 self._error(
                     field,
-                    'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in participant_id',
+                    'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`',
                 )
         elif value != paternal_id:
             self._error(
                 field,
-                'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in participant_id',
+                'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`',
             )
 
     def _check_with_twin_id_is_valid(self, field: str, value: str):
@@ -84,13 +84,13 @@ class SampleValidator(Validator):
         ids = value.split(" ")
         if value != "NA":
             if len(ids) != 2:
-                self._error(field, "value does not have exactly two ids")
+                self._error(field, "Value does not have exactly two ids")
             if not (
                 (ids[0].endswith("_1") and ids[1].endswith("_4"))
                 or (ids[0].endswith("_4") and ids[1].endswith("_1"))
             ):
                 self._error(
-                    field, "ids do not end with _1 and _4 or _4 and _1 respectively."
+                    field, "Ids do not end with _1 and _4 or _4 and _1 respectively."
                 )
             for twin_id in ids[:2]:
                 if participant_id == twin_id:
@@ -99,7 +99,7 @@ class SampleValidator(Validator):
                 if matching not in twin_id:
                     self._error(field, f"{value} does not contain {matching}")
             if not participant_id_exist:
-                self._error(field, "value does not coantian `participant_id`")
+                self._error(field, "Value does not contain `participant_id`")
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):
         """Checks that field's value starts with `BCM_`"""

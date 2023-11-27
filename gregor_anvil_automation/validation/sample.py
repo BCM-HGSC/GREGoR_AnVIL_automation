@@ -8,14 +8,16 @@ from cerberus import Validator
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
+    def _check_with_analyte_id(self, field: str, value: str):
+        """Checks that the analyte_id is valid:
+        Valid if:
+            - {participant_id}_{batch_id}"""
+        # TODO: Please fill out
+
     def _check_with_is_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA`"""
         if value != "NA":
             self._error(field, "Value must be NA")
-
-    def _check_with_is_number_or_na(self, field: str, value: str):
-        """Checks that the field's value is a valid integer or NA"""
-        # Can accept either a intenger or NA
 
     def _check_with_is_number(self, field: str, value: str):
         """Checks that the field's value is a valid integer"""

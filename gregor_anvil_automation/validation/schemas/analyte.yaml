@@ -1,80 +1,86 @@
 analyte_id:
   type: string
   required: True
-  allowed: [] # "BCM_’[subject_id]’batch_id’
-  check_with: must_start_with_bcm_subject
-
-age_at_collection:
-  type: string
-  required:
-  allowed: []
-
-analyte_processing_details:
-  type: string
-  required:
-  allowed: []
-
-analyte_type:
-  type: string
-  required:
-  allowed: []
-
-hours_since_last_meal:
-  type: string
-  required:
-  allowed: []
-
-participant_drugs_intake:
-  type: string
-  required:
-  allowed: []
-
+  dependencies: participant_id
+  check_with: analyte_id
 participant_id:
   type: string
-  required:
-  allowed: []
-
-participant_special_diet:
+  required: True
+  empty: False
+  check_with: must_start_with_bcm_subject
+analyte_type:
   type: string
-  required:
-  allowed: []
-
-passage_number:
+  required: True
+  allowed:
+    - DNA
+    - RNA
+    - cDNA
+    - blood plasma
+    - frozen whole blood
+    - high molecular weight DNA
+    - urine
+analyte_processing_details:
   type: string
-  required:
-  allowed: []
-
+  required: False
 primary_biosample:
   type: string
-  required:
-  allowed: []
-
-primary_biosample_details:
-  type: string
-  required:
-  allowed: []
-
+  required: True
+  allowed:
+    - "UBERON:0000479"
+    - "UBERON:0003714"
+    - "UBERON:0001836"
+    - "UBERON:0001003"
+    - "UBERON:0002385"
+    - "UBERON:0000178"
+    - "UBERON:0002371"
+    - "UBERON:0006956"
+    - "UBERON:0001359"
+    - "UBERON:0001088"
+    - "UBERON:0019306"
+    - "CL: 0000034"
+    - "CL: 0000576"
+    - "CL: 0000542"
+    - "CL: 0000057"
+    - "UBERON: 0005291"
+    - "CL: 0011020"
+    - "UBERON: 0002037"
+    - "UBERON: 0001133"
 primary_biosample_id:
   type: string
-  required:
-  allowed: []
-
-quality_issues:
+  required: False
+primary_biosample_details:
   type: string
-  required:
-  allowed: []
-
-sample_transformation_detail:
-  type: string
-  required:
-  allowed: []
-
-time_to_freeze:
-  type: string
-  required:
-  allowed: []
-
+  required: False
 tissue_affected_status:
   type: string
-  required:
-  allowed: []
+  required: False
+  allowed:
+    - Yes
+    - No
+age_at_collection:
+  type: string
+  required: False
+  check_with: is_number_or_is_na
+participant_drugs_intake:
+  type: string
+  required: False
+participant_special_diet:
+  type: string
+  required: False
+hours_since_last_meal:
+  type: string
+  required: False
+passage_number:
+  type: string
+  required: False
+  check_with: is_number_or_is_na
+time_to_freeze:
+  type: string
+  required: False
+  check_with: is_number_or_is_na
+sample_transformation_detail:
+  type: string
+  required: False
+quality_issues:
+  type: string
+  required: False

@@ -23,7 +23,7 @@ consent_code:
 recontactable:
   type: string
   required: False
-  cooerce: camelcase
+  cooerce: initialcase
   allowed:
     - Yes
     - No
@@ -74,7 +74,7 @@ proband_relationship:
     - Paternal 1st Cousin
     - Other
     - Unknown
-  coerce: camelcase
+  coerce: initialcase
 proband_relationship_detail:
   type: string
   required: False
@@ -85,7 +85,7 @@ sex:
     - Female
     - Male
     - Unknown
-  coerce: camelcase
+  coerce: initialcase
 sex_detail:
   type: string
   required: False
@@ -136,7 +136,7 @@ solve_status:
     - Likely
     - No
     - Partial
-  coerce: camelcase
+  coerce: initialcase
 missing_variant_case:
   type: string
   required: True
@@ -144,7 +144,7 @@ missing_variant_case:
     - Yes
     - No
     - Unknown
-  coerce: camelcase
+  coerce: initialcase
 missing_variant_details:
   type: string
   required: False

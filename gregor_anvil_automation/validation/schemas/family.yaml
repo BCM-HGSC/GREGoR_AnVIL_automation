@@ -7,7 +7,7 @@ consanguinity:
   type: string
   required: True
   allowed: ["None suspected", "Suspected", "Present", "Unknown"]
-  coerce: camelcase
+  coerce: initialcase
   # normalization would also need to verify 'None suspected' does not have a capitalized 's'
 consanguinity_detail:
   type: string

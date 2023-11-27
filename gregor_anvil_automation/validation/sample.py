@@ -87,9 +87,10 @@ class SampleValidator(Validator):
         if not value.startswith(tuple(ontology)):
             self._error(field, "Value must start with HP: or MONDO:")
 
-    def _normalize_coerce_camelcase(self, value: str) -> str:
-        """Coerces value to camelcase"""
-        value = value[0].upper() + value[1:].lower()
+    def _normalize_coerce_initialcase(self, value: str) -> str:
+        """Coerces value to initialcase"""
+        if len(value.strip()) > 0:
+            value = " ".join([idx.title() for idx in value.strip().split(" ")])
         return value
 
     def _normalize_coerce_uppercase(self, value: str) -> str:

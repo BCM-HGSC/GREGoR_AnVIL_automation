@@ -1,5 +1,6 @@
 """Custom cerberus validator for GREGoR project"""
 from datetime import datetime
+from string import capwords
 
 from cerberus import Validator
 
@@ -87,9 +88,10 @@ class SampleValidator(Validator):
         if not value.startswith(tuple(ontology)):
             self._error(field, "Value must start with HP: or MONDO:")
 
-    def _normalize_coerce_camelcase(self, value: str) -> str:
-        """Coerces value to camelcase"""
-        value = value[0].upper() + value[1:].lower()
+    def _normalize_coerce_initialcase(self, value: str) -> str:
+        """Coerces value to initialcase"""
+        if value.strip():
+            value = capwords(value)
         return value
 
     def _normalize_coerce_uppercase(self, value: str) -> str:

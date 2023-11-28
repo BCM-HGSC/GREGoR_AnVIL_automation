@@ -8,6 +8,19 @@ from cerberus import Validator
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
+    def _check_with_aligned_nanopore_id(self, field: str, value: str):
+        """Check that `aligned_nanopore_id` is valid.
+        Valid if:
+            - {experiment_nanopore_id}_{batch_id}
+        """
+        # TODO: Please fill out
+
+    def _check_with_experiment_nanopore_id(self, field: str, value: str):
+        """Check that `experiment_nanopore_id` is valid.
+        Valid if:
+            - BCM_ONTWGS_*
+        """
+
     def _check_with_analyte_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:
         Valid if:
@@ -190,3 +203,13 @@ class SampleValidator(Validator):
         # TODO: Please fill out :)
         # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
         # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+
+    def _normalize_coerce_aligned_nanopore_file(self, value: str):
+        """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam"""
+        # TODO: Please fill out
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam
+
+    def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
+        """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai"""
+        # TODO: Please fill out
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai

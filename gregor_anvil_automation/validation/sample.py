@@ -14,6 +14,14 @@ class SampleValidator(Validator):
             - {participant_id}_{batch_id}"""
         # TODO: Please fill out
 
+    def _check_with_experiment_sample_id(self, field: str, value: str):
+        """Checks that the `experiment_sample_id`
+        Valid if:
+            - experiment_sample_id == experiment_dna_short_read_id
+              (without the BCM part)
+        """
+        # TODO: Please fill out
+
     def _check_with_is_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA`"""
         if value != "NA":
@@ -146,6 +154,10 @@ class SampleValidator(Validator):
             value.title()
         return value
 
+    def _normalize_coerce_lowercase(self, value: str) -> str:
+        """Coerces value to lowercase"""
+        return value.lower()
+
     def _normalize_coerce_uppercase(self, value: str) -> str:
         """Coerces value to uppercase"""
         value = value.upper()
@@ -155,3 +167,8 @@ class SampleValidator(Validator):
         """Coerces value to YYY-MM-DD format"""
         value = datetime.strptime(value, "%Y-%m-%d")
         return value
+
+    def _normalize_coerce_targeted_region_bed_file(self, value: str) -> str:
+        """Coerce targeted_region_bed_file into a gcp path if not NA."""
+        # TODO: Please fill out.
+        # NOTE: If anything but NA given, format as `gs://{google_bucket}/{value}`

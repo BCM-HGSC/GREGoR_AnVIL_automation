@@ -1,49 +1,48 @@
 experiment_dna_short_read_id:
   type: string
   required: True
-  allowed: [] # BCM_HY7HVDSX5-2-IDUDI0088
   check_with: must_start_with_bcm
-
 analyte_id:
   type: string
   required: True
-  allowed: [] # references analyte.analyte_id
-  depends_on: analyte.analyte_id # TODO
-
-date_data_generation:
-  type: string
-  required: False # not needed but issue with date. change to YYYY-MM-DD
-  coerce: year_month_date
-
+  empty: False
 experiment_sample_id:
   type: string
   required: False
-
-experiment_type:
-  type: string
-  required: True
-  allowed: [targeted, genome, exome]
-
-read_length:
-  type: string
-  required: False
-
+  check_with: experiment_sample_id
 seq_library_prep_kit_method:
   type: string
   required: False
-
-sequencing_platform:
+read_length:
   type: string
   required: False
-
-target_insert_size:
+  check_with: is_number
+experiment_type:
+  type: string
+  required: True
+  allowed:
+    - targeted
+    - genome
+    - exome
+  coerce: lowercase
+targeted_regions_method:
   type: string
   required: False
-
 targeted_region_bed_file:
   type: string
   required: False
-
-targeted_regions_method:
+  coerce: targeted_region_bed_file
+# Note on below: Latest version submitted correctly, which we should still verify (becomes a validate not coeerce).
+# Lets see how they submit it and handle from there. Want to be consistent.
+# Will leave coerce as is for now.
+date_data_generation:
+  type: string
+  required: False
+  coerce: year_month_date
+target_insert_size:
+  type: string
+  required: False
+  check_with: is_number
+sequencing_platform:
   type: string
   required: False

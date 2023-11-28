@@ -8,14 +8,44 @@ from cerberus import Validator
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
+    def _check_with_aligned_nanopore_id(self, field: str, value: str):
+        """Check that `aligned_nanopore_id` is valid.
+        Valid if:
+            - {experiment_nanopore_id}_{batch_id}
+        """
+        # TODO: Please fill out
+
+    def _check_with_experiment_nanopore_id(self, field: str, value: str):
+        """Check that `experiment_nanopore_id` is valid.
+        Valid if:
+            - BCM_ONTWGS_*
+        """
+
+    def _check_with_analyte_id(self, field: str, value: str):
+        """Checks that the analyte_id is valid:
+        Valid if:
+            - {participant_id}_{batch_id}"""
+        # TODO: Please fill out
+
+    def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
+        """Checks that the `experiment_dna_short_read_id` is valid.
+        Valid if:
+            - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
+                the batch id.
+        """
+
+    def _check_with_experiment_sample_id(self, field: str, value: str):
+        """Checks that the `experiment_sample_id`
+        Valid if:
+            - experiment_sample_id == experiment_dna_short_read_id
+              (without the BCM part)
+        """
+        # TODO: Please fill out
+
     def _check_with_is_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA`"""
         if value != "NA":
             self._error(field, "Value must be NA")
-
-    def _check_with_is_number_or_na(self, field: str, value: str):
-        """Checks that the field's value is a valid integer or NA"""
-        # Can accept either a intenger or NA
 
     def _check_with_is_number(self, field: str, value: str):
         """Checks that the field's value is a valid integer"""
@@ -138,12 +168,48 @@ class SampleValidator(Validator):
             value = capwords(value)
         return value
 
+    def _normalize_coerce_titlecase(self, value: str) -> str:
+        """Coerces value to titlecase"""
+        if value.strip():
+            value.title()
+        return value
+
+    def _normalize_coerce_lowercase(self, value: str) -> str:
+        """Coerces value to lowercase"""
+        return value.lower() if value else value
+
     def _normalize_coerce_uppercase(self, value: str) -> str:
         """Coerces value to uppercase"""
-        value = value.upper()
-        return value
+        return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
         """Coerces value to YYY-MM-DD format"""
         value = datetime.strptime(value, "%Y-%m-%d")
         return value
+
+    def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:
+        """Coerce value into a gcp path if not NA."""
+        # TODO: Please fill out.
+        # NOTE: If anything but NA given, format as `gs://{google_bucket}/{value}`
+
+    def _normalize_coerce_aligned_dna_short_read_file(self, value: str):
+        """Coerce `aligned_dna_short_read_file` to a GCP path."""
+        # TODO: Please fill out :)
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
+        # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+
+    def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
+        """Coerce `aligned_dna_short_read_index_file` to a GCP path."""
+        # TODO: Please fill out :)
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
+        # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+
+    def _normalize_coerce_aligned_nanopore_file(self, value: str):
+        """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam"""
+        # TODO: Please fill out
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam
+
+    def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
+        """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai"""
+        # TODO: Please fill out
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai

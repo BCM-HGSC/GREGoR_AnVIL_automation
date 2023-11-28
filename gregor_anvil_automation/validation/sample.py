@@ -156,12 +156,11 @@ class SampleValidator(Validator):
 
     def _normalize_coerce_lowercase(self, value: str) -> str:
         """Coerces value to lowercase"""
-        return value.lower()
+        return value.lower() if value else value
 
     def _normalize_coerce_uppercase(self, value: str) -> str:
         """Coerces value to uppercase"""
-        value = value.upper()
-        return value
+        return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
         """Coerces value to YYY-MM-DD format"""

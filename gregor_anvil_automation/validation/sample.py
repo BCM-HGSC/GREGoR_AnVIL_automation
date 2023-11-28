@@ -14,6 +14,13 @@ class SampleValidator(Validator):
             - {participant_id}_{batch_id}"""
         # TODO: Please fill out
 
+    def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
+        """Checks that the `experiment_dna_short_read_id` is valid.
+        Valid if:
+            - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
+                the batch id.
+        """
+
     def _check_with_experiment_sample_id(self, field: str, value: str):
         """Checks that the `experiment_sample_id`
         Valid if:
@@ -167,7 +174,19 @@ class SampleValidator(Validator):
         value = datetime.strptime(value, "%Y-%m-%d")
         return value
 
-    def _normalize_coerce_targeted_region_bed_file(self, value: str) -> str:
-        """Coerce targeted_region_bed_file into a gcp path if not NA."""
+    def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:
+        """Coerce value into a gcp path if not NA."""
         # TODO: Please fill out.
         # NOTE: If anything but NA given, format as `gs://{google_bucket}/{value}`
+
+    def _normalize_coerce_aligned_dna_short_read_file(self, value: str):
+        """Coerce `aligned_dna_short_read_file` to a GCP path."""
+        # TODO: Please fill out :)
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
+        # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+
+    def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
+        """Coerce `aligned_dna_short_read_index_file` to a GCP path."""
+        # TODO: Please fill out :)
+        # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
+        # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31

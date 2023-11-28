@@ -31,7 +31,7 @@ targeted_regions_method:
 targeted_region_bed_file:
   type: string
   required: False
-  coerce: targeted_region_bed_file
+  coerce: into_gcp_path_if_not_na
 # Note on below: Latest version submitted correctly, which we should still verify (becomes a validate not coeerce).
 # Lets see how they submit it and handle from there. Want to be consistent.
 # Will leave coerce as is for now.

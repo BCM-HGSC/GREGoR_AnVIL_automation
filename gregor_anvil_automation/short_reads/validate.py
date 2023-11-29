@@ -13,6 +13,7 @@ from ..validation.checks import *
 
 def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int:
     """The short_reads entry point"""
+    print(batch_id)
     tables = get_table_samples(excel_path)
     # import pprint
 
@@ -41,12 +42,14 @@ def validate_table(
     # Validate sample by sample using cerberus
     # Load schema
     schema = get_schema(table_name)
-    sample_validator = SampleValidator(schema, batch_id=batch_id)
+    sample_validator = SampleValidator(schema=schema, batch_id=batch_id)
     for sample in samples:
         sample_validator.validate(sample)
         issues.extend(
             convert_errors_to_issues(
-                errors=sample_validator.errors, table_name=table_name, row=sample["row"]
+                errors=sample_validator.errors,
+                table_name=table_name,
+                row=sample["row_number"],
             )
         )
     return issues

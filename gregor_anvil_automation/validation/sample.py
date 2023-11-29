@@ -173,10 +173,10 @@ class SampleValidator(Validator):
             value = capwords(value)
         return value
 
-    def _normalize_coerce_titlecase(self, value: str) -> str:
-        """Coerces value to titlecase"""
+    def _normalize_coerce_capitalize(self, value: str) -> str:
+        """Coerces value to capitalize"""
         if value.strip():
-            value.title()
+            value = value.capitalize()
         return value
 
     def _normalize_coerce_lowercase(self, value: str) -> str:

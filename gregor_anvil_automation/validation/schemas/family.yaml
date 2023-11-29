@@ -1,24 +1,25 @@
 family_id:
   type: string
   required: True
-  allowed: [] # participant.family_id
   check_with: must_start_with_bcm_fam
 consanguinity:
   type: string
   required: True
-  allowed: ["None suspected", "Suspected", "Present", "Unknown"]
-  coerce: initialcase
-  # normalization would also need to verify 'None suspected' does not have a capitalized 's'
+  allowed:
+    - None suspected
+    - Suspected
+    - Present
+    - Unknown
+  coerce: titlecase
 consanguinity_detail:
-  type: string
-  required: False
-family_history_detail:
   type: string
   required: False
 pedigree_file:
   type: string
   required: False
-  allowed: [] # google bucket path usually NA
 pedigree_file_detail:
+  type: string
+  required: False
+family_history_detail:
   type: string
   required: False

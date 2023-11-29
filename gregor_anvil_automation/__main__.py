@@ -7,12 +7,14 @@ a script by running:
 from argparse import ArgumentParser, Namespace
 from logging import basicConfig, getLogger, INFO
 from pathlib import Path
+from os import environ
 
 import addict
 
 from . import __version__
 from .short_reads import validate
 from .utils.utils import parse_yaml
+from gregor_anvil_automation.utils.working_dir import get_working_dir
 
 logger = getLogger(__name__)
 
@@ -22,15 +24,18 @@ def main() -> int:
     args = command_line_parser()
     basicConfig(level=INFO)
     config = parse_yaml(args.config_file)
-    return run_command(config, args)
+    # Working Dir
+    parent = environ.get("TMPDIR", None)  # From user or cluster
+    with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:
+        return run_command(config, args, working_dir)
 
 
-def run_command(config: addict.Dict, args) -> int:
+def run_command(config: addict.Dict, args, working_dir) -> int:
     """Runs the command given by the user"""
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0
     if args.command == "short_reads":
-        return_code = validate.run(config, args.excel_path, (args.batch_id).strip())
+        return_code = validate.run(config, args.excel_path, (args.batch_id).strip(), working_dir)
     return return_code
 
 

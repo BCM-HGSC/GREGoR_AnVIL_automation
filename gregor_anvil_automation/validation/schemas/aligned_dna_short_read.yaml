@@ -1,56 +1,48 @@
 aligned_dna_short_read_id:
   type: string
   required: True
-  allowed: [] # follows pattern
-  check_with: must_start_with_bcm_subject
-  # ex. BCM_[participant_id]_A4
-
-aligned_dna_short_read_file:
-  type: string
-  required: True
-  allowed: [] # bucket path with *.cram
-  # ex. gs://[google_bucket_name]/BCM_[participant_id]_[bucket_id].hgv.cram
-
-aligned_dna_short_read_index_file:
-  type: string
-  required: True
-  allowed: [] # bucket path with *.cram.crai
-# ex. gs://[google_bucket_name]/BCM_[participant_id]_[bucket_id].hgv.cram.crai
-alignment_software:
-  type: string
-  required: True
-
-analysis_details:
-  type: string
-  required: False
-
+  check_with: must_start_with_bcm
 experiment_dna_short_read_id:
   type: string
   required: True
-  allowed: [] #  experiment_dna_short_read.experiment_dna_short_read_id
-  check_with: must_start_with_bcm_subject
-  # ‘BCM_”[sample_id]”
+  check_with: experiment_dna_short_read_id
+aligned_dna_short_read_file:
+  type: string
+  required: True
+  coerce: aligned_dna_short_read_file
+aligned_dna_short_read_index_file:
+  type: string
+  required: True
+  coerce: aligned_dna_short_read_index_file
 md5sum:
   type: string
   required: True
-  allowed: [] # i'd like to make sure this is populated from its respective cram file
-mean_coverage:
-  type: string
-  required: False
-  allowed: []
-quality_issues:
-  type: string
-  required: False
-  allowed: []
+  empty: False
 reference_assembly:
   type: string
   required: True
-  allowed: [GRCh38] # may be more values... maybe a warning message for verification?
-reference_assembly_details:
-  type: string
-  required: False
-
+  allowed:
+    - GRCh38
+    - GRCh37
+    - NCBI36
+    - NCBI35
+    - NCBI34
 reference_assembly_uri:
   type: string
   required: False
-  allowed: [] # will be a bucket path gs:// etc ...
+  coerce: into_gcp_path_if_not_na
+reference_assembly_details:
+  type: string
+  required: False
+alignment_software:
+  type: string
+  required: True
+mean_coverage:
+  type: string
+  required: False
+analysis_details:
+  type: string
+  required: False
+quality_issues:
+  type: string
+  required: False

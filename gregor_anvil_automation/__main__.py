@@ -39,7 +39,6 @@ def run_command(config: addict.Dict, args, working_dir) -> int:
             config,
             args.excel_path,
             (args.batch_id).strip(),
-            (args.gcp_bucket).strip(),
             working_dir,
         )
     return return_code
@@ -72,10 +71,6 @@ def command_line_parser() -> Namespace:
     parser.add_argument(
         "batch_id",
         help="batch_id is passed to help normalize data",
-    )
-    parser.add_argument(
-        "gcp_bucket",
-        help="gcp_bucket is passed to help normalize data",
     )
     args = parser.parse_args()
     return args

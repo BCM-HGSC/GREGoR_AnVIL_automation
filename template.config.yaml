@@ -9,4 +9,4 @@ destination:
   gcp:
     bucket_name: some-bucket
 
-working_dir:
+working_dir: some-dir

@@ -11,9 +11,7 @@ from ..validation.sample import SampleValidator
 from ..validation.checks import *
 
 
-def run(
-    config: Dict, excel_path: Path, batch_id: str, gcp_bucket: str, working_dir: Path
-) -> int:
+def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int:
     """The short_reads entry point"""
     tables = get_table_samples(excel_path)
     # import pprint
@@ -22,7 +20,9 @@ def run(
     issues = []
     # Validate files
     for table_name, samples in tables.items():
-        issues = validate_table(table_name, samples, batch_id, gcp_bucket)
+        issues = validate_table(
+            table_name, samples, batch_id, config.destination.gcp.bucket_name
+        )
 
     # If all ok, generate tsvs
 

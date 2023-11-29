@@ -27,16 +27,15 @@ def main() -> int:
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster
     with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:
-        config.working_dir = working_dir
-    return run_command(config, args)
+        return run_command(config, args, working_dir)
 
 
-def run_command(config: addict.Dict, args) -> int:
+def run_command(config: addict.Dict, args, working_dir) -> int:
     """Runs the command given by the user"""
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0
     if args.command == "short_reads":
-        return_code = validate.run(config, args.excel_path, config.working_dir)
+        return_code = validate.run(config, args.excel_path, (args.batch_id).strip(), working_dir)
     return return_code
 
 
@@ -63,6 +62,10 @@ def command_line_parser() -> Namespace:
         default="~/.config/gregor_anvil_automation.yaml",
         type=Path,
         help="Path to the config YAML file",
+    )
+    parser.add_argument(
+        "batch_id",
+        help="batch_id is passed to help normalize data",
     )
     args = parser.parse_args()
     return args

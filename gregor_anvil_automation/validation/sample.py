@@ -7,6 +7,9 @@ from cerberus import Validator
 
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
+    def __init__(self, batch_id, *args, **kwargs):
+        super(Validator, self).__init__(*args, **kwargs)
+        self.batch_id = batch_id
 
     def _check_with_aligned_nanopore_id(self, field: str, value: str):
         """Check that `aligned_nanopore_id` is valid.
@@ -52,7 +55,7 @@ class SampleValidator(Validator):
         if not isinstance(value, int):
             self._error(field, "Value requires an int")
 
-    def _check_with_is_number_or_is_na(self, field: str, value: str):
+    def _check_with_is_number_or_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
         if value != "NA" and not isinstance(value, int):
             self._error(field, "Value must be NA or an int")

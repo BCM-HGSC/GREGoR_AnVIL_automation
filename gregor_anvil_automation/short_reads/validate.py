@@ -11,7 +11,9 @@ from ..validation.sample import SampleValidator
 from ..validation.checks import *
 
 
-def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int:
+def run(
+    config: Dict, excel_path: Path, batch_id: str, gcp_bucket: str, working_dir: Path
+) -> int:
     """The short_reads entry point"""
     tables = get_table_samples(excel_path)
     # import pprint
@@ -20,7 +22,7 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
     issues = []
     # Validate files
     for table_name, samples in tables.items():
-        issues = validate_table(table_name, samples, batch_id)
+        issues = validate_table(table_name, samples, batch_id, gcp_bucket)
 
     # If all ok, generate tsvs
 
@@ -32,7 +34,7 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
 
 
 def validate_table(
-    table_name: str, samples: list[Sample], batch_id: str
+    table_name: str, samples: list[Sample], batch_id: str, gcp_bucket: str
 ) -> list[Issue]:
     """Validates a table and returns a list of issues, if any found."""
     issues = []
@@ -41,7 +43,7 @@ def validate_table(
     # Validate sample by sample using cerberus
     # Load schema
     schema = get_schema(table_name)
-    sample_validator = SampleValidator(schema, batch_id=batch_id)
+    sample_validator = SampleValidator(schema, batch_id=batch_id, gcp_bucket=gcp_bucket)
     for sample in samples:
         sample_validator.validate(sample)
         issues.extend(

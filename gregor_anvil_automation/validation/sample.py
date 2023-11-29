@@ -7,9 +7,11 @@ from cerberus import Validator
 
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
-    def __init__(self, batch_id, *args, **kwargs):
+
+    def __init__(self, batch_id, gcp_bucket, *args, **kwargs):
         super(Validator, self).__init__(*args, **kwargs)
         self.batch_id = batch_id
+        self.gcp_bucket = gcp_bucket
 
     def _check_with_aligned_nanopore_id(self, field: str, value: str):
         """Check that `aligned_nanopore_id` is valid.

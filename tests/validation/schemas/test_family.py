@@ -1,0 +1,49 @@
+import pytest
+from pathlib import Path
+
+from gregor_anvil_automation.validation.sample import SampleValidator
+from gregor_anvil_automation.validation.schema import get_schema
+
+
+@pytest.fixture(name="family_sample", scope="function")
+def fixture_family_sample():
+    return {
+        "family_id": "BCM_Fam_BHTEST",
+        "consanguinity": "None suspected",
+        "consanguinity_detail": "test-family_id-gregor",
+        "family_history_detail": "test-family_id-gregor",
+        "pedigree_file": "test-family_id-gregor",
+        "pedigree_file_detail": "test-family_id-gregor",
+    }
+
+
+@pytest.fixture(name="get_validator")
+def fixture_get_validator():
+    schema = get_schema("family")
+    return SampleValidator(
+        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+    )
+
+
+def test_family_good_sample(get_validator, family_sample):
+    """Test that a good sample passes validation"""
+    validator = get_validator
+    validator.validate(family_sample)
+    assert validator.errors == {}
+
+
+def test_family_invalid_family_id(get_validator, family_sample):
+    """Test that a good sample passes validation"""
+    validator = get_validator
+    family_sample["family_id"] = "TEST-TEST"
+    validator.validate(family_sample)
+    assert validator.errors == {"family_id": ["Value must start with BCM_Fam"]}
+
+
+def test_family_consanguinity_titlecase(get_validator, family_sample):
+    """Test that a good sample passes validation"""
+    validator = get_validator
+    family_sample["consanguinity"] = "none suspected"
+    validator.normalized(family_sample)
+    validator.validate(family_sample)
+    assert validator.errors == {}

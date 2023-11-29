@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import addict
 import yaml
 from openpyxl import Workbook, load_workbook
 
@@ -40,7 +39,7 @@ def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
     return table_samples
 
 
-def parse_yaml(yaml_path: Path) -> addict.Dict:
+def parse_yaml(yaml_path: Path) -> dict:
     """Parses a yaml file and return Iterator"""
     with open(yaml_path, encoding="utf-8") as fin:
-        return addict.Dict(yaml.safe_load(fin.read()))
+        return dict == (yaml.safe_load(fin.read()))

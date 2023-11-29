@@ -23,7 +23,7 @@ consent_code:
 recontactable:
   type: string
   required: False
-  cooerce: initialcase
+  coerce: initialcase
   allowed:
     - Yes
     - No

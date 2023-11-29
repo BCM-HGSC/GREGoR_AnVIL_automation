@@ -1,7 +1,7 @@
 aligned_nanopore_id:
   type: string
   required: True
-  depencendies: experiment_nanopore_id
+  dependencies: experiment_nanopore_id
   check_with: aligned_nanopore_id
 experiment_nanopore_id:
   type: string
@@ -39,15 +39,15 @@ analysis_details:
 mean_coverage:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 genome_coverage:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 contamination:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 sex_concordance:
   type: string
   required: False
@@ -58,34 +58,34 @@ sex_concordance:
 num_reads:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 num_bases:
   type: string
   required: False
 read_length_mean:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 num_aligned_reads:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 num_aligned_bases:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 aligned_read_length_mean:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 read_error_rate:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 mapped_reads_pct:
   type: string
   required: False
-  check_with: is_number_or_is_na
+  check_with: is_number_or_na
 methylation_called:
   type: string
   required: True

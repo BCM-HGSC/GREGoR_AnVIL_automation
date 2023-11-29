@@ -41,7 +41,7 @@ def validate_table(
     # Validate sample by sample using cerberus
     # Load schema
     schema = get_schema(table_name)
-    sample_validator = SampleValidator(schema, batch_id)
+    sample_validator = SampleValidator(schema, batch_id=batch_id)
     for sample in samples:
         sample_validator.validate(sample)
         issues.extend(

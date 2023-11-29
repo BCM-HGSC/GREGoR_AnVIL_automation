@@ -30,7 +30,7 @@ def run_command(config: addict.Dict, args) -> int:
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0
     if args.command == "short_reads":
-        return_code = validate.run(config, args.excel_path)
+        return_code = validate.run(config, args.excel_path, (args.batch_id).strip())
     return return_code
 
 
@@ -57,6 +57,10 @@ def command_line_parser() -> Namespace:
         default="~/.config/gregor_anvil_automation.yaml",
         type=Path,
         help="Path to the config YAML file",
+    )
+    parser.add_argument(
+        "batch_id",
+        help="batch_id is passed to help normalize data",
     )
     args = parser.parse_args()
     return args

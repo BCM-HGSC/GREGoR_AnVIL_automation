@@ -11,7 +11,7 @@ from ..validation.sample import SampleValidator
 from ..validation.checks import *
 
 
-def run(config: Dict, excel_path: Path) -> int:
+def run(config: Dict, excel_path: Path, working_dir: Path) -> int:
     """The short_reads entry point"""
     tables = get_table_samples(excel_path)
     # import pprint

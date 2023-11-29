@@ -8,3 +8,5 @@ email:
 destination:
   gcp:
     bucket_name: some-bucket
+
+working_dir:

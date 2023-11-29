@@ -35,7 +35,12 @@ def run_command(config: addict.Dict, args, working_dir) -> int:
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0
     if args.command == "short_reads":
-        return_code = validate.run(config, args.excel_path, (args.batch_id).strip(), working_dir)
+        return_code = validate.run(
+            config,
+            args.excel_path,
+            (args.batch_id).strip(),
+            working_dir,
+        )
     return return_code
 
 

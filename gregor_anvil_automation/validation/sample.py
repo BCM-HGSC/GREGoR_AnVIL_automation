@@ -18,19 +18,36 @@ class SampleValidator(Validator):
         Valid if:
             - {experiment_nanopore_id}_{batch_id}
         """
-        # TODO: Please fill out
+        experiment_nanopore_id = self.document["experiment_nanopore_id"]
+        aligned_nanopore_id = f"{experiment_nanopore_id}_{self.batch_id}"
+        if not value != aligned_nanopore_id:
+            self._error(
+                field,
+                f"Value must match the format of {experiment_nanopore_id}_{self.batch_id}",
+            )
 
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
         """Check that `experiment_nanopore_id` is valid.
         Valid if:
             - BCM_ONTWGS_*
         """
+        if not value.starts_with("BCM_ONTWGS_"):
+            self._error(
+                field,
+                "Value must start with BCM_ONTWGS_",
+            )
 
     def _check_with_analyte_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:
         Valid if:
             - {participant_id}_{batch_id}"""
-        # TODO: Please fill out
+        participant_id = self.document["participant_id"]
+        analyte_id = f"{participant_id}_{self.batch_id}"
+        if not value != analyte_id:
+            self._error(
+                field,
+                f"Value must match the format of {analyte_id}_{self.batch_id}",
+            )
 
     def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
         """Checks that the `experiment_dna_short_read_id` is valid.
@@ -38,6 +55,15 @@ class SampleValidator(Validator):
             - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
                 the batch id.
         """
+        aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
+        experiment_dna_short_read_id = aligned_dna_short_read_id.replace(
+            f"_{self.batch_id}", ""
+        )
+        if value != experiment_dna_short_read_id:
+            self._error(
+                field,
+                f"Value must match the format of {aligned_dna_short_read_id} minus _{self.batch_id}",
+            )
 
     def _check_with_experiment_sample_id(self, field: str, value: str):
         """Checks that the `experiment_sample_id`
@@ -46,6 +72,13 @@ class SampleValidator(Validator):
               (without the BCM part)
         """
         # TODO: Please fill out
+        experiment_dna_short_read_id = self.document["experiment_dna_short_read_id"]
+        experiment_sample_id = experiment_dna_short_read_id.replace("BCM_", "")
+        if value != experiment_sample_id:
+            self._error(
+                field,
+                f"Value must match the format of {experiment_sample_id} minus BCM_",
+            )
 
     def _check_with_is_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA`"""
@@ -196,25 +229,40 @@ class SampleValidator(Validator):
         """Coerce value into a gcp path if not NA."""
         # TODO: Please fill out.
         # NOTE: If anything but NA given, format as `gs://{google_bucket}/{value}`
+        if value != "NA":
+            value = f"gs://{self.gcp_bucket}/{value}"
+        return value
 
     def _normalize_coerce_aligned_dna_short_read_file(self, value: str):
         """Coerce `aligned_dna_short_read_file` to a GCP path."""
         # TODO: Please fill out :)
         # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
         # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+        aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
+        value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
+        return value
 
     def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
         """Coerce `aligned_dna_short_read_index_file` to a GCP path."""
         # TODO: Please fill out :)
         # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
         # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+        aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
+        value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
+        return value
 
     def _normalize_coerce_aligned_nanopore_file(self, value: str):
         """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam"""
         # TODO: Please fill out
         # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam
+        aligned_nanopore_id = self.document["aligned_nanopore_id"]
+        value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
+        return value
 
     def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
         """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai"""
         # TODO: Please fill out
         # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
+        aligned_nanopore_id = self.document["aligned_nanopore_id"]
+        value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
+        return value

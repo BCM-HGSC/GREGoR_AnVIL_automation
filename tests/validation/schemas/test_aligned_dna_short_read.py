@@ -31,10 +31,10 @@ def fixture_get_validator():
     )
 
 
-def test_aligned_dna_short_read_id_valid_sample(
+def test_aligned_dna_short_read_valid_sample(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that an aligned_dna_short_read_id sample passes validation"""
+    """Test that a sample with a valid aligned_dna_short_read_id passes validation"""
     validator = get_validator
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}
@@ -43,7 +43,7 @@ def test_aligned_dna_short_read_id_valid_sample(
 def test_aligned_dna_short_read_id_invalid_sample(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that an invalid aligned_dna_short_read_id sample fails validation"""
+    """Test that a sample with an invalid aligned_dna_short_read_id fails validation"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_id"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
@@ -52,38 +52,44 @@ def test_aligned_dna_short_read_id_invalid_sample(
     }
 
 
-def test_experiment_dna_short_read_id_valid_sample(
+def test_experiment_dna_short_read_id_invalid_sample(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that an experiment_dna_short_read_id sample passes validation"""
+    """Test that a sample with an invalid experiment_dna_short_read_id fails validation"""
     validator = get_validator
+    aligned_dna_short_read_sample["experiment_dna_short_read_id"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}
 
 
-def test_experiment_dna_short_read_id_invalid_sample(
+def test_aligned_dna_short_read_file_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that an invalid experiment_dna_short_read_id sample fails validation"""
-    validator = get_validator
-    aligned_dna_short_read_sample["experiment_dna_short_read_id"] = "TEST-TEST"
-    aligned_dna_short_read_id = aligned_dna_short_read_sample[
-        "aligned_dna_short_read_id"
-    ]
-    validator.validate(aligned_dna_short_read_sample)
-    assert validator.errors == {
-        "experiment_dna_short_read_id": [
-            f"Value must match the format of {aligned_dna_short_read_id} minus _test-batch_id"
-        ]
-    }
-
-
-def test_aligned_dna_short_read_file_valid_sample(
-    get_validator, aligned_dna_short_read_sample
-):
-    """Test that an aligned_dna_short_read_file sample normalizes properly"""
+    """Test that a sample's aligned_dna_short_read_file properly normalizes"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_file"] = "TEST-TEST"
+    validator.normalized(aligned_dna_short_read_sample)
+    validator.validate(aligned_dna_short_read_sample)
+    assert validator.errors == {}
+
+
+def test_aligned_dna_short_read_index_file_normalization(
+    get_validator, aligned_dna_short_read_sample
+):
+    """Test that a sample's aligned_dna_short_read_index_file properly normalizes"""
+    validator = get_validator
+    aligned_dna_short_read_sample["aligned_dna_short_read_index_file"] = "TEST-TEST"
+    validator.normalized(aligned_dna_short_read_sample)
+    validator.validate(aligned_dna_short_read_sample)
+    assert validator.errors == {}
+
+
+def test_reference_assembly_uri_normalization(
+    get_validator, aligned_dna_short_read_sample
+):
+    """Test that a sample's aligned_dna_short_read_index_file properly normalizes"""
+    validator = get_validator
+    aligned_dna_short_read_sample["reference_assembly_uri"] = "TEST-TEST"
     validator.normalized(aligned_dna_short_read_sample)
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}

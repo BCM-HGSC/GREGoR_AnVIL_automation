@@ -12,14 +12,14 @@ def fixture_aligned_dna_short_read_sample():
         "experiment_dna_short_read_id": "BCM_BHTEST",
         "aligned_dna_short_read_file": "gs://test-gcp-bucket/BCM_BHTEST.hgv.cram",
         "aligned_dna_short_read_index_file": "gs://test-gcp-bucket/BCM_BHTEST.hgv.cram.crai",
-        "md5sum": "test-aligned_dna_short_read_id-gregor",
+        "md5sum": "test-aligned_dna_short_read-gregor",
         "reference_assembly": "GRCh38",
         "reference_assembly_uri": "NA",
-        "reference_assembly_details": "test-aligned_dna_short_read_id-gregor",
-        "alignment_software": "test-aligned_dna_short_read_id-gregor",
-        "mean_coverage": "test-aligned_dna_short_read_id-gregor",
-        "analysis_details": "test-aligned_dna_short_read_id-gregor",
-        "quality_issues": "test-aligned_dna_short_read_id-gregor",
+        "reference_assembly_details": "test-aligned_dna_short_read-gregor",
+        "alignment_software": "test-aligned_dna_short_read-gregor",
+        "mean_coverage": "test-aligned_dna_short_read-gregor",
+        "analysis_details": "test-aligned_dna_short_read-gregor",
+        "quality_issues": "test-aligned_dna_short_read-gregor",
     }
 
 
@@ -34,7 +34,7 @@ def fixture_get_validator():
 def test_aligned_dna_short_read_valid_sample(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample with a valid aligned_dna_short_read_id passes validation"""
+    """Test that a valid aligned_dna_short_read sample passes validation"""
     validator = get_validator
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}
@@ -58,8 +58,13 @@ def test_experiment_dna_short_read_id_invalid_sample(
     """Test that a sample with an invalid experiment_dna_short_read_id fails validation"""
     validator = get_validator
     aligned_dna_short_read_sample["experiment_dna_short_read_id"] = "TEST-TEST"
+    aligned_dna_short_read_id = aligned_dna_short_read_sample[
+        "aligned_dna_short_read_id"
+    ]
     validator.validate(aligned_dna_short_read_sample)
-    assert validator.errors == {}
+    assert validator.errors == {
+        f"Value must match the format of {aligned_dna_short_read_id} minus _test-batch_id"
+    }
 
 
 def test_aligned_dna_short_read_file_normalization(

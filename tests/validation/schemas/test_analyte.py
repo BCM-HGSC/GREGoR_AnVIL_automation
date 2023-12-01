@@ -11,19 +11,19 @@ def fixture_analyte_sample():
         "analyte_id": "BCM_SUBJECT_TEST_test-batch_id",
         "participant_id": "BCM_SUBJECT_TEST",
         "analyte_type": "DNA",
-        "analyte_processing_details": "test-aligned_analyte-gregor",
+        "analyte_processing_details": "test-analyte-gregor",
         "primary_biosample": "UBERON:0000479",
-        "primary_biosample_id": "test-aligned_analyte-gregor",
-        "primary_biosample_details": "test-aligned_analyte-gregor",
+        "primary_biosample_id": "test-analyte-gregor",
+        "primary_biosample_details": "test-analyte-gregor",
         "tissue_affected_status": "Yes",
         "age_at_collection": "NA",
-        "participant_drugs_intake": "test-aligned_analyte-gregor",
-        "participant_special_diet": "test-aligned_analyte-gregor",
-        "hours_since_last_meal": "test-aligned_analyte-gregor",
+        "participant_drugs_intake": "test-analyte-gregor",
+        "participant_special_diet": "test-analyte-gregor",
+        "hours_since_last_meal": "test-analyte-gregor",
         "passage_number": "NA",
         "time_to_freeze": "NA",
-        "sample_transformation_detail": "test-aligned_analyte-gregor",
-        "quality_issues": "test-aligned_analyte-gregor"
+        "sample_transformation_detail": "test-analyte-gregor",
+        "quality_issues": "test-analyte-gregor",
     }
 
 
@@ -58,9 +58,7 @@ def test_participant_id_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["participant_id"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {
-        "Value must start with BCM_Subject"
-    }
+    assert validator.errors == {"Value must start with BCM_Subject"}
 
 
 def test_age_at_collection_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -68,9 +66,7 @@ def test_age_at_collection_invalid_sample(get_validator, aligned_nanopore_sample
     validator = get_validator
     aligned_nanopore_sample["age_at_collection"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {
-        "Value must be NA or an int"
-    }
+    assert validator.errors == {"Value must be NA or an int"}
 
 
 def test_passage_number_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -78,9 +74,7 @@ def test_passage_number_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["passage_number"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {
-        "Value must be NA or an int"
-    }
+    assert validator.errors == {"Value must be NA or an int"}
 
 
 def test_time_to_freeze_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -88,6 +82,15 @@ def test_time_to_freeze_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["time_to_freeze"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {
-        "Value must be NA or an int"
-    }
+    assert validator.errors == {"Value must be NA or an int"}
+
+
+def test_sex_tissue_affected_status_normalization(
+    get_validator, aligned_nanopore_sample
+):
+    """Test that a sample's tissue_affected_status properly normalizes"""
+    validator = get_validator
+    aligned_nanopore_sample["tissue_affected_status"] = "yes"
+    validator.normalized(aligned_nanopore_sample)
+    validator.validate(aligned_nanopore_sample)
+    assert validator.errors == {}

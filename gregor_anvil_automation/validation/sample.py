@@ -77,7 +77,7 @@ class SampleValidator(Validator):
         if value != experiment_sample_id:
             self._error(
                 field,
-                f"Value must match the format of {experiment_sample_id} minus BCM_",
+                f"Value must match the format of {experiment_dna_short_read_id} minus BCM_",
             )
 
     def _check_with_is_na(self, field: str, value: str):

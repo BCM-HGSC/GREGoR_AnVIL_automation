@@ -46,7 +46,7 @@ class SampleValidator(Validator):
         if not value != analyte_id:
             self._error(
                 field,
-                f"Value must match the format of {analyte_id}_{self.batch_id}",
+                f"Value must match the format of {participant_id}_{self.batch_id}",
             )
 
     def _check_with_experiment_dna_short_read_id(self, field: str, value: str):

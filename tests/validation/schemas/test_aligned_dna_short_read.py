@@ -40,7 +40,7 @@ def test_aligned_dna_short_read_valid_sample(
     assert validator.errors == {}
 
 
-def test_aligned_dna_short_read_id_invalid_sample(  # update with new check_with
+def test_aligned_dna_short_read_id_invalid_sample(
     get_validator, aligned_dna_short_read_sample
 ):
     """Test that a sample with an invalid aligned_dna_short_read_id fails validation"""

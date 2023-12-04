@@ -295,7 +295,8 @@ class SampleValidator(Validator):
         """
         if self.document.contains("aligned_dna_short_read_id"):
             aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
-        value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
+        if value == "":
+            value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
         return value
 
     def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
@@ -305,7 +306,8 @@ class SampleValidator(Validator):
         """
         if self.document.contains("aligned_dna_short_read_id"):
             aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
-        value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
+        if value == "":
+            value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
         return value
 
     def _normalize_coerce_aligned_nanopore_file(self, value: str):
@@ -314,7 +316,8 @@ class SampleValidator(Validator):
         """
         if self.document.contains("aligned_nanopore_id"):
             aligned_nanopore_id = self.document["aligned_nanopore_id"]
-        value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
+        if value == "":
+            value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
         return value
 
     def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
@@ -323,5 +326,6 @@ class SampleValidator(Validator):
         """
         if self.document.contains("aligned_nanopore_id"):
             aligned_nanopore_id = self.document["aligned_nanopore_id"]
-        value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
+        if value == "":
+            value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
         return value

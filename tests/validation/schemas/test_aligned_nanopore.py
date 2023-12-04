@@ -10,8 +10,8 @@ def fixture_aligned_nanopore_sample():
     return {
         "aligned_nanopore_id": "BCM_ONTWGS_TEST_test-batch_id",
         "experiment_nanopore_id": "BCM_ONTWGS_TEST",
-        "aligned_nanopore_file": "test-aligned_nanopore-gregor",
-        "aligned_nanopore_index_file": "test-aligned_nanopore-gregor",
+        "aligned_nanopore_file": "",
+        "aligned_nanopore_index_file": "",
         "md5sum": "test-aligned_nanopore-gregor",
         "reference_assembly": "chm13",
         "alignment_software": "test-aligned_nanopore-gregor",
@@ -148,22 +148,60 @@ def test_mapped_reads_pct_invalid_sample(get_validator, aligned_nanopore_sample)
     assert validator.errors == {"Value must be NA or an int"}
 
 
-def test_aligned_nanopore_file_normalization(get_validator, aligned_nanopore_sample):
-    """Test that a sample's aligned_nanopore_file properly normalizes with coerce: aligned_nanopore_file"""
+def test_aligned_nanopore_file_empty_normalization(
+    get_validator, aligned_nanopore_sample
+):
+    """Test that a sample's aligned_nanopore_file properly normalizes to a path with coerce: aligned_nanopore_file"""
     validator = get_validator
-    aligned_nanopore_sample["aligned_nanopore_file"] = "TEST-TEST"
+    aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
+    aligned_nanopore_sample["aligned_nanopore_file"] = ""
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {}
+    assert (
+        validator.errors == {}
+        and aligned_nanopore_sample["aligned_nanopore_file"]
+        == f"gs://test-gcp-bucket/{aligned_nanopore_id}.bam"
+    )
 
 
-def test_aligned_nanopore_index_file_normalization(
+def test_aligned_nanopore_file_not_empty_normalization(
+    get_validator, aligned_nanopore_sample
+):
+    """Test that a sample's aligned_nanopore_file properly normalizes to the given value with coerce: aligned_nanopore_file"""
+    validator = get_validator
+    aligned_nanopore_sample["aligned_nanopore_file"] = "TEST_TEST"
+    validator.validate(aligned_nanopore_sample)
+    assert (
+        validator.errors == {}
+        and aligned_nanopore_sample["aligned_nanopore_file"] == "TEST-TEST"
+    )
+
+
+def test_aligned_nanopore_index_file_empty_normalization(
+    get_validator, aligned_nanopore_sample
+):
+    """Test that a sample's aligned_nanopore_index_file properly normalizes with coerce: aligned_nanopore_file_index"""
+    validator = get_validator
+    aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
+    aligned_nanopore_sample["aligned_nanopore_index_file"] = ""
+    validator.validate(aligned_nanopore_sample)
+    assert (
+        validator.errors == {}
+        and aligned_nanopore_sample["aligned_nanopore_index_file"]
+        == f"gs://test-gcp-bucket/{aligned_nanopore_id}.bam.bai"
+    )
+
+
+def test_aligned_nanopore_index_file_not_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
     """Test that a sample's aligned_nanopore_index_file properly normalizes with coerce: aligned_nanopore_file_index"""
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_index_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {}
+    assert (
+        validator.errors == {}
+        and aligned_nanopore_sample["aligned_nanopore_index_file"] == "TEST-TEST"
+    )
 
 
 def test_sex_concordance_normalization(get_validator, aligned_nanopore_sample):

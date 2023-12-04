@@ -10,8 +10,8 @@ def fixture_aligned_dna_short_read_sample():
     return {
         "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_id",
         "experiment_dna_short_read_id": "BCM_BHTEST",
-        "aligned_dna_short_read_file": "test-aligned_dna_short_read-gregor",
-        "aligned_dna_short_read_index_file": "test-aligned_dna_short_read-gregor",
+        "aligned_dna_short_read_file": "",
+        "aligned_dna_short_read_index_file": "",
         "md5sum": "test-aligned_dna_short_read-gregor",
         "reference_assembly": "GRCh38",
         "reference_assembly_uri": "NA",
@@ -69,14 +69,51 @@ def test_experiment_dna_short_read_id_invalid_sample(
     }
 
 
-def test_aligned_dna_short_read_file_normalization(
+def test_aligned_dna_short_read_file_empty_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample's aligned_dna_short_read_file properly normalizes with coerce: aligned_dna_short_read_file"""
+    """Test that a sample's aligned_dna_short_read_file properly normalizes to a path with coerce: aligned_dna_short_read_file"""
+    validator = get_validator
+    aligned_dna_short_read_id = aligned_dna_short_read_sample[
+        "aligned_dna_short_read_id"
+    ]
+    aligned_dna_short_read_sample["aligned_dna_short_read_file"] = ""
+    validator.validate(aligned_dna_short_read_sample)
+    assert (
+        validator.errors == {}
+        and aligned_dna_short_read_sample["aligned_dna_short_read_file"]
+        == f"gs://test-gcp-bucket/{aligned_dna_short_read_id}.hgv.cram"
+    )
+
+
+def test_aligned_dna_short_read_file_not_empty_normalization(
+    get_validator, aligned_dna_short_read_sample
+):
+    """Test that a sample's aligned_dna_short_read_file properly normalizes to the given value with coerce: aligned_dna_short_read_file"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_file"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
-    assert validator.errors == {}
+    assert (
+        validator.errors == {}
+        and aligned_dna_short_read_sample["aligned_dna_short_read_file"] == "TEST-TEST"
+    )
+
+
+def test_aligned_dna_short_read_index_file_empty_normalization(
+    get_validator, aligned_dna_short_read_sample
+):
+    """Test that a sample's aligned_dna_short_read_index_file properly normalizes with coerce: aligned_dna_short_read_index_file"""
+    validator = get_validator
+    aligned_dna_short_read_id = aligned_dna_short_read_sample[
+        "aligned_dna_short_read_id"
+    ]
+    aligned_dna_short_read_sample["aligned_dna_short_read_index_file"] = ""
+    validator.validate(aligned_dna_short_read_sample)
+    assert (
+        validator.errors == {}
+        and aligned_dna_short_read_sample["aligned_dna_short_read_file"]
+        == f"gs://test-gcp-bucket/{aligned_dna_short_read_id}.hgv.cram.crai"
+    )
 
 
 def test_aligned_dna_short_read_index_file_normalization(

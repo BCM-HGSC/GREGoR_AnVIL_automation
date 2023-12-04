@@ -42,58 +42,56 @@ def test_analyte_valid_sample(get_validator, analyte_sample):
     assert validator.errors == {}
 
 
-def test_analyte_id_invalid_sample(get_validator, aligned_nanopore_sample):
+def test_analyte_id_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid analyte_id fails validation"""
     validator = get_validator
-    aligned_nanopore_sample["analyte_id"] = "TEST-TEST"
-    participant_id = aligned_nanopore_sample["participant_id"]
-    validator.validate(aligned_nanopore_sample)
+    analyte_sample["analyte_id"] = "TEST-TEST"
+    participant_id = analyte_sample["participant_id"]
+    validator.validate(analyte_sample)
     assert validator.errors == {
         f"Value must match the format of {participant_id}_test-batch_id",
         f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
     }
 
 
-def test_participant_id_invalid_sample(get_validator, aligned_nanopore_sample):
+def test_participant_id_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid participant_id fails validation"""
     validator = get_validator
-    aligned_nanopore_sample["participant_id"] = "TEST-TEST"
-    validator.validate(aligned_nanopore_sample)
+    analyte_sample["participant_id"] = "TEST-TEST"
+    validator.validate(analyte_sample)
     assert validator.errors == {
         "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
     }
 
 
-def test_age_at_collection_invalid_sample(get_validator, aligned_nanopore_sample):
+def test_age_at_collection_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid age_at_collection fails validation"""
     validator = get_validator
-    aligned_nanopore_sample["age_at_collection"] = "TEST-TEST"
-    validator.validate(aligned_nanopore_sample)
+    analyte_sample["age_at_collection"] = "TEST-TEST"
+    validator.validate(analyte_sample)
     assert validator.errors == {"Value must be NA or an int"}
 
 
-def test_passage_number_invalid_sample(get_validator, aligned_nanopore_sample):
+def test_passage_number_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid passage_number fails validation"""
     validator = get_validator
-    aligned_nanopore_sample["passage_number"] = "TEST-TEST"
-    validator.validate(aligned_nanopore_sample)
+    analyte_sample["passage_number"] = "TEST-TEST"
+    validator.validate(analyte_sample)
     assert validator.errors == {"Value must be NA or an int"}
 
 
-def test_time_to_freeze_invalid_sample(get_validator, aligned_nanopore_sample):
+def test_time_to_freeze_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid time_to_freeze fails validation"""
     validator = get_validator
-    aligned_nanopore_sample["time_to_freeze"] = "TEST-TEST"
-    validator.validate(aligned_nanopore_sample)
+    analyte_sample["time_to_freeze"] = "TEST-TEST"
+    validator.validate(analyte_sample)
     assert validator.errors == {"Value must be NA or an int"}
 
 
-def test_sex_tissue_affected_status_normalization(
-    get_validator, aligned_nanopore_sample
-):
+def test_sex_tissue_affected_status_normalization(get_validator, analyte_sample):
     """Test that a sample's tissue_affected_status properly normalizes with coerce: intialcase"""
     validator = get_validator
-    aligned_nanopore_sample["tissue_affected_status"] = "yes"
-    validator.normalized(aligned_nanopore_sample)
-    validator.validate(aligned_nanopore_sample)
+    analyte_sample["tissue_affected_status"] = "yes"
+    validator.normalized(analyte_sample)
+    validator.validate(analyte_sample)
     assert validator.errors == {}

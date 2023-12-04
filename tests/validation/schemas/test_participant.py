@@ -136,55 +136,55 @@ def test_age_at_enrollment_invalid_sample(get_validator, participant_sample):
     assert validator.errors == {"Value must be NA or an int"}
 
 
-def test_gregor_center_normalization(get_validator, experiment_nanopore_sample):
+def test_gregor_center_normalization(get_validator, participant_sample):
     """Test that a sample's gregor_center properly normalizes with coerce: uppercase"""
     validator = get_validator
-    experiment_nanopore_sample["gregor_center"] = "bcm"
-    validator.normalized(experiment_nanopore_sample)
-    validator.validate(experiment_nanopore_sample)
+    participant_sample["gregor_center"] = "bcm"
+    validator.normalized(participant_sample)
+    validator.validate(participant_sample)
     assert validator.errors == {}
 
 
-def test_recontactable_normalization(get_validator, experiment_nanopore_sample):
+def test_recontactable_normalization(get_validator, participant_sample):
     """Test that a sample's recontactable properly normalizes with coerce: initialcase"""
     validator = get_validator
-    experiment_nanopore_sample["recontactable"] = "yes"
-    validator.normalized(experiment_nanopore_sample)
-    validator.validate(experiment_nanopore_sample)
+    participant_sample["recontactable"] = "yes"
+    validator.normalized(participant_sample)
+    validator.validate(participant_sample)
     assert validator.errors == {}
 
 
-def test_proband_relationship_normalization(get_validator, experiment_nanopore_sample):
+def test_proband_relationship_normalization(get_validator, participant_sample):
     """Test that a sample's proband_relationship properly normalizes with coerce: initialcase"""
     validator = get_validator
-    experiment_nanopore_sample["proband_relationship"] = "maternal half sibling"
-    validator.normalized(experiment_nanopore_sample)
-    validator.validate(experiment_nanopore_sample)
+    participant_sample["proband_relationship"] = "maternal half sibling"
+    validator.normalized(participant_sample)
+    validator.validate(participant_sample)
     assert validator.errors == {}
 
 
-def test_sex_normalization(get_validator, experiment_nanopore_sample):
+def test_sex_normalization(get_validator, participant_sample):
     """Test that a sample's sex properly normalizes with coerce: initialcase"""
     validator = get_validator
-    experiment_nanopore_sample["sex"] = "female"
-    validator.normalized(experiment_nanopore_sample)
-    validator.validate(experiment_nanopore_sample)
+    participant_sample["sex"] = "female"
+    validator.normalized(participant_sample)
+    validator.validate(participant_sample)
     assert validator.errors == {}
 
 
-def test_solve_status_normalization(get_validator, experiment_nanopore_sample):
+def test_solve_status_normalization(get_validator, participant_sample):
     """Test that a sample's solve_status properly normalizes with coerce: initialcase"""
     validator = get_validator
-    experiment_nanopore_sample["solve_status"] = "yes"
-    validator.normalized(experiment_nanopore_sample)
-    validator.validate(experiment_nanopore_sample)
+    participant_sample["solve_status"] = "yes"
+    validator.normalized(participant_sample)
+    validator.validate(participant_sample)
     assert validator.errors == {}
 
 
-def test_missing_variant_case_normalization(get_validator, experiment_nanopore_sample):
+def test_missing_variant_case_normalization(get_validator, participant_sample):
     """Test that a sample's missing_variant_case properly normalizes with coerce: initialcase"""
     validator = get_validator
-    experiment_nanopore_sample["missing_variant_case"] = "yes"
-    validator.normalized(experiment_nanopore_sample)
-    validator.validate(experiment_nanopore_sample)
+    participant_sample["missing_variant_case"] = "yes"
+    validator.normalized(participant_sample)
+    validator.validate(participant_sample)
     assert validator.errors == {}

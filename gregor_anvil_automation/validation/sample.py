@@ -18,7 +18,8 @@ class SampleValidator(Validator):
         Valid if:
             - {experiment_nanopore_id}_{batch_id}
         """
-        experiment_nanopore_id = self.document["experiment_nanopore_id"]
+        if self.document.contains("experiment_nanopore_id"):
+            experiment_nanopore_id = self.document["experiment_nanopore_id"]
         aligned_nanopore_id = f"{experiment_nanopore_id}_{self.batch_id}"
         if value != aligned_nanopore_id:
             self._error(
@@ -70,7 +71,8 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - {participant_id}_{batch_id}"""
-        participant_id = self.document["participant_id"]
+        if self.document.contains("participant_id"):
+            participant_id = self.document["participant_id"]
         analyte_id = f"{participant_id}_{self.batch_id}"
         if not value != analyte_id:
             self._error(
@@ -84,7 +86,8 @@ class SampleValidator(Validator):
             - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
                 the batch id.
         """
-        aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
+        if self.document.contains("aligned_dna_short_read_id"):
+            aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         experiment_dna_short_read_id = aligned_dna_short_read_id.replace(
             f"_{self.batch_id}", ""
         )
@@ -100,7 +103,8 @@ class SampleValidator(Validator):
             - experiment_sample_id == experiment_dna_short_read_id
               (without the BCM part)
         """
-        experiment_dna_short_read_id = self.document["experiment_dna_short_read_id"]
+        if self.document.contains("experiment_dna_short_read_id"):
+            experiment_dna_short_read_id = self.document["experiment_dna_short_read_id"]
         experiment_sample_id = experiment_dna_short_read_id.replace("BCM_", "")
         if value != experiment_sample_id:
             self._error(
@@ -146,7 +150,8 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        participant_id = self.document["participant_id"]
+        if self.document.contains("participant_id"):
+            participant_id = self.document["participant_id"]
         maternal_id = "_".join(participant_id.split("_")[:-1]) + "_2"
         if not self.document["participant_id"].endswith("_1"):
             if value != "0":
@@ -169,7 +174,8 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        participant_id = self.document["participant_id"]
+        if self.document.contains("participant_id"):
+            participant_id = self.document["participant_id"]
         paternal_id = "_".join(participant_id.split("_")[:-1]) + "_3"
         if not self.document["participant_id"].endswith("_1"):
             if value != "0":
@@ -193,7 +199,8 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
-        participant_id = self.document["participant_id"]
+        if self.document.contains("participant_id"):
+            participant_id = self.document["participant_id"]
         subject_id = participant_id.split("_")[2]
         matching = f"BCM_Subject_{subject_id}_"
         ids = value.split(" ")
@@ -286,7 +293,8 @@ class SampleValidator(Validator):
         Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
         Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
         """
-        aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
+        if self.document.contains("aligned_dna_short_read_id"):
+            aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
         return value
 
@@ -295,7 +303,8 @@ class SampleValidator(Validator):
         Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
         Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
         """
-        aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
+        if self.document.contains("aligned_dna_short_read_id"):
+            aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
         return value
 
@@ -303,7 +312,8 @@ class SampleValidator(Validator):
         """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam
         Expected format: gs://{bucket_name}/{aligned_nanopore_id}.bam
         """
-        aligned_nanopore_id = self.document["aligned_nanopore_id"]
+        if self.document.contains("aligned_nanopore_id"):
+            aligned_nanopore_id = self.document["aligned_nanopore_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
         return value
 
@@ -311,6 +321,7 @@ class SampleValidator(Validator):
         """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai
         Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
         """
-        aligned_nanopore_id = self.document["aligned_nanopore_id"]
+        if self.document.contains("aligned_nanopore_id"):
+            aligned_nanopore_id = self.document["aligned_nanopore_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
         return value

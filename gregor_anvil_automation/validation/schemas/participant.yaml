@@ -2,7 +2,7 @@ participant_id:
   type: string
   required: True
   empty: False
-  check_with: must_start_with_bcm_subject
+  check_with: participant_id
 internal_project_id:
   type: string
   required: False

@@ -1,7 +1,7 @@
 aligned_dna_short_read_id:
   type: string
   required: True
-  check_with: must_start_with_bcm
+  check_with: aligned_dna_short_read_id
 experiment_dna_short_read_id:
   type: string
   required: True

@@ -9,16 +9,16 @@ from gregor_anvil_automation.validation.schema import get_schema
 def fixture_experiment_dna_short_read_sample():
     return {
         "experiment_dna_short_read_id": "BCM_TEST",
-        "analyte_id": "test-analyte-gregor",
+        "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
         "experiment_sample_id": "TEST",
-        "seq_library_prep_kit_method": "test-analyte-gregor",
+        "seq_library_prep_kit_method": "test-experiment_dna_short_read-gregor",
         "read_length": "0",
         "experiment_type": "targeted",
-        "targeted_regions_method": "test-analyte-gregor",
+        "targeted_regions_method": "test-experiment_dna_short_reade-gregor",
         "targeted_region_bed_file": "NA",
-        "date_data_generation": "2023-12-01",
+        "date_data_generation": "2023-12-25",
         "target_insert_size": "0",
-        "sequencing_platform": "test-analyte-gregor",
+        "sequencing_platform": "test-experiment_dna_short_read-gregor",
     }
 
 
@@ -47,6 +47,16 @@ def test_experiment_dna_short_read_id_invalid_sample(
     experiment_dna_short_read_sample["experiment_dna_short_read_id"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {"Value must start with BCM_"}
+
+
+def test_analyte_id_invalid_sample(get_validator, experiment_dna_short_read_sample):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_dna_short_read_sample["analyte_id"] = "TEST-TEST"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {
+        f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+    }
 
 
 def test_experiment_sample_id_invalid_sample(
@@ -83,7 +93,7 @@ def test_target_insert_size_invalid_sample(
 
 
 def test_experiment_type_normalization(get_validator, experiment_dna_short_read_sample):
-    """Test that a sample's experiment_type properly normalizes"""
+    """Test that a sample's experiment_type properly normalizes with coerce: lowercase"""
     validator = get_validator
     experiment_dna_short_read_sample["experiment_type"] = "TARGETED"
     validator.normalized(experiment_dna_short_read_sample)
@@ -94,7 +104,7 @@ def test_experiment_type_normalization(get_validator, experiment_dna_short_read_
 def test_targeted_region_bed_file_normalization(
     get_validator, experiment_dna_short_read_sample
 ):
-    """Test that a sample's targeted_region_bed_file properly normalizes"""
+    """Test that a sample's targeted_region_bed_file properly normalizes with coerce: into_gcp_path_if_not_na"""
     validator = get_validator
     experiment_dna_short_read_sample["targeted_region_bed_file"] = "TEST-TEST"
     validator.normalized(experiment_dna_short_read_sample)
@@ -105,9 +115,9 @@ def test_targeted_region_bed_file_normalization(
 def test_date_data_generation_normalization(
     get_validator, experiment_dna_short_read_sample
 ):
-    """Test that a sample's date_data_generation properly normalizes"""
+    """Test that a sample's date_data_generation properly normalizes with coerce: year_month_date"""
     validator = get_validator
-    experiment_dna_short_read_sample["date_data_generation"] = "12-01-2023"
+    experiment_dna_short_read_sample["date_data_generation"] = "12-25-2023"
     validator.normalized(experiment_dna_short_read_sample)
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}

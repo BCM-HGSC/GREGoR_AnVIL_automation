@@ -26,6 +26,17 @@ class SampleValidator(Validator):
                 f"Value must match the format of {experiment_nanopore_id}_{self.batch_id}",
             )
 
+    def _check_with_aligned_dna_short_read_id(self, field: str, value: str):
+        """Check that `aligned_dna_short_read_id` is valid.
+        Valid if:
+            - Starts with BCM_
+            - Ends in _{batch_id}
+        """
+        if not value.startswith("BCM_") or not value.endswith((f"_{self.batch_id}")):
+            self._error(
+                field, f"Value must start with BCM_ and end with _{self.batch_id}"
+            )
+
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
         """Check that `experiment_nanopore_id` is valid.
         Valid if:
@@ -38,6 +49,24 @@ class SampleValidator(Validator):
             )
 
     def _check_with_analyte_id(self, field: str, value: str):
+        """Checks that the analyte_id is valid:
+        Valid if:
+            - Starts with BCM_Subject_
+            - Ends in _1_{batch_id}, _2_{batch_id}, _3_{batch_id}, or _4_{batch_id}"""
+        if not value.startswith("BCM_Subject_") or not value.endswith(
+            (
+                f"_1_{self.batch_id}",
+                f"_2_{self.batch_id}",
+                f"_3_{self.batch_id}",
+                f"_4_{self.batch_id}",
+            )
+        ):
+            self._error(
+                field,
+                f"Value must start with BCM_Subject_ and end with _1_{self.batch_id}, _2_{self.batch_id}, _3_{self.batch_id}, or _4_{self.batch_id}",
+            )
+
+    def _check_with_analyte_id_matches_participant_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:
         Valid if:
             - {participant_id}_{batch_id}"""
@@ -66,7 +95,7 @@ class SampleValidator(Validator):
             )
 
     def _check_with_experiment_sample_id(self, field: str, value: str):
-        """Checks that the `experiment_sample_id`
+        """Checks that the `experiment_sample_id` is valid.
         Valid if:
             - experiment_sample_id == experiment_dna_short_read_id
               (without the BCM part)
@@ -95,6 +124,20 @@ class SampleValidator(Validator):
         if value != "NA" and not isinstance(value, int):
             self._error(field, "Value must be NA or an int")
 
+    def _check_with_participant_id(self, field: str, value: str):
+        """Checks that participant id is valid.
+        A valid participant id is:
+            - starts with BCM_Subject_
+            - ends with _1, _2, _3, or _4
+        """
+        if not value.startswith("BCM_Subject_") or not value.endswith(
+            ("_1", "_2", "_3", "_4")
+        ):
+            self._error(
+                field,
+                "Value must start with BCM_Subject and end with either _1, _2, _3, or _4",
+            )
+
     def _check_with_maternal_id_is_valid(self, field: str, value: str):
         """Checks that maternal id is valid.
         A valid maternal id is:
@@ -110,12 +153,12 @@ class SampleValidator(Validator):
             if value != "0":
                 self._error(
                     field,
-                    'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`',
+                    "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
                 )
         elif value != maternal_id:
             self._error(
                 field,
-                'Value must be "0" or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`',
+                "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
             )
 
     def _check_with_paternal_id_is_valid(self, field: str, value: str):
@@ -133,12 +176,12 @@ class SampleValidator(Validator):
             if value != "0":
                 self._error(
                     field,
-                    'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`',
+                    "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
                 )
         elif value != paternal_id:
             self._error(
                 field,
-                'Value must be "0" or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`',
+                "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
             )
 
     def _check_with_twin_id_is_valid(self, field: str, value: str):
@@ -206,6 +249,12 @@ class SampleValidator(Validator):
             value = capwords(value)
         return value
 
+    def _normalize_coerce_titlecase(self, value: str) -> str:
+        """Coerces value to titlecase"""
+        if value.strip():
+            value = value.title()
+        return value
+
     def _normalize_coerce_capitalize(self, value: str) -> str:
         """Coerces value to capitalize"""
         if value.strip():
@@ -221,7 +270,7 @@ class SampleValidator(Validator):
         return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
-        """Coerces value to YYY-MM-DD format"""
+        """Coerces value to YYYY-MM-DD format"""
         value = datetime.strptime(value, "%Y-%m-%d")
         return value
 

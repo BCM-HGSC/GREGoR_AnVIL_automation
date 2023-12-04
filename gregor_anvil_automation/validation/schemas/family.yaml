@@ -10,7 +10,7 @@ consanguinity:
     - Suspected
     - Present
     - Unknown
-  coerce: capitalize
+  coerce: titlecase
 consanguinity_detail:
   type: string
   required: False

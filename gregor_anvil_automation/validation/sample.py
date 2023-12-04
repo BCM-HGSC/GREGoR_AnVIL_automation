@@ -275,43 +275,43 @@ class SampleValidator(Validator):
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:
-        """Coerce value into a gcp path if not NA."""
-        # TODO: Please fill out.
-        # NOTE: If anything but NA given, format as `gs://{google_bucket}/{value}`
+        """Coerce value into a gcp path if not NA.
+        Expected format: "NA" or `gs://{google_bucket}/{value}`
+        """
         if value != "NA":
             value = f"gs://{self.gcp_bucket}/{value}"
         return value
 
     def _normalize_coerce_aligned_dna_short_read_file(self, value: str):
-        """Coerce `aligned_dna_short_read_file` to a GCP path."""
-        # TODO: Please fill out :)
-        # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
-        # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+        """Coerce `aligned_dna_short_read_file` to a GCP path.
+        Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
+        Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+        """
         aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
         return value
 
     def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
-        """Coerce `aligned_dna_short_read_index_file` to a GCP path."""
-        # TODO: Please fill out :)
-        # NOTE: Expected format. gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
-        # Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+        """Coerce `aligned_dna_short_read_index_file` to a GCP path.
+        Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
+        Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
+        """
         aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
         return value
 
     def _normalize_coerce_aligned_nanopore_file(self, value: str):
-        """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam"""
-        # TODO: Please fill out
-        # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam
+        """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam
+        Expected format: gs://{bucket_name}/{aligned_nanopore_id}.bam
+        """
         aligned_nanopore_id = self.document["aligned_nanopore_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
         return value
 
     def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
-        """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai"""
-        # TODO: Please fill out
-        # NOTE: Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
+        """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai
+        Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
+        """
         aligned_nanopore_id = self.document["aligned_nanopore_id"]
         value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
         return value

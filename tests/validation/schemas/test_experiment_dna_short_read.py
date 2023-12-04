@@ -96,7 +96,6 @@ def test_experiment_type_normalization(get_validator, experiment_dna_short_read_
     """Test that a sample's experiment_type properly normalizes with coerce: lowercase"""
     validator = get_validator
     experiment_dna_short_read_sample["experiment_type"] = "TARGETED"
-    validator.normalized(experiment_dna_short_read_sample)
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
 
@@ -107,7 +106,6 @@ def test_targeted_region_bed_file_normalization(
     """Test that a sample's targeted_region_bed_file properly normalizes with coerce: into_gcp_path_if_not_na"""
     validator = get_validator
     experiment_dna_short_read_sample["targeted_region_bed_file"] = "TEST-TEST"
-    validator.normalized(experiment_dna_short_read_sample)
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
 
@@ -118,6 +116,5 @@ def test_date_data_generation_normalization(
     """Test that a sample's date_data_generation properly normalizes with coerce: year_month_date"""
     validator = get_validator
     experiment_dna_short_read_sample["date_data_generation"] = "12-25-2023"
-    validator.normalized(experiment_dna_short_read_sample)
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}

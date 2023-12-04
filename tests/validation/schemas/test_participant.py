@@ -140,7 +140,6 @@ def test_gregor_center_normalization(get_validator, participant_sample):
     """Test that a sample's gregor_center properly normalizes with coerce: uppercase"""
     validator = get_validator
     participant_sample["gregor_center"] = "bcm"
-    validator.normalized(participant_sample)
     validator.validate(participant_sample)
     assert validator.errors == {}
 
@@ -149,7 +148,6 @@ def test_recontactable_normalization(get_validator, participant_sample):
     """Test that a sample's recontactable properly normalizes with coerce: initialcase"""
     validator = get_validator
     participant_sample["recontactable"] = "yes"
-    validator.normalized(participant_sample)
     validator.validate(participant_sample)
     assert validator.errors == {}
 
@@ -158,7 +156,6 @@ def test_proband_relationship_normalization(get_validator, participant_sample):
     """Test that a sample's proband_relationship properly normalizes with coerce: initialcase"""
     validator = get_validator
     participant_sample["proband_relationship"] = "maternal half sibling"
-    validator.normalized(participant_sample)
     validator.validate(participant_sample)
     assert validator.errors == {}
 
@@ -167,7 +164,6 @@ def test_sex_normalization(get_validator, participant_sample):
     """Test that a sample's sex properly normalizes with coerce: initialcase"""
     validator = get_validator
     participant_sample["sex"] = "female"
-    validator.normalized(participant_sample)
     validator.validate(participant_sample)
     assert validator.errors == {}
 
@@ -176,7 +172,6 @@ def test_solve_status_normalization(get_validator, participant_sample):
     """Test that a sample's solve_status properly normalizes with coerce: initialcase"""
     validator = get_validator
     participant_sample["solve_status"] = "yes"
-    validator.normalized(participant_sample)
     validator.validate(participant_sample)
     assert validator.errors == {}
 
@@ -185,6 +180,5 @@ def test_missing_variant_case_normalization(get_validator, participant_sample):
     """Test that a sample's missing_variant_case properly normalizes with coerce: initialcase"""
     validator = get_validator
     participant_sample["missing_variant_case"] = "yes"
-    validator.normalized(participant_sample)
     validator.validate(participant_sample)
     assert validator.errors == {}

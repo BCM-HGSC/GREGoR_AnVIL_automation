@@ -92,6 +92,5 @@ def test_sex_tissue_affected_status_normalization(get_validator, analyte_sample)
     """Test that a sample's tissue_affected_status properly normalizes with coerce: intialcase"""
     validator = get_validator
     analyte_sample["tissue_affected_status"] = "yes"
-    validator.normalized(analyte_sample)
     validator.validate(analyte_sample)
     assert validator.errors == {}

@@ -44,6 +44,5 @@ def test_family_consanguinity_titlecase(get_validator, family_sample):
     """Test that a sample's consanguinity properly normalizes with coerce: titlecase"""
     validator = get_validator
     family_sample["consanguinity"] = "none suspected"
-    validator.normalized(family_sample)
     validator.validate(family_sample)
     assert validator.errors == {}

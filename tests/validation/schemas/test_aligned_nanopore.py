@@ -152,7 +152,6 @@ def test_aligned_nanopore_file_normalization(get_validator, aligned_nanopore_sam
     """Test that a sample's aligned_nanopore_file properly normalizes with coerce: aligned_nanopore_file"""
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_file"] = "TEST-TEST"
-    validator.normalized(aligned_nanopore_sample)
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {}
 
@@ -163,7 +162,6 @@ def test_aligned_nanopore_index_file_normalization(
     """Test that a sample's aligned_nanopore_index_file properly normalizes with coerce: aligned_nanopore_file_index"""
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_index_file"] = "TEST-TEST"
-    validator.normalized(aligned_nanopore_sample)
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {}
 
@@ -172,7 +170,6 @@ def test_sex_concordance_normalization(get_validator, aligned_nanopore_sample):
     """Test that a sample's sex_concordance properly normalizes with coerce: uppercase"""
     validator = get_validator
     aligned_nanopore_sample["sex_concordance"] = "true"
-    validator.normalized(aligned_nanopore_sample)
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {}
 
@@ -181,6 +178,5 @@ def test_methylation_called_normalization(get_validator, aligned_nanopore_sample
     """Test that a sample's methylation_called properly normalizes with coerce: uppercase"""
     validator = get_validator
     aligned_nanopore_sample["methylation_called"] = "true"
-    validator.normalized(aligned_nanopore_sample)
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {}

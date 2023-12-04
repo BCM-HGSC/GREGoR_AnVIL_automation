@@ -10,8 +10,8 @@ def fixture_aligned_dna_short_read_sample():
     return {
         "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_id",
         "experiment_dna_short_read_id": "BCM_BHTEST",
-        "aligned_dna_short_read_file": "gs://test-gcp-bucket/BCM_BHTEST_test-batch_id.hgv.cram",
-        "aligned_dna_short_read_index_file": "gs://test-gcp-bucket/BCM_BHTEST_test-batch_id.hgv.cram.crai",
+        "aligned_dna_short_read_file": "test-aligned_dna_short_read-gregor",
+        "aligned_dna_short_read_index_file": "test-aligned_dna_short_read-gregor",
         "md5sum": "test-aligned_dna_short_read-gregor",
         "reference_assembly": "GRCh38",
         "reference_assembly_uri": "NA",
@@ -75,7 +75,6 @@ def test_aligned_dna_short_read_file_normalization(
     """Test that a sample's aligned_dna_short_read_file properly normalizes with coerce: aligned_dna_short_read_file"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_file"] = "TEST-TEST"
-    validator.normalized(aligned_dna_short_read_sample)
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}
 
@@ -86,7 +85,6 @@ def test_aligned_dna_short_read_index_file_normalization(
     """Test that a sample's aligned_dna_short_read_index_file properly normalizes with coerce: aligned_dna_short_read_index_file"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_index_file"] = "TEST-TEST"
-    validator.normalized(aligned_dna_short_read_sample)
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}
 
@@ -97,6 +95,5 @@ def test_reference_assembly_uri_normalization(
     """Test that a sample's reference_assembly_uri properly normalizes with coerce: into_gcp_path_if_not_na"""
     validator = get_validator
     aligned_dna_short_read_sample["reference_assembly_uri"] = "TEST-TEST"
-    validator.normalized(aligned_dna_short_read_sample)
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}

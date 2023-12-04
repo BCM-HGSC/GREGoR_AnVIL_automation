@@ -63,7 +63,6 @@ def test_experiment_type_normalization(get_validator, experiment_nanopore_sample
     """Test that a sample's experiment_type properly normalizes with coerce: lowercase"""
     validator = get_validator
     experiment_nanopore_sample["experiment_type"] = "TARGETED"
-    validator.normalized(experiment_nanopore_sample)
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {}
 
@@ -72,7 +71,6 @@ def test_date_data_generation_normalization(get_validator, experiment_nanopore_s
     """Test that a sample's date_data_generation properly normalizes with coerce: year_month_date"""
     validator = get_validator
     experiment_nanopore_sample["date_data_generation"] = "12-25-2023"
-    validator.normalized(experiment_nanopore_sample)
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {}
 
@@ -81,6 +79,5 @@ def test_was_barcoded_normalization(get_validator, experiment_nanopore_sample):
     """Test that a sample's was_barcoded properly normalizes with coerce: uppercase"""
     validator = get_validator
     experiment_nanopore_sample["was_barcoded"] = "true"
-    validator.normalized(experiment_nanopore_sample)
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {}

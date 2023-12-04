@@ -100,6 +100,7 @@ reported_race:
     - Other Pacific Islander
     - Middle Eastern or North African
     - White
+    - NA
 reported_ethnicity:
   type: string
   required: False

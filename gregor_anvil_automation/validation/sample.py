@@ -100,7 +100,6 @@ class SampleValidator(Validator):
             - experiment_sample_id == experiment_dna_short_read_id
               (without the BCM part)
         """
-        # TODO: Please fill out
         experiment_dna_short_read_id = self.document["experiment_dna_short_read_id"]
         experiment_sample_id = experiment_dna_short_read_id.replace("BCM_", "")
         if value != experiment_sample_id:

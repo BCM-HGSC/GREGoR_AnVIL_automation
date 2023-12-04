@@ -89,11 +89,28 @@ def test_aligned_dna_short_read_index_file_normalization(
     assert validator.errors == {}
 
 
-def test_reference_assembly_uri_normalization(
+def test_reference_assembly_uri_na_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample's reference_assembly_uri properly normalizes with coerce: into_gcp_path_if_not_na"""
+    """Test that a sample's reference_assembly_uri properly normalizes to 'NA' with coerce: into_gcp_path_if_not_na"""
+    validator = get_validator
+    aligned_dna_short_read_sample["reference_assembly_uri"] = "NA"
+    validator.validate(aligned_dna_short_read_sample)
+    assert (
+        validator.errors == {}
+        and aligned_dna_short_read_sample["reference_assembly_uri"] == "NA"
+    )
+
+
+def test_reference_assembly_uri_gcp_path_normalization(
+    get_validator, aligned_dna_short_read_sample
+):
+    """Test that a sample's reference_assembly_uri properly normalizes to a path with coerce: into_gcp_path_if_not_na"""
     validator = get_validator
     aligned_dna_short_read_sample["reference_assembly_uri"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
-    assert validator.errors == {}
+    assert (
+        validator.errors == {}
+        and aligned_dna_short_read_sample["reference_assembly_uri"]
+        == "gs://test-gcp-bucket/TEST-TEST"
+    )

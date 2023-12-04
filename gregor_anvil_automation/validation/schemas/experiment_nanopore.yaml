@@ -10,7 +10,7 @@ analyte_id:
 experiment_sample_id:
   type: string
   required: False
-  check_with: experiment_sample_id
+  empty: False
 seq_library_prep_kit_method:
   type: string
   required: True

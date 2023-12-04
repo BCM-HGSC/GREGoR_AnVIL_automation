@@ -20,7 +20,7 @@ class SampleValidator(Validator):
         """
         experiment_nanopore_id = self.document["experiment_nanopore_id"]
         aligned_nanopore_id = f"{experiment_nanopore_id}_{self.batch_id}"
-        if not value != aligned_nanopore_id:
+        if value != aligned_nanopore_id:
             self._error(
                 field,
                 f"Value must match the format of {experiment_nanopore_id}_{self.batch_id}",

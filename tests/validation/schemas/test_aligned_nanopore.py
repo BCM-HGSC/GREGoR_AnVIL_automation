@@ -10,8 +10,8 @@ def fixture_aligned_nanopore_sample():
     return {
         "aligned_nanopore_id": "BCM_ONTWGS_TEST_test-batch_id",
         "experiment_nanopore_id": "BCM_ONTWGS_TEST",
-        "aligned_nanopore_file": "gs://test-gcp-bucket/BCM_ONTWGS_TEST_test-batch_id.bam",
-        "aligned_nanopore_index_file": "gs://test-gcp-bucket/BCM_ONTWGS_TEST_test-batch_id.bam.bai",
+        "aligned_nanopore_file": "test-aligned_nanopore-gregor",
+        "aligned_nanopore_index_file": "test-aligned_nanopore-gregor",
         "md5sum": "test-aligned_nanopore-gregor",
         "reference_assembly": "chm13",
         "alignment_software": "test-aligned_nanopore-gregor",

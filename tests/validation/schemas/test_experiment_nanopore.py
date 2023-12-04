@@ -39,16 +39,14 @@ def test_experiment_nanopore_valid_sample(get_validator, experiment_nanopore_sam
     assert validator.errors == {}
 
 
-def test_experiment_nanopore_id_invalid_sample(  # in progress
+def test_experiment_nanopore_id_invalid_sample(
     get_validator, experiment_nanopore_sample
 ):
     """Test that a sample with an invalid experiment_nanopore_id fails validation"""
     validator = get_validator
     experiment_nanopore_sample["experiment_nanopore_id"] = "TEST-TEST"
     validator.validate(experiment_nanopore_sample)
-    assert validator.errors == {
-        "Value must start with BCM_"
-    }  # wrong and current check_with needs to be changed
+    assert validator.errors == {"Value must start with BCM_"}
 
 
 def test_analyte_id_invalid_sample(get_validator, experiment_nanopore_sample):

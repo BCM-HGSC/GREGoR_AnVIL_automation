@@ -10,10 +10,10 @@ def fixture_family_sample():
     return {
         "family_id": "BCM_Fam_BHTEST",
         "consanguinity": "None suspected",
-        "consanguinity_detail": "test-family_id-gregor",
-        "family_history_detail": "test-family_id-gregor",
-        "pedigree_file": "test-family_id-gregor",
-        "pedigree_file_detail": "test-family_id-gregor",
+        "consanguinity_detail": "test-family-gregor",
+        "family_history_detail": "test-family-gregor",
+        "pedigree_file": "test-family-gregor",
+        "pedigree_file_detail": "test-family-gregor",
     }
 
 

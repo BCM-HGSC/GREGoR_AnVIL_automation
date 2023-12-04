@@ -57,8 +57,8 @@ tissue_affected_status:
   type: string
   required: False
   allowed:
-    - Yes
-    - No
+    - "Yes"
+    - "No"
   coerce: initialcase
 age_at_collection:
   type: string

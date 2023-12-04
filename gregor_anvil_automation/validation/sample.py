@@ -18,7 +18,7 @@ class SampleValidator(Validator):
         Valid if:
             - {experiment_nanopore_id}_{batch_id}
         """
-        if self.document.contains("experiment_nanopore_id"):
+        if self.document["experiment_nanopore_id"]:
             experiment_nanopore_id = self.document["experiment_nanopore_id"]
         aligned_nanopore_id = f"{experiment_nanopore_id}_{self.batch_id}"
         if value != aligned_nanopore_id:
@@ -71,7 +71,7 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - {participant_id}_{batch_id}"""
-        if self.document.contains("participant_id"):
+        if self.document["participant_id"]:
             participant_id = self.document["participant_id"]
         analyte_id = f"{participant_id}_{self.batch_id}"
         if not value != analyte_id:
@@ -86,7 +86,7 @@ class SampleValidator(Validator):
             - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
                 the batch id.
         """
-        if self.document.contains("aligned_dna_short_read_id"):
+        if self.document["aligned_dna_short_read_id"]:
             aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         experiment_dna_short_read_id = aligned_dna_short_read_id.replace(
             f"_{self.batch_id}", ""
@@ -103,7 +103,7 @@ class SampleValidator(Validator):
             - experiment_sample_id == experiment_dna_short_read_id
               (without the BCM part)
         """
-        if self.document.contains("experiment_dna_short_read_id"):
+        if self.document["experiment_dna_short_read_id"]:
             experiment_dna_short_read_id = self.document["experiment_dna_short_read_id"]
         experiment_sample_id = experiment_dna_short_read_id.replace("BCM_", "")
         if value != experiment_sample_id:
@@ -124,7 +124,7 @@ class SampleValidator(Validator):
 
     def _check_with_is_number_or_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
-        if value != "NA" and not isinstance(value, int):
+        if value != "NA" and not isinstance(int(value), int):
             self._error(field, "Value must be NA or an int")
 
     def _check_with_participant_id(self, field: str, value: str):
@@ -150,20 +150,18 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        if self.document.contains("participant_id"):
+        if self.document["participant_id"]:
             participant_id = self.document["participant_id"]
         maternal_id = "_".join(participant_id.split("_")[:-1]) + "_2"
-        if not self.document["participant_id"].endswith("_1"):
-            if value != "0":
+        if value != "0":
+            if (
+                not self.document["participant_id"].endswith("_1")
+                or value != maternal_id
+            ):
                 self._error(
                     field,
                     "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
                 )
-        elif value != maternal_id:
-            self._error(
-                field,
-                "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
-            )
 
     def _check_with_paternal_id_is_valid(self, field: str, value: str):
         """Checks that paternal id is valid.
@@ -174,20 +172,18 @@ class SampleValidator(Validator):
         Special Condition:
             - "0" must be accepted as valid input
         """
-        if self.document.contains("participant_id"):
+        if self.document["participant_id"]:
             participant_id = self.document["participant_id"]
         paternal_id = "_".join(participant_id.split("_")[:-1]) + "_3"
-        if not self.document["participant_id"].endswith("_1"):
-            if value != "0":
+        if value != "0":
+            if (
+                not self.document["participant_id"].endswith("_1")
+                or value != paternal_id
+            ):
                 self._error(
                     field,
                     "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
                 )
-        elif value != paternal_id:
-            self._error(
-                field,
-                "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
-            )
 
     def _check_with_twin_id_is_valid(self, field: str, value: str):
         """Checks that twin id is valid.
@@ -199,10 +195,11 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
-        if self.document.contains("participant_id"):
+        if self.document["participant_id"]:
             participant_id = self.document["participant_id"]
         subject_id = participant_id.split("_")[2]
         matching = f"BCM_Subject_{subject_id}_"
+        participant_id_exist = False
         ids = value.split(" ")
         if value != "NA":
             if len(ids) != 2:
@@ -293,7 +290,7 @@ class SampleValidator(Validator):
         Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
         Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
         """
-        if self.document.contains("aligned_dna_short_read_id"):
+        if self.document["aligned_dna_short_read_id"]:
             aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         if value == "":
             value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
@@ -304,7 +301,7 @@ class SampleValidator(Validator):
         Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
         Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
         """
-        if self.document.contains("aligned_dna_short_read_id"):
+        if self.document["aligned_dna_short_read_id"]:
             aligned_dna_short_read_id = self.document["aligned_dna_short_read_id"]
         if value == "":
             value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
@@ -314,7 +311,7 @@ class SampleValidator(Validator):
         """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam
         Expected format: gs://{bucket_name}/{aligned_nanopore_id}.bam
         """
-        if self.document.contains("aligned_nanopore_id"):
+        if self.document["aligned_nanopore_id"]:
             aligned_nanopore_id = self.document["aligned_nanopore_id"]
         if value == "":
             value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
@@ -324,7 +321,7 @@ class SampleValidator(Validator):
         """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai
         Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
         """
-        if self.document.contains("aligned_nanopore_id"):
+        if self.document["aligned_nanopore_id"]:
             aligned_nanopore_id = self.document["aligned_nanopore_id"]
         if value == "":
             value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"

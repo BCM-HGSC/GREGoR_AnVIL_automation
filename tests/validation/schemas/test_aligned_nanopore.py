@@ -54,7 +54,9 @@ def test_aligned_nanopore_id_invalid_sample(get_validator, aligned_nanopore_samp
     experiment_nanopore_id = aligned_nanopore_sample["experiment_nanopore_id"]
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
-        f"Value must match the format of {experiment_nanopore_id}_test-batch_id"
+        "aligned_nanopore_id": [
+            f"Value must match the format of {experiment_nanopore_id}_test-batch_id"
+        ]
     }
 
 
@@ -63,7 +65,12 @@ def test_experiment_nanopore_id_invalid_sample(get_validator, aligned_nanopore_s
     validator = get_validator
     aligned_nanopore_sample["experiment_nanopore_id"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must start with BCM_ONTWGS_"}
+    assert validator.errors == {
+        "aligned_nanopore_id": [
+            "Value must match the format of TEST-TEST_test-batch_id"
+        ],
+        "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"],
+    }
 
 
 def test_mean_coverage_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -71,7 +78,7 @@ def test_mean_coverage_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["mean_coverage"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"mean_coverage": ["Value must be NA or an int"]}
 
 
 def test_genome_coverage_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -79,7 +86,7 @@ def test_genome_coverage_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["genome_coverage"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"genome_coverage": ["Value must be NA or an int"]}
 
 
 def test_contamination_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -87,7 +94,7 @@ def test_contamination_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["contamination"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"contamination": ["Value must be NA or an int"]}
 
 
 def test_num_reads_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -95,7 +102,7 @@ def test_num_reads_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["num_reads"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"num_reads": ["Value must be NA or an int"]}
 
 
 def test_read_length_mean_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -103,7 +110,7 @@ def test_read_length_mean_invalid_sample(get_validator, aligned_nanopore_sample)
     validator = get_validator
     aligned_nanopore_sample["read_length_mean"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"read_length_mean": ["Value must be NA or an int"]}
 
 
 def test_num_aligned_reads_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -111,7 +118,7 @@ def test_num_aligned_reads_invalid_sample(get_validator, aligned_nanopore_sample
     validator = get_validator
     aligned_nanopore_sample["num_aligned_reads"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"num_aligned_reads": ["Value must be NA or an int"]}
 
 
 def test_num_aligned_bases_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -119,7 +126,7 @@ def test_num_aligned_bases_invalid_sample(get_validator, aligned_nanopore_sample
     validator = get_validator
     aligned_nanopore_sample["num_aligned_bases"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"num_aligned_bases": ["Value must be NA or an int"]}
 
 
 def test_aligned_read_length_mean_invalid_sample(
@@ -129,7 +136,9 @@ def test_aligned_read_length_mean_invalid_sample(
     validator = get_validator
     aligned_nanopore_sample["aligned_read_length_mean"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {
+        "aligned_read_length_mean": ["Value must be NA or an int"]
+    }
 
 
 def test_read_error_rate_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -137,7 +146,7 @@ def test_read_error_rate_invalid_sample(get_validator, aligned_nanopore_sample):
     validator = get_validator
     aligned_nanopore_sample["read_error_rate"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"read_error_rate": ["Value must be NA or an int"]}
 
 
 def test_mapped_reads_pct_invalid_sample(get_validator, aligned_nanopore_sample):
@@ -145,7 +154,7 @@ def test_mapped_reads_pct_invalid_sample(get_validator, aligned_nanopore_sample)
     validator = get_validator
     aligned_nanopore_sample["mapped_reads_pct"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"mapped_reads_pct": ["Value must be NA or an int"]}
 
 
 def test_aligned_nanopore_file_empty_normalization(
@@ -168,7 +177,7 @@ def test_aligned_nanopore_file_not_empty_normalization(
 ):
     """Test that a sample's aligned_nanopore_file properly normalizes to the given value with coerce: aligned_nanopore_file"""
     validator = get_validator
-    aligned_nanopore_sample["aligned_nanopore_file"] = "TEST_TEST"
+    aligned_nanopore_sample["aligned_nanopore_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
     assert (
         validator.errors == {}

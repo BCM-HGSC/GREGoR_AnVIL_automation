@@ -46,7 +46,10 @@ def test_experiment_dna_short_read_id_invalid_sample(
     validator = get_validator
     experiment_dna_short_read_sample["experiment_dna_short_read_id"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
-    assert validator.errors == {"Value must start with BCM_"}
+    assert validator.errors == {
+        "experiment_dna_short_read_id": ["Value must start with BCM_"],
+        "experiment_sample_id": ["Value must match the format of TEST-TEST minus BCM_"],
+    }
 
 
 def test_analyte_id_invalid_sample(get_validator, experiment_dna_short_read_sample):
@@ -55,7 +58,9 @@ def test_analyte_id_invalid_sample(get_validator, experiment_dna_short_read_samp
     experiment_dna_short_read_sample["analyte_id"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {
-        f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+        ]
     }
 
 
@@ -70,7 +75,9 @@ def test_experiment_sample_id_invalid_sample(
     ]
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {
-        f"Value must match the format of {experiment_dna_short_read_id} minus BCM_"
+        "experiment_sample_id": [
+            f"Value must match the format of {experiment_dna_short_read_id} minus BCM_"
+        ]
     }
 
 
@@ -79,7 +86,7 @@ def test_read_length_invalid_sample(get_validator, experiment_dna_short_read_sam
     validator = get_validator
     experiment_dna_short_read_sample["read_length"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
-    assert validator.errors == {"Value requires an int"}
+    assert validator.errors == {"read_length": ["Value requires an int"]}
 
 
 def test_target_insert_size_invalid_sample(
@@ -89,7 +96,7 @@ def test_target_insert_size_invalid_sample(
     validator = get_validator
     experiment_dna_short_read_sample["target_insert_size"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
-    assert validator.errors == {"Value requires an int"}
+    assert validator.errors == {"target_insert_size": ["Value requires an int"]}
 
 
 def test_experiment_type_normalization(get_validator, experiment_dna_short_read_sample):

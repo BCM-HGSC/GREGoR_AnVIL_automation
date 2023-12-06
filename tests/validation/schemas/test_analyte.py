@@ -8,8 +8,8 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="analyte_sample", scope="function")
 def fixture_analyte_sample():
     return {
-        "analyte_id": "BCM_SUBJECT_TEST_1_test-batch_id",
-        "participant_id": "BCM_SUBJECT_TEST_1",
+        "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
+        "participant_id": "BCM_Subject_TEST_1",
         "analyte_type": "DNA",
         "analyte_processing_details": "test-analyte-gregor",
         "primary_biosample": "UBERON:0000479",
@@ -49,8 +49,10 @@ def test_analyte_id_invalid_sample(get_validator, analyte_sample):
     participant_id = analyte_sample["participant_id"]
     validator.validate(analyte_sample)
     assert validator.errors == {
-        f"Value must match the format of {participant_id}_test-batch_id",
-        f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
+        "analyte_id": [
+            f"Value must match the format of {participant_id}_test-batch_id",
+            f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
+        ],
     }
 
 
@@ -60,7 +62,8 @@ def test_participant_id_invalid_sample(get_validator, analyte_sample):
     analyte_sample["participant_id"] = "TEST-TEST"
     validator.validate(analyte_sample)
     assert validator.errors == {
-        "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
+        "analyte_id": ["Value must match the format of TEST-TEST_test-batch_id"],
+        "participant_id": ["Value must start with BCM_Subject"],
     }
 
 
@@ -69,7 +72,7 @@ def test_age_at_collection_invalid_sample(get_validator, analyte_sample):
     validator = get_validator
     analyte_sample["age_at_collection"] = "TEST-TEST"
     validator.validate(analyte_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"age_at_collection": ["Value must be NA or an int"]}
 
 
 def test_passage_number_invalid_sample(get_validator, analyte_sample):
@@ -77,7 +80,7 @@ def test_passage_number_invalid_sample(get_validator, analyte_sample):
     validator = get_validator
     analyte_sample["passage_number"] = "TEST-TEST"
     validator.validate(analyte_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"passage_number": ["Value must be NA or an int"]}
 
 
 def test_time_to_freeze_invalid_sample(get_validator, analyte_sample):
@@ -85,7 +88,7 @@ def test_time_to_freeze_invalid_sample(get_validator, analyte_sample):
     validator = get_validator
     analyte_sample["time_to_freeze"] = "TEST-TEST"
     validator.validate(analyte_sample)
-    assert validator.errors == {"Value must be NA or an int"}
+    assert validator.errors == {"time_to_freeze": ["Value must be NA or an int"]}
 
 
 def test_sex_tissue_affected_status_normalization(get_validator, analyte_sample):

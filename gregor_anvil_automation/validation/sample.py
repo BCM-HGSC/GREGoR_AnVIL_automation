@@ -43,7 +43,7 @@ class SampleValidator(Validator):
         Valid if:
             - BCM_ONTWGS_*
         """
-        if not value.starts_with("BCM_ONTWGS_"):
+        if not value.startswith("BCM_ONTWGS_"):
             self._error(
                 field,
                 "Value must start with BCM_ONTWGS_",
@@ -74,11 +74,8 @@ class SampleValidator(Validator):
         if self.document["participant_id"]:
             participant_id = self.document["participant_id"]
         analyte_id = f"{participant_id}_{self.batch_id}"
-        if not value != analyte_id:
-            self._error(
-                field,
-                f"Value must match the format of {participant_id}_{self.batch_id}",
-            )
+        if value != analyte_id:
+            self._error(field, f"Value must match the format of {analyte_id}")
 
     def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
         """Checks that the `experiment_dna_short_read_id` is valid.
@@ -119,12 +116,12 @@ class SampleValidator(Validator):
 
     def _check_with_is_number(self, field: str, value: str):
         """Checks that the field's value is a valid integer"""
-        if not isinstance(value, int):
+        if not value.isdigit():
             self._error(field, "Value requires an int")
 
     def _check_with_is_number_or_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
-        if value != "NA" and not isinstance(int(value), int):
+        if value != "NA" and not value.isdigit():
             self._error(field, "Value must be NA or an int")
 
     def _check_with_participant_id(self, field: str, value: str):
@@ -195,30 +192,37 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
-        if self.document["participant_id"]:
+        if (
+            self.document["participant_id"]
+            and len(self.document["participant_id"].split("_")) >= 3
+        ):
             participant_id = self.document["participant_id"]
-        subject_id = participant_id.split("_")[2]
-        matching = f"BCM_Subject_{subject_id}_"
-        participant_id_exist = False
-        ids = value.split(" ")
-        if value != "NA":
-            if len(ids) != 2:
-                self._error(field, "Value does not have exactly two ids")
-            if not (
-                (ids[0].endswith("_1") and ids[1].endswith("_4"))
-                or (ids[0].endswith("_4") and ids[1].endswith("_1"))
-            ):
-                self._error(
-                    field, "Ids do not end with _1 and _4 or _4 and _1 respectively."
-                )
-            for twin_id in ids[:2]:
-                if participant_id == twin_id:
-                    participant_id_exist = True
-                    continue
-                if matching not in twin_id:
-                    self._error(field, f"{value} does not contain {matching}")
-            if not participant_id_exist:
-                self._error(field, "Value does not contain `participant_id`")
+            subject_id = participant_id.split("_")[2]
+            matching = f"BCM_Subject_{subject_id}_"
+            participant_id_exist = False
+            ids = value.split(" ")
+            if value != "NA":
+                if len(ids) != 2:
+                    self._error(field, "Value does not have exactly two ids")
+                else:
+                    for twin_id in ids[:2]:
+                        if participant_id == twin_id:
+                            participant_id_exist = True
+                            continue
+                        if matching not in twin_id and twin_id == ids[1]:
+                            self._error(field, f"{value} does not contain {matching}")
+                    if not participant_id_exist:
+                        self._error(field, "Value does not contain `participant_id`")
+                if not (
+                    (ids[0].endswith("_1") and ids[1].endswith("_4"))
+                    or (ids[0].endswith("_4") and ids[1].endswith("_1"))
+                ):
+                    self._error(
+                        field,
+                        "Ids do not end with _1 and _4 or _4 and _1 respectively.",
+                    )
+        else:
+            self._error(field, "Value does not contain `participant_id`")
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):
         """Checks that field's value starts with `BCM_`"""
@@ -255,12 +259,6 @@ class SampleValidator(Validator):
     def _normalize_coerce_titlecase(self, value: str) -> str:
         """Coerces value to titlecase"""
         if value.strip():
-            value = value.title()
-        return value
-
-    def _normalize_coerce_capitalize(self, value: str) -> str:
-        """Coerces value to capitalize"""
-        if value.strip():
             value = value.capitalize()
         return value
 
@@ -273,8 +271,18 @@ class SampleValidator(Validator):
         return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
-        """Coerces value to YYYY-MM-DD format"""
-        value = datetime.strptime(value, "%Y-%m-%d")
+        """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY-MM-DD to YYYY-MM-DD format"""
+        try:
+            value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
+        except ValueError:
+            try:
+                value = datetime.strftime(
+                    datetime.strptime(value, "%m-%d-%Y"), "%Y-%m-%d"
+                )
+            except ValueError:
+                value = datetime.strftime(
+                    datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
+                )
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:

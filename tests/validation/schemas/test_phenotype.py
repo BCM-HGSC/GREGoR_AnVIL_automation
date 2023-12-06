@@ -40,7 +40,9 @@ def test_participant_id_invalid_sample(get_validator, phenotype_sample):
     phenotype_sample["participant_id"] = "TEST-TEST"
     validator.validate(phenotype_sample)
     assert validator.errors == {
-        "Value must start with BCM_Subject and end with either _1, _2, _3, or _4",
+        "participant_id": [
+            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
+        ]
     }
 
 
@@ -49,9 +51,7 @@ def test_term_id_invalid_sample(get_validator, phenotype_sample):
     validator = get_validator
     phenotype_sample["term_id"] = "TEST-TEST"
     validator.validate(phenotype_sample)
-    assert validator.errors == {
-        "Value must start with HP: or MONDO:",
-    }
+    assert validator.errors == {"term_id": ["Value must start with HP: or MONDO:"]}
 
 
 def test_presence_normalization(get_validator, phenotype_sample):

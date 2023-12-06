@@ -16,7 +16,7 @@ def fixture_experiment_nanopore_sample():
         "experiment_type": "targeted",
         "targeted_regions_method": "test-experiment_nanopore-gregor",
         "targeted_region_bed_file": "test-experiment_nanopore-gregor",
-        "date_data_generation": "test-experiment_nanopore-gregor",
+        "date_data_generation": "2023-12-25",
         "sequencing_platform": "Oxford Nanopore PromethION 48",
         "chemistry_type": "R9.4.1",
         "was_barcoded": "TRUE",
@@ -46,7 +46,9 @@ def test_experiment_nanopore_id_invalid_sample(
     validator = get_validator
     experiment_nanopore_sample["experiment_nanopore_id"] = "TEST-TEST"
     validator.validate(experiment_nanopore_sample)
-    assert validator.errors == {"Value must start with BCM_"}
+    assert validator.errors == {
+        "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"]
+    }
 
 
 def test_analyte_id_invalid_sample(get_validator, experiment_nanopore_sample):
@@ -55,7 +57,9 @@ def test_analyte_id_invalid_sample(get_validator, experiment_nanopore_sample):
     experiment_nanopore_sample["analyte_id"] = "TEST-TEST"
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {
-        f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+        ]
     }
 
 

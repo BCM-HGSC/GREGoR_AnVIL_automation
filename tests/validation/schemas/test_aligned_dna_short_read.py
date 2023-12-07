@@ -84,9 +84,9 @@ def test_aligned_dna_short_read_file_empty_normalization(
     ]
     aligned_dna_short_read_sample["aligned_dna_short_read_file"] = ""
     validator.validate(aligned_dna_short_read_sample)
+    assert validator.errors == {}
     assert (
-        validator.errors == {}
-        and aligned_dna_short_read_sample["aligned_dna_short_read_file"]
+        validator.document["aligned_dna_short_read_file"]
         == f"gs://test-gcp-bucket/{aligned_dna_short_read_id}.hgv.cram"
     )
 
@@ -98,10 +98,8 @@ def test_aligned_dna_short_read_file_not_empty_normalization(
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_file"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
-    assert (
-        validator.errors == {}
-        and aligned_dna_short_read_sample["aligned_dna_short_read_file"] == "TEST-TEST"
-    )
+    assert validator.errors == {}
+    assert validator.document["aligned_dna_short_read_file"] == "TEST-TEST"
 
 
 def test_aligned_dna_short_read_index_file_empty_normalization(
@@ -114,9 +112,9 @@ def test_aligned_dna_short_read_index_file_empty_normalization(
     ]
     aligned_dna_short_read_sample["aligned_dna_short_read_index_file"] = ""
     validator.validate(aligned_dna_short_read_sample)
+    assert validator.errors == {}
     assert (
-        validator.errors == {}
-        and aligned_dna_short_read_sample["aligned_dna_short_read_file"]
+        validator.document["aligned_dna_short_read_index_file"]
         == f"gs://test-gcp-bucket/{aligned_dna_short_read_id}.hgv.cram.crai"
     )
 
@@ -138,10 +136,8 @@ def test_reference_assembly_uri_na_normalization(
     validator = get_validator
     aligned_dna_short_read_sample["reference_assembly_uri"] = "NA"
     validator.validate(aligned_dna_short_read_sample)
-    assert (
-        validator.errors == {}
-        and aligned_dna_short_read_sample["reference_assembly_uri"] == "NA"
-    )
+    assert validator.errors == {}
+    assert validator.document["reference_assembly_uri"] == "NA"
 
 
 def test_reference_assembly_uri_gcp_path_normalization(
@@ -151,8 +147,7 @@ def test_reference_assembly_uri_gcp_path_normalization(
     validator = get_validator
     aligned_dna_short_read_sample["reference_assembly_uri"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
+    assert validator.errors == {}
     assert (
-        validator.errors == {}
-        and aligned_dna_short_read_sample["reference_assembly_uri"]
-        == "gs://test-gcp-bucket/TEST-TEST"
+        validator.document["reference_assembly_uri"] == "gs://test-gcp-bucket/TEST-TEST"
     )

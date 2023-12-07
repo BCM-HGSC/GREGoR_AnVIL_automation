@@ -165,9 +165,9 @@ def test_aligned_nanopore_file_empty_normalization(
     aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
     aligned_nanopore_sample["aligned_nanopore_file"] = ""
     validator.validate(aligned_nanopore_sample)
+    assert validator.errors == {}
     assert (
-        validator.errors == {}
-        and aligned_nanopore_sample["aligned_nanopore_file"]
+        validator.document["aligned_nanopore_file"]
         == f"gs://test-gcp-bucket/{aligned_nanopore_id}.bam"
     )
 
@@ -179,10 +179,8 @@ def test_aligned_nanopore_file_not_empty_normalization(
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert (
-        validator.errors == {}
-        and aligned_nanopore_sample["aligned_nanopore_file"] == "TEST-TEST"
-    )
+    assert validator.errors == {}
+    assert validator.document["aligned_nanopore_file"] == "TEST-TEST"
 
 
 def test_aligned_nanopore_index_file_empty_normalization(
@@ -193,9 +191,9 @@ def test_aligned_nanopore_index_file_empty_normalization(
     aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
     aligned_nanopore_sample["aligned_nanopore_index_file"] = ""
     validator.validate(aligned_nanopore_sample)
+    assert validator.errors == {}
     assert (
-        validator.errors == {}
-        and aligned_nanopore_sample["aligned_nanopore_index_file"]
+        validator.document["aligned_nanopore_index_file"]
         == f"gs://test-gcp-bucket/{aligned_nanopore_id}.bam.bai"
     )
 
@@ -207,10 +205,8 @@ def test_aligned_nanopore_index_file_not_empty_normalization(
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_index_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
-    assert (
-        validator.errors == {}
-        and aligned_nanopore_sample["aligned_nanopore_index_file"] == "TEST-TEST"
-    )
+    assert validator.errors == {}
+    assert validator.document["aligned_nanopore_index_file"] == "TEST-TEST"
 
 
 def test_sex_concordance_normalization(get_validator, aligned_nanopore_sample):

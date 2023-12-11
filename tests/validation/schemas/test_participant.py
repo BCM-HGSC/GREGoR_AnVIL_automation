@@ -135,12 +135,28 @@ def test_age_at_last_observation_invalid_sample(get_validator, participant_sampl
     }
 
 
+def test_age_at_last_observation_is_int_valid_sample(get_validator, participant_sample):
+    """Test that a sample with a age_at_last_observation with a string number passes validation"""
+    validator = get_validator
+    participant_sample["age_at_last_observation"] = "12345"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
+
+
 def test_age_at_enrollment_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid age_at_enrollment fails validation"""
     validator = get_validator
     participant_sample["age_at_enrollment"] = "TEST-TEST"
     validator.validate(participant_sample)
     assert validator.errors == {"age_at_enrollment": ["Value must be NA or an int"]}
+
+
+def test_age_at_enrollment_is_int_valid_sample(get_validator, participant_sample):
+    """Test that a sample with a age_at_enrollment with a string number passes validation"""
+    validator = get_validator
+    participant_sample["age_at_enrollment"] = "12345"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
 
 
 def test_gregor_center_normalization(get_validator, participant_sample):

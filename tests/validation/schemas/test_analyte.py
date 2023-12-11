@@ -75,6 +75,14 @@ def test_age_at_collection_invalid_sample(get_validator, analyte_sample):
     assert validator.errors == {"age_at_collection": ["Value must be NA or an int"]}
 
 
+def test_age_at_collection_is_int_valid_sample(get_validator, analyte_sample):
+    """Test that a sample with a age_at_collection with a string number passes validation"""
+    validator = get_validator
+    analyte_sample["age_at_collection"] = "12345"
+    validator.validate(analyte_sample)
+    assert validator.errors == {}
+
+
 def test_passage_number_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid passage_number fails validation"""
     validator = get_validator
@@ -83,12 +91,28 @@ def test_passage_number_invalid_sample(get_validator, analyte_sample):
     assert validator.errors == {"passage_number": ["Value must be NA or an int"]}
 
 
+def test_passage_number_is_int_valid_sample(get_validator, analyte_sample):
+    """Test that a sample with a passage_number with a string number passes validation"""
+    validator = get_validator
+    analyte_sample["passage_number"] = "12345"
+    validator.validate(analyte_sample)
+    assert validator.errors == {}
+
+
 def test_time_to_freeze_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid time_to_freeze fails validation"""
     validator = get_validator
     analyte_sample["time_to_freeze"] = "TEST-TEST"
     validator.validate(analyte_sample)
     assert validator.errors == {"time_to_freeze": ["Value must be NA or an int"]}
+
+
+def test_time_to_freeze_is_int_valid_sample(get_validator, analyte_sample):
+    """Test that a sample with a time_to_freeze with a string number passes validation"""
+    validator = get_validator
+    analyte_sample["time_to_freeze"] = "12345"
+    validator.validate(analyte_sample)
+    assert validator.errors == {}
 
 
 def test_sex_tissue_affected_status_normalization(get_validator, analyte_sample):

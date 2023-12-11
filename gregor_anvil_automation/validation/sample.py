@@ -256,18 +256,23 @@ class SampleValidator(Validator):
         return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
-        """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY-MM-DD to YYYY-MM-DD format"""
+        """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY/MM/DD to YYYY-MM-DD format"""
         try:
             value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
         except ValueError:
             try:
                 value = datetime.strftime(
-                    datetime.strptime(value, "%m-%d-%Y"), "%Y-%m-%d"
+                    datetime.strptime(value, "%Y/%m/%d"), "%Y-%m-%d"
                 )
             except ValueError:
-                value = datetime.strftime(
-                    datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
-                )
+                try:
+                    value = datetime.strftime(
+                        datetime.strptime(value, "%m-%d-%Y"), "%Y-%m-%d"
+                    )
+                except ValueError:
+                    value = datetime.strftime(
+                        datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
+                    )
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:

@@ -77,7 +77,7 @@ def test_experiment_dna_short_read_id_invalid_sample(
 def test_aligned_dna_short_read_file_empty_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample's aligned_dna_short_read_file properly normalizes to a path with coerce: aligned_dna_short_read_file"""
+    """Test that a sample's aligned_dna_short_read_file properly normalizes when empty to a path with coerce: aligned_dna_short_read_file"""
     validator = get_validator
     aligned_dna_short_read_id = aligned_dna_short_read_sample[
         "aligned_dna_short_read_id"
@@ -94,7 +94,7 @@ def test_aligned_dna_short_read_file_empty_normalization(
 def test_aligned_dna_short_read_file_not_empty_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample's aligned_dna_short_read_file properly normalizes to the given value with coerce: aligned_dna_short_read_file"""
+    """Test that a sample's aligned_dna_short_read_file properly normalizes when not empty to the given value with coerce: aligned_dna_short_read_file"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_file"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
@@ -105,7 +105,7 @@ def test_aligned_dna_short_read_file_not_empty_normalization(
 def test_aligned_dna_short_read_index_file_empty_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample's aligned_dna_short_read_index_file properly normalizes with coerce: aligned_dna_short_read_index_file"""
+    """Test that a sample's aligned_dna_short_read_index_file properly normalizes when empty to path with coerce: aligned_dna_short_read_index_file"""
     validator = get_validator
     aligned_dna_short_read_id = aligned_dna_short_read_sample[
         "aligned_dna_short_read_id"
@@ -119,14 +119,15 @@ def test_aligned_dna_short_read_index_file_empty_normalization(
     )
 
 
-def test_aligned_dna_short_read_index_file_normalization(
+def test_aligned_dna_short_read_index_file_not_empty_normalization(
     get_validator, aligned_dna_short_read_sample
 ):
-    """Test that a sample's aligned_dna_short_read_index_file properly normalizes with coerce: aligned_dna_short_read_index_file"""
+    """Test that a sample's aligned_dna_short_read_index_file properly normalizes when not empty to the given value with coerce: aligned_dna_short_read_index_file"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_index_file"] = "TEST-TEST"
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {}
+    assert validator.document["aligned_dna_short_read_index_file"] == "TEST-TEST"
 
 
 def test_reference_assembly_uri_na_normalization(

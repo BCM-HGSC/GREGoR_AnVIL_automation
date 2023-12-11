@@ -160,7 +160,7 @@ def test_mapped_reads_pct_invalid_sample(get_validator, aligned_nanopore_sample)
 def test_aligned_nanopore_file_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
-    """Test that a sample's aligned_nanopore_file properly normalizes to a path with coerce: aligned_nanopore_file"""
+    """Test that a sample's aligned_nanopore_file properly normalizes when empty to a path with coerce: aligned_nanopore_file"""
     validator = get_validator
     aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
     aligned_nanopore_sample["aligned_nanopore_file"] = ""
@@ -175,7 +175,7 @@ def test_aligned_nanopore_file_empty_normalization(
 def test_aligned_nanopore_file_not_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
-    """Test that a sample's aligned_nanopore_file properly normalizes to the given value with coerce: aligned_nanopore_file"""
+    """Test that a sample's aligned_nanopore_file properly normalizes when not empty to the given value with coerce: aligned_nanopore_file"""
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
@@ -186,7 +186,7 @@ def test_aligned_nanopore_file_not_empty_normalization(
 def test_aligned_nanopore_index_file_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
-    """Test that a sample's aligned_nanopore_index_file properly normalizes with coerce: aligned_nanopore_file_index"""
+    """Test that a sample's aligned_nanopore_index_file properly normalizes when empty to a path with coerce: aligned_nanopore_file_index"""
     validator = get_validator
     aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
     aligned_nanopore_sample["aligned_nanopore_index_file"] = ""
@@ -201,7 +201,7 @@ def test_aligned_nanopore_index_file_empty_normalization(
 def test_aligned_nanopore_index_file_not_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
-    """Test that a sample's aligned_nanopore_index_file properly normalizes with coerce: aligned_nanopore_file_index"""
+    """Test that a sample's aligned_nanopore_index_file properly normalizes when not empty to the given value with coerce: aligned_nanopore_file_index"""
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_index_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)

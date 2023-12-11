@@ -14,11 +14,10 @@ class SampleValidator(Validator):
         self.gcp_bucket = gcp_bucket
 
     def _check_with_aligned_nanopore_id(self, field: str, value: str):
-        """Check that `aligned_nanopore_id` is valid.
+        """Checks that `aligned_nanopore_id` is valid.
         Valid if:
             - {experiment_nanopore_id}_{batch_id}
         """
-
         experiment_nanopore_id = self.document.get("experiment_nanopore_id")
         if not experiment_nanopore_id:
             return
@@ -30,7 +29,7 @@ class SampleValidator(Validator):
             )
 
     def _check_with_aligned_dna_short_read_id(self, field: str, value: str):
-        """Check that `aligned_dna_short_read_id` is valid.
+        """Checks that `aligned_dna_short_read_id` is valid.
         Valid if:
             - Starts with BCM_
             - Ends in _{batch_id}
@@ -41,7 +40,7 @@ class SampleValidator(Validator):
             )
 
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
-        """Check that `experiment_nanopore_id` is valid.
+        """Checks that `experiment_nanopore_id` is valid.
         Valid if:
             - BCM_ONTWGS_*
         """
@@ -86,7 +85,6 @@ class SampleValidator(Validator):
             - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
                 the batch id.
         """
-
         aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
         if not aligned_dna_short_read_id:
             return

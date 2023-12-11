@@ -118,7 +118,9 @@ def test_twin_id_no_matching_invalid_sample(get_validator, participant_sample):
     participant_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
     participant_id = participant_sample["participant_id"]
     subject_id = participant_id.split("_")[2]
-    matching = f"BCM_Subject_{subject_id}_"
+    matching = (
+        f"BCM_Subject_{subject_id}_{'4' if participant_id.endswith('_1') else '1'}"
+    )
     validator.validate(participant_sample)
     assert validator.errors == {
         "twin_id": [f"Twin id does not match expected format of: {matching}"]

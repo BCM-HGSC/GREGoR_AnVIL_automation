@@ -58,7 +58,7 @@ def test_analyte_id_invalid_sample(get_validator, experiment_nanopore_sample):
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {
         "analyte_id": [
-            f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+            "Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
         ]
     }
 

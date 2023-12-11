@@ -76,7 +76,6 @@ class SampleValidator(Validator):
         participant_id = self.document.get("participant_id")
         if not participant_id:
             return
-        participant_id = self.document["participant_id"]
         analyte_id = f"{participant_id}_{self.batch_id}"
         if value != analyte_id:
             self._error(field, f"Value must match the format of {analyte_id}")
@@ -155,18 +154,14 @@ class SampleValidator(Validator):
             - "0" must be accepted as valid input
         """
         participant_id = self.document.get("participant_id")
-        if not participant_id:
+        if not participant_id or value == "0":
             return
         maternal_id = "_".join(participant_id.split("_")[:-1]) + "_2"
-        if value != "0":
-            if (
-                not self.document["participant_id"].endswith("_1")
-                or value != maternal_id
-            ):
-                self._error(
-                    field,
-                    "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
-                )
+        if not self.document["participant_id"].endswith("_1") or value != maternal_id:
+            self._error(
+                field,
+                "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
+            )
 
     def _check_with_paternal_id_is_valid(self, field: str, value: str):
         """Checks that paternal id is valid.
@@ -178,18 +173,14 @@ class SampleValidator(Validator):
             - "0" must be accepted as valid input
         """
         participant_id = self.document.get("participant_id")
-        if not participant_id:
+        if not participant_id or value == "0":
             return
         paternal_id = "_".join(participant_id.split("_")[:-1]) + "_3"
-        if value != "0":
-            if (
-                not self.document["participant_id"].endswith("_1")
-                or value != paternal_id
-            ):
-                self._error(
-                    field,
-                    "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
-                )
+        if not self.document["participant_id"].endswith("_1") or value != paternal_id:
+            self._error(
+                field,
+                "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
+            )
 
     def _check_with_twin_id_is_valid(self, field: str, value: str):
         """Checks that twin id is valid.
@@ -201,36 +192,6 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
-        # participant_id = self.document.get("participant_id")
-        # if not participant_id:
-        #     return
-        # if value.strip().upper() != "NA":
-        #     if len(participant_id.split("_")) >= 3:
-        #         subject_id = participant_id.split("_")[2]
-        #         matching = f"BCM_Subject_{subject_id}_"
-        #         participant_id_exist = False
-        #         ids = value.split(" ")
-        #         if len(ids) != 2:
-        #             self._error(field, "Value does not have exactly two ids")
-        #         else:
-        #             for twin_id in ids[:2]:
-        #                 if participant_id == twin_id:
-        #                     participant_id_exist = True
-        #                     continue
-        #                 if matching not in twin_id and twin_id == ids[1]:
-        #                     self._error(field, f"{value} does not contain {matching}")
-        #             if not participant_id_exist:
-        #                 self._error(field, "Value does not contain `participant_id`")
-        #         if not (
-        #             (ids[0].endswith("_1") and ids[1].endswith("_4"))
-        #             or (ids[0].endswith("_4") and ids[1].endswith("_1"))
-        #         ):
-        #             self._error(
-        #                 field,
-        #                 "Ids do not end with _1 and _4 or _4 and _1 respectively.",
-        #             )
-        #     else:
-        #         self._error(field, "Value does not contain `participant_id`")
         participant_id = self.document.get("participant_id")
         if not participant_id or value == "NA":
             return

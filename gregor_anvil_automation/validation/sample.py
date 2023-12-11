@@ -118,7 +118,7 @@ class SampleValidator(Validator):
 
     def _check_with_is_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA`"""
-        if value != "NA":
+        if value.strip().upper() != "NA":
             self._error(field, "Value must be NA")
 
     def _check_with_is_number(self, field: str, value: str):
@@ -128,7 +128,7 @@ class SampleValidator(Validator):
 
     def _check_with_is_number_or_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
-        if value != "NA" and not value.isdigit():
+        if value.strip().upper() != "NA" and not value.isdigit():
             self._error(field, "Value must be NA or an int")
 
     def _check_with_participant_id(self, field: str, value: str):
@@ -209,7 +209,7 @@ class SampleValidator(Validator):
             matching = f"BCM_Subject_{subject_id}_"
             participant_id_exist = False
             ids = value.split(" ")
-            if value != "NA":
+            if value.strip().upper() != "NA":
                 if len(ids) != 2:
                     self._error(field, "Value does not have exactly two ids")
                 else:
@@ -249,7 +249,7 @@ class SampleValidator(Validator):
 
     def _check_with_must_start_with_bcm_subject_or_is_na(self, field: str, value: str):
         """Checks that field's value starts with `BCM_Subject` or is na"""
-        if value != "NA" and not value.startswith("BCM_Subject"):
+        if value.strip().upper() != "NA" and not value.startswith("BCM_Subject"):
             self._error(field, "Value must be NA or start with BCM_Subject")
 
     def _check_with_must_start_with_ontology(self, field: str, value: str):
@@ -297,7 +297,7 @@ class SampleValidator(Validator):
         """Coerce value into a gcp path if not NA.
         Expected format: "NA" or `gs://{google_bucket}/{value}`
         """
-        if value != "NA":
+        if value.strip().upper() != "NA":
             value = f"gs://{self.gcp_bucket}/{value}"
         return value
 
@@ -309,7 +309,7 @@ class SampleValidator(Validator):
         aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
         if not aligned_dna_short_read_id:
             return value
-        if value == "":
+        if not value:
             value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
         return value
 
@@ -321,7 +321,7 @@ class SampleValidator(Validator):
         aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
         if not aligned_dna_short_read_id:
             return value
-        if value == "":
+        if not value:
             value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
         return value
 
@@ -332,7 +332,7 @@ class SampleValidator(Validator):
         aligned_nanopore_id = self.document.get("aligned_nanopore_id")
         if not aligned_nanopore_id:
             return value
-        if value == "":
+        if not value:
             value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
         return value
 
@@ -343,6 +343,6 @@ class SampleValidator(Validator):
         aligned_nanopore_id = self.document.get("aligned_nanopore_id")
         if not aligned_nanopore_id:
             return value
-        if value == "":
+        if not value:
             value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
         return value

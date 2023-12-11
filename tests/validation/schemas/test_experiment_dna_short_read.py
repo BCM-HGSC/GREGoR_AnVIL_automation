@@ -105,6 +105,7 @@ def test_experiment_type_normalization(get_validator, experiment_dna_short_read_
     experiment_dna_short_read_sample["experiment_type"] = "TARGETED"
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
+    assert validator.document["experiment_type"] == "targeted"
 
 
 def test_targeted_region_bed_file_normalization(
@@ -115,6 +116,10 @@ def test_targeted_region_bed_file_normalization(
     experiment_dna_short_read_sample["targeted_region_bed_file"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
+    assert (
+        validator.document["targeted_region_bed_file"]
+        == "gs://test-gcp-bucket/TEST-TEST"
+    )
 
 
 def test_date_data_generation_normalization(
@@ -125,3 +130,4 @@ def test_date_data_generation_normalization(
     experiment_dna_short_read_sample["date_data_generation"] = "12-25-2023"
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
+    assert validator.document["date_data_generation"] == "2023-12-25"

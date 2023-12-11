@@ -46,3 +46,4 @@ def test_family_consanguinity_titlecase(get_validator, family_sample):
     family_sample["consanguinity"] = "none suspected"
     validator.validate(family_sample)
     assert validator.errors == {}
+    assert validator.document["consanguinity"] == "None suspected"

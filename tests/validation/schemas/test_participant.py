@@ -149,6 +149,7 @@ def test_gregor_center_normalization(get_validator, participant_sample):
     participant_sample["gregor_center"] = "bcm"
     validator.validate(participant_sample)
     assert validator.errors == {}
+    assert validator.document["gregor_center"] == "BCM"
 
 
 def test_recontactable_normalization(get_validator, participant_sample):
@@ -157,6 +158,7 @@ def test_recontactable_normalization(get_validator, participant_sample):
     participant_sample["recontactable"] = "yes"
     validator.validate(participant_sample)
     assert validator.errors == {}
+    assert validator.document["recontactable"] == "Yes"
 
 
 def test_proband_relationship_normalization(get_validator, participant_sample):
@@ -165,6 +167,7 @@ def test_proband_relationship_normalization(get_validator, participant_sample):
     participant_sample["proband_relationship"] = "maternal half sibling"
     validator.validate(participant_sample)
     assert validator.errors == {}
+    assert validator.document["proband_relationship"] == "Maternal Half Sibling"
 
 
 def test_sex_normalization(get_validator, participant_sample):
@@ -173,6 +176,7 @@ def test_sex_normalization(get_validator, participant_sample):
     participant_sample["sex"] = "female"
     validator.validate(participant_sample)
     assert validator.errors == {}
+    assert validator.document["sex"] == "Female"
 
 
 def test_solve_status_normalization(get_validator, participant_sample):
@@ -181,6 +185,7 @@ def test_solve_status_normalization(get_validator, participant_sample):
     participant_sample["solve_status"] = "yes"
     validator.validate(participant_sample)
     assert validator.errors == {}
+    assert validator.document["solve_status"] == "Yes"
 
 
 def test_missing_variant_case_normalization(get_validator, participant_sample):
@@ -189,3 +194,4 @@ def test_missing_variant_case_normalization(get_validator, participant_sample):
     participant_sample["missing_variant_case"] = "yes"
     validator.validate(participant_sample)
     assert validator.errors == {}
+    assert validator.document["missing_variant_case"] == "Yes"

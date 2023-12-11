@@ -60,11 +60,13 @@ def test_presence_normalization(get_validator, phenotype_sample):
     phenotype_sample["presence"] = "present"
     validator.validate(phenotype_sample)
     assert validator.errors == {}
+    assert validator.document["presence"] == "Present"
 
 
 def test_ontology_normalization(get_validator, phenotype_sample):
-    """Test that a sample's ontology properly normalizes with coerce: initialcase"""
+    """Test that a sample's ontology properly normalizes with coerce: uppercase"""
     validator = get_validator
     phenotype_sample["ontology"] = "hpo"
     validator.validate(phenotype_sample)
     assert validator.errors == {}
+    assert validator.document["ontology"] == "HPO"

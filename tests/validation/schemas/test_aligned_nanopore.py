@@ -186,7 +186,7 @@ def test_aligned_nanopore_file_not_empty_normalization(
 def test_aligned_nanopore_index_file_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
-    """Test that a sample's aligned_nanopore_index_file properly normalizes when empty to a path with coerce: aligned_nanopore_file_index"""
+    """Test that a sample's aligned_nanopore_index_file properly normalizes when empty to a path with coerce: aligned_nanopore_index_file"""
     validator = get_validator
     aligned_nanopore_id = aligned_nanopore_sample["aligned_nanopore_id"]
     aligned_nanopore_sample["aligned_nanopore_index_file"] = ""
@@ -201,7 +201,7 @@ def test_aligned_nanopore_index_file_empty_normalization(
 def test_aligned_nanopore_index_file_not_empty_normalization(
     get_validator, aligned_nanopore_sample
 ):
-    """Test that a sample's aligned_nanopore_index_file properly normalizes when not empty to the given value with coerce: aligned_nanopore_file_index"""
+    """Test that a sample's aligned_nanopore_index_file properly normalizes when not empty to the given value with coerce: aligned_nanopore_index_file"""
     validator = get_validator
     aligned_nanopore_sample["aligned_nanopore_index_file"] = "TEST-TEST"
     validator.validate(aligned_nanopore_sample)
@@ -215,6 +215,7 @@ def test_sex_concordance_normalization(get_validator, aligned_nanopore_sample):
     aligned_nanopore_sample["sex_concordance"] = "true"
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {}
+    assert validator.document["sex_concordance"] == "TRUE"
 
 
 def test_methylation_called_normalization(get_validator, aligned_nanopore_sample):
@@ -223,3 +224,4 @@ def test_methylation_called_normalization(get_validator, aligned_nanopore_sample
     aligned_nanopore_sample["methylation_called"] = "true"
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {}
+    assert validator.document["methylation_called"] == "TRUE"

@@ -51,7 +51,7 @@ def test_analyte_id_invalid_sample(get_validator, analyte_sample):
     assert validator.errors == {
         "analyte_id": [
             f"Value must match the format of {participant_id}_test-batch_id",
-            f"Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
+            "Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
         ],
     }
 
@@ -115,7 +115,7 @@ def test_time_to_freeze_is_int_valid_sample(get_validator, analyte_sample):
     assert validator.errors == {}
 
 
-def test_sex_tissue_affected_status_normalization(get_validator, analyte_sample):
+def test_tissue_affected_status_normalization(get_validator, analyte_sample):
     """Test that a sample's tissue_affected_status properly normalizes with coerce: intialcase"""
     validator = get_validator
     analyte_sample["tissue_affected_status"] = "yes"

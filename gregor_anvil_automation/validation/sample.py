@@ -201,36 +201,52 @@ class SampleValidator(Validator):
         Special Condition:
             - "NA" must be accepted as valid input
         """
+        # participant_id = self.document.get("participant_id")
+        # if not participant_id:
+        #     return
+        # if value.strip().upper() != "NA":
+        #     if len(participant_id.split("_")) >= 3:
+        #         subject_id = participant_id.split("_")[2]
+        #         matching = f"BCM_Subject_{subject_id}_"
+        #         participant_id_exist = False
+        #         ids = value.split(" ")
+        #         if len(ids) != 2:
+        #             self._error(field, "Value does not have exactly two ids")
+        #         else:
+        #             for twin_id in ids[:2]:
+        #                 if participant_id == twin_id:
+        #                     participant_id_exist = True
+        #                     continue
+        #                 if matching not in twin_id and twin_id == ids[1]:
+        #                     self._error(field, f"{value} does not contain {matching}")
+        #             if not participant_id_exist:
+        #                 self._error(field, "Value does not contain `participant_id`")
+        #         if not (
+        #             (ids[0].endswith("_1") and ids[1].endswith("_4"))
+        #             or (ids[0].endswith("_4") and ids[1].endswith("_1"))
+        #         ):
+        #             self._error(
+        #                 field,
+        #                 "Ids do not end with _1 and _4 or _4 and _1 respectively.",
+        #             )
+        #     else:
+        #         self._error(field, "Value does not contain `participant_id`")
         participant_id = self.document.get("participant_id")
-        if not participant_id:
+        if not participant_id or value == "NA":
             return
-        if len(participant_id.split("_")) >= 3:
-            subject_id = participant_id.split("_")[2]
-            matching = f"BCM_Subject_{subject_id}_"
-            participant_id_exist = False
-            ids = value.split(" ")
-            if value.strip().upper() != "NA":
-                if len(ids) != 2:
-                    self._error(field, "Value does not have exactly two ids")
-                else:
-                    for twin_id in ids[:2]:
-                        if participant_id == twin_id:
-                            participant_id_exist = True
-                            continue
-                        if matching not in twin_id and twin_id == ids[1]:
-                            self._error(field, f"{value} does not contain {matching}")
-                    if not participant_id_exist:
-                        self._error(field, "Value does not contain `participant_id`")
-                if not (
-                    (ids[0].endswith("_1") and ids[1].endswith("_4"))
-                    or (ids[0].endswith("_4") and ids[1].endswith("_1"))
-                ):
-                    self._error(
-                        field,
-                        "Ids do not end with _1 and _4 or _4 and _1 respectively.",
-                    )
-        else:
+        if participant_id not in value:
             self._error(field, "Value does not contain `participant_id`")
+            return
+        if len(value.split(" ")) != 2:
+            self._error(field, "Value does not have exactly two ids")
+            return
+        subject_id = participant_id.split("_")[2]
+        matching = (
+            f"BCM_Subject_{subject_id}_{'4' if participant_id.endswith('_1') else '1'}"
+        )
+        twin_id = value.replace(participant_id, "").strip()
+        if twin_id != matching:
+            self._error(field, f"Twin id does not match expected format of: {matching}")
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):
         """Checks that field's value starts with `BCM_`"""

@@ -59,8 +59,7 @@ def test_participant_id_invalid_sample(get_validator, participant_sample):
     assert validator.errors == {
         "participant_id": [
             "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
-        ],
-        "twin_id": ["Value does not contain `participant_id`"],
+        ]
     }
 
 
@@ -101,39 +100,28 @@ def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
     validator = get_validator
     participant_sample["twin_id"] = "TEST-TEST"
     validator.validate(participant_sample)
-    assert validator.errors == {
-        "twin_id": [
-            "Ids do not end with _1 and _4 or _4 and _1 respectively.",
-            "Value does not have exactly two ids",
-        ]
-    }
+    assert validator.errors == {"twin_id": ["Value does not contain `participant_id`"]}
 
 
-def test_twin_id_no_one_and_four_invalid_sample(get_validator, participant_sample):
+def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid twin_id fails validation"""
     validator = get_validator
-    participant_sample["twin_id"] = "BCM_Subject_TEST_1 BCM_Subject_TEST_1"
+    participant_sample["twin_id"] = "BCM_Subject_TEST_1"
     validator.validate(participant_sample)
-    assert validator.errors == {
-        "twin_id": ["Ids do not end with _1 and _4 or _4 and _1 respectively."]
-    }
+    assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
 
 
 def test_twin_id_no_matching_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid twin_id fails validation"""
     validator = get_validator
-    participant_sample["twin_id"] = "BCM_Subject_TEST_1 BCM_Subject_TEST_4"
-    twin_id = participant_sample["twin_id"]
+    participant_sample["twin_id"] = "BCM_Subject_TEST-TEST_1 BCM_Subject_TEST_4"
     participant_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
     participant_id = participant_sample["participant_id"]
     subject_id = participant_id.split("_")[2]
     matching = f"BCM_Subject_{subject_id}_"
     validator.validate(participant_sample)
     assert validator.errors == {
-        "twin_id": [
-            "Value does not contain `participant_id`",
-            f"{twin_id} does not contain {matching}",
-        ]
+        "twin_id": [f"Twin id does not match expected format of: {matching}"]
     }
 
 

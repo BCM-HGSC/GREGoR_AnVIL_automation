@@ -1,6 +1,6 @@
 genetic_findings_id:
   type: string
-  required: True
+  required: True # may need a check_with, currently unsure of format
 participant_id:
   type: string
   required: True # references participant.participant_id
@@ -189,6 +189,7 @@ phenotype_contribution:
     - Partial
     - Full
     - Uncertain
+  coerce: initialcase
 partial_contribution_explained:
   type: string
   required: False # references phenotype.term_id

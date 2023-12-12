@@ -236,13 +236,13 @@ class SampleValidator(Validator):
     def _normalize_coerce_initialcase(self, value: str) -> str:
         """Coerces value to initialcase"""
         if value.strip():
-            value = capwords(value)
+            value = value.capitalize()
         return value
 
     def _normalize_coerce_titlecase(self, value: str) -> str:
         """Coerces value to titlecase"""
         if value.strip():
-            value = value.capitalize()
+            value = capwords(value)
         return value
 
     def _normalize_coerce_lowercase(self, value: str) -> str:

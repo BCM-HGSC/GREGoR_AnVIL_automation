@@ -67,7 +67,7 @@ alt:
   type: string
   required: True
   coerce: uppercase
-clingen_allele_id: # maybe update name
+clingen_allele_id:
   type: string
   required: False
 gene:
@@ -131,13 +131,19 @@ gene_known_for_phenotype:
   coerce: initialcase
 known_condition_name:
   type: string
-  required: False # depends on gene_known_for_phenotype - if Known, then required. if Candidate, then optional
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - if Known, then required. if Candidate, then optional
 condition_id:
   type: string
-  required: False # depends on gene_known_for_phenotype - if Known, then required.
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - if Known, then required.
 condition_inheritance:
   type: string
-  required: False # depends on gene_known_for_phenotype - same
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - same
   allowed:
     - Autosomal recessive
     - Autosomal dominant
@@ -152,7 +158,9 @@ condition_inheritance:
   coerce: initialcase
 gregor_variant_classification:
   type: string
-  required: False # depends on gene_known_for_phenotype - same
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - same
   allowed:
     - Benign
     - Likely benign
@@ -183,8 +191,9 @@ phenotype_contribution:
     - Uncertain
 partial_contribution_explained:
   type: string
-  required: False # required if partial contribution (above)
-  # references phenotype.term_id
+  required: False # references phenotype.term_id
+  dependencies:
+    phenotype_contribution: Partial # required if partial contribution (above)
 additional_family_members_with_variant:
   type: string
   required: False # references participant.participant_id

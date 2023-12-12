@@ -2,7 +2,9 @@ analyte_id:
   type: string
   required: True
   dependencies: participant_id
-  check_with: analyte_id
+  check_with:
+    - analyte_id
+    - analyte_id_matches_participant_id
 participant_id:
   type: string
   required: True
@@ -55,8 +57,9 @@ tissue_affected_status:
   type: string
   required: False
   allowed:
-    - Yes
-    - No
+    - "Yes"
+    - "No"
+  coerce: initialcase
 age_at_collection:
   type: string
   required: False

@@ -92,3 +92,4 @@ methylation_called:
   allowed:
     - "TRUE"
     - "FALSE"
+  coerce: uppercase

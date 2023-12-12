@@ -6,6 +6,7 @@ participant_id:
   type: string
   required: True
   empty: False
+  check_with: participant_id
 term_id:
   type: string
   required: True

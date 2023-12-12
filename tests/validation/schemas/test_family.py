@@ -10,10 +10,10 @@ def fixture_family_sample():
     return {
         "family_id": "BCM_Fam_BHTEST",
         "consanguinity": "None suspected",
-        "consanguinity_detail": "test-family_id-gregor",
-        "family_history_detail": "test-family_id-gregor",
-        "pedigree_file": "test-family_id-gregor",
-        "pedigree_file_detail": "test-family_id-gregor",
+        "consanguinity_detail": "test-family-gregor",
+        "family_history_detail": "test-family-gregor",
+        "pedigree_file": "test-family-gregor",
+        "pedigree_file_detail": "test-family-gregor",
     }
 
 
@@ -25,15 +25,15 @@ def fixture_get_validator():
     )
 
 
-def test_family_good_sample(get_validator, family_sample):
-    """Test that a good sample passes validation"""
+def test_family_valid_sample(get_validator, family_sample):
+    """Test that a valid family sample passes validation"""
     validator = get_validator
     validator.validate(family_sample)
     assert validator.errors == {}
 
 
 def test_family_invalid_family_id(get_validator, family_sample):
-    """Test that a good sample passes validation"""
+    """Test that a sample with a valid famil_id passes validation"""
     validator = get_validator
     family_sample["family_id"] = "TEST-TEST"
     validator.validate(family_sample)
@@ -41,9 +41,9 @@ def test_family_invalid_family_id(get_validator, family_sample):
 
 
 def test_family_consanguinity_titlecase(get_validator, family_sample):
-    """Test that a good sample passes validation"""
+    """Test that a sample's consanguinity properly normalizes with coerce: titlecase"""
     validator = get_validator
     family_sample["consanguinity"] = "none suspected"
-    validator.normalized(family_sample)
     validator.validate(family_sample)
     assert validator.errors == {}
+    assert validator.document["consanguinity"] == "None suspected"

@@ -2,7 +2,7 @@ participant_id:
   type: string
   required: True
   empty: False
-  check_with: must_start_with_bcm_subject
+  check_with: participant_id
 internal_project_id:
   type: string
   required: False
@@ -25,8 +25,8 @@ recontactable:
   required: False
   coerce: initialcase
   allowed:
-    - Yes
-    - No
+    - "Yes"
+    - "No"
 prior_testing:
   type: string
   required: False
@@ -100,6 +100,7 @@ reported_race:
     - Other Pacific Islander
     - Middle Eastern or North African
     - White
+    - NA
 reported_ethnicity:
   type: string
   required: False
@@ -132,17 +133,17 @@ solve_status:
   type: string
   required: True
   allowed:
-    - Yes
+    - "Yes"
     - Likely
-    - No
+    - "No"
     - Partial
   coerce: initialcase
 missing_variant_case:
   type: string
   required: True
   allowed:
-    - Yes
-    - No
+    - "Yes"
+    - "No"
     - Unknown
   coerce: initialcase
 missing_variant_details:

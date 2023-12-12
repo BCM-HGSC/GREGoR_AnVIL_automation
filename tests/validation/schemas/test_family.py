@@ -40,7 +40,7 @@ def test_family_invalid_family_id(get_validator, family_sample):
     assert validator.errors == {"family_id": ["Value must start with BCM_Fam"]}
 
 
-def test_family_consanguinity_initialcase(get_validator, family_sample):
+def test_family_consanguinity_normalization(get_validator, family_sample):
     """Test that a sample's consanguinity properly normalizes with coerce: initialcase"""
     validator = get_validator
     family_sample["consanguinity"] = "none suspected"

@@ -1,9 +1,15 @@
 """Custom checks that we can't do with cerberus"""
-from ..utils.types import Table
+from gregor_anvil_automation.utils.issue import Issue
+from ..utils.types import Sample, Table
+from ..utils.mappings import UNIQUE_MAPPING
 
 
-def check_uniqueness(samples: list[str]):
+def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):
     """Checks if the given list of values is unique"""
+    # TODO: Work on this given the new input. It will not return anything but
+    # add on to the existing ongoing issues list. I recommend using test
+    # as you develop this so you can get instant feedback.
+    # Use the UNIQUE_MAPPING dict given
     for sample in samples:
         if samples.count(sample) > 1:
             return False

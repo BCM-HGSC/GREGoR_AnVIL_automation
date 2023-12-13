@@ -74,7 +74,7 @@ proband_relationship:
     - Paternal 1st Cousin
     - Other
     - Unknown
-  coerce: initialcase
+  coerce: titlecase
 proband_relationship_detail:
   type: string
   required: False

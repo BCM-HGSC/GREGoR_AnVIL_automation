@@ -180,7 +180,7 @@ def test_recontactable_normalization(get_validator, participant_sample):
 
 
 def test_proband_relationship_normalization(get_validator, participant_sample):
-    """Test that a sample's proband_relationship properly normalizes with coerce: initialcase"""
+    """Test that a sample's proband_relationship properly normalizes with coerce: titlecase"""
     validator = get_validator
     participant_sample["proband_relationship"] = "maternal half sibling"
     validator.validate(participant_sample)

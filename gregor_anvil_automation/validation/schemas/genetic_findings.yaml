@@ -1,0 +1,219 @@
+genetic_findings_id:
+  type: string
+  required: True # may need a check_with, currently unsure of format
+participant_id:
+  type: string
+  required: True # references participant.participant_id
+  check_with: participant_id
+experiment_id:
+  type: string
+  required: True
+  # need to make a format check - starts with "experiment_dna_short_read." or "experiment_nanopore."
+variant_type:
+  type: string
+  required: True
+  allowed:
+    - SNV/INDEL
+    - SV
+    - CNV
+    - RE
+    - MEI
+  coerce: uppercase
+variant_reference_assembly:
+  type: string
+  required: True
+  allowed:
+    - GrCh38
+    - CHM13
+chrom:
+  type: string
+  required: True
+  allowed:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+    - "13"
+    - "14"
+    - "15"
+    - "16"
+    - "17"
+    - "18"
+    - "19"
+    - "20"
+    - "21"
+    - "22"
+    - "X"
+    - "Y"
+    - "MT"
+  coerce: uppercase
+pos:
+  type: string
+  required: True
+  check_with: is_number
+ref:
+  type: string
+  required: True
+  coerce: uppercase
+alt:
+  type: string
+  required: True
+  coerce: uppercase
+clingen_allele_id:
+  type: string
+  required: False
+gene:
+  type: string
+  required: True
+transcript:
+  type: string
+  required: True # relies on gene which is always required
+hgvsc:
+  type: string
+  required: True # relies on gene which is always required
+hgvsp:
+  type: string
+  required: True # relies on gene which is always required
+zygosity:
+  type: string
+  required: True
+  allowed:
+    - Heterozygous
+    - Homozygous
+    - Hemizygous
+    - Heteroplasmy
+    - Homoplasmy
+    - Mosaic
+  coerce: initialcase
+allele_balance_or_heteroplasmy_percentage:
+  type: string
+  required: False
+variant_inheritance:
+  type: string
+  required: False
+  allowed:
+    - de novo
+    - maternal
+    - paternal
+    - biparental
+    - nonmaternal
+    - nonpaternal
+    - unknown
+  coerce: lowercase
+linked_variant:
+  type: string
+  required: False
+linked_variant_phase:
+  type: string
+  required: False
+  allowed:
+    - in trans
+    - in cis
+    - unknown
+  coerce: lowercase
+gene_known_for_phenotype:
+  type: string
+  required: True
+  allowed:
+    - Known
+    - Candidate
+  coerce: initialcase
+known_condition_name:
+  type: string
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known
+condition_id:
+  type: string
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known
+condition_inheritance:
+  type: string
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - same
+  allowed:
+    - Autosomal recessive
+    - Autosomal dominant
+    - X-linked
+    - Mitochondrial
+    - Y-linked
+    - Contiguous gene syndrome
+    - Somatic mosaicism
+    - Digenic
+    - Other
+    - Unknown
+  coerce: initialcase
+gregor_variant_classification:
+  type: string
+  required: False
+  dependencies:
+    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - same
+  allowed:
+    - Benign
+    - Likely benign
+    - Uncertain significance - low
+    - Uncertain significance - moderate
+    - Uncertain significance - high
+    - Uncertain significance
+    - Likely pathogenic
+    - Pathogenic
+    - Curation in progress
+    - Well-established P/LP
+gregor_clinvar_scv:
+  type: string
+  required: False # "currently optional, to consider whether required if already submitted"
+public_database_other:
+  type: string
+  required: False
+public_database_id_other:
+  type: string
+  required: False
+phenotype_contribution:
+  type: string
+  required: False
+  allowed:
+    - Partial
+    - Full
+    - Uncertain
+  coerce: initialcase
+partial_contribution_explained:
+  type: string
+  required: False # references phenotype.term_id
+  dependencies:
+    phenotype_contribution: Partial # required if partial contribution (above)
+additional_family_members_with_variant:
+  type: string
+  required: False # references participant.participant_id
+method_of_discovery:
+  type: string
+  required: False
+  allowed:
+    - SR-ES
+    - SR-GS
+    - LR-GS
+    - SNP array
+    - Optical mapping
+    - Karyotype
+    - SR RNA-seq
+    - LR RNA-seq
+    - SR-ES-reanalysis
+    - SR-GS-reanalysis
+    - LR-GS-reanalysis
+    - SNP array-reanalysis
+    - Optical mapping-reanalysis
+    - Karyotype-reanalysis
+    - SR RNA-seq-reanalysis
+    - LR RNA-seq-reanalysis
+notes:
+  type: string
+  required: False

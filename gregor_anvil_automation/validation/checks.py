@@ -10,9 +10,19 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
     # add on to the existing ongoing issues list. I recommend using test
     # as you develop this so you can get instant feedback.
     # Use the UNIQUE_MAPPING dict given
-    for sample in samples:
-        if samples.count(sample) > 1:
-            return False
+    table = samples.get(table_name)
+    if table and table in UNIQUE_MAPPING:
+        for value in table:
+            if table.count(value) > 1:
+                row = table.index(value)
+                new_issue = Issue[
+                    table,
+                    f"Value {value} already exists in the table {table_name} in row {row}",
+                    table_name,
+                    row,
+                ]
+                issues.append(new_issue)
+                return False
     return True
 
 

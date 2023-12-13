@@ -5,6 +5,7 @@ TABLE_NAME_MAPPINGS = {
     "ExptNanopore": "experiment_nanopore",
     "AlignedShortRead": "aligned_dna_short_read",
     "ExpShortRead": "experiment_dna_short_read",
+    "Genetic_Findings_Table": "genetic_findings",
 }
 
 
@@ -20,4 +21,5 @@ UNIQUE_MAPPING = {
     },
     "experiment_nanopore": {"experiment_nanopore_id", "analyte_id"},
     "aligned_nanopore": {"aligned_nanopore_id", "experiment_nanopore_id"},
+    "genetic_findings": {"genetic_findings_id", "participant_id"},
 }

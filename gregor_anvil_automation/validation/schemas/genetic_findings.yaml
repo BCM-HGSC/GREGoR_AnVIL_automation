@@ -54,7 +54,7 @@ chrom:
     - "X"
     - "Y"
     - "MT"
-  coerce: uppercase # assuming this doesn't affect numbers, or a check_with for num or int between 1 and 22
+  coerce: uppercase
 pos:
   type: string
   required: True
@@ -62,7 +62,7 @@ pos:
 ref:
   type: string
   required: True
-  coerce: uppercase # ref and alt might only be able to be A,C,T,G, or U?
+  coerce: uppercase
 alt:
   type: string
   required: True
@@ -93,10 +93,7 @@ zygosity:
     - Homoplasmy
     - Mosaic
   coerce: initialcase
-allele_balance: # also has heteroplasmy_percentage in same column
-  type: string
-  required: False
-heteroplasmy_percentage: # also has allele_balance in same column
+allele_balance_or_heteroplasmy_percentage:
   type: string
   required: False
 variant_inheritance:
@@ -133,12 +130,12 @@ known_condition_name:
   type: string
   required: False
   dependencies:
-    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - if Known, then required. if Candidate, then optional
+    gene_known_for_phenotype: Known
 condition_id:
   type: string
   required: False
   dependencies:
-    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - if Known, then required.
+    gene_known_for_phenotype: Known
 condition_inheritance:
   type: string
   required: False
@@ -172,7 +169,6 @@ gregor_variant_classification:
     - Pathogenic
     - Curation in progress
     - Well-established P/LP
-  coerce: initialcase
 gregor_clinvar_scv:
   type: string
   required: False # "currently optional, to consider whether required if already submitted"

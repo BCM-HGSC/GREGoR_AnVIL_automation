@@ -23,8 +23,7 @@ def fixture_genetic_findings_sample():
         "hgvsc": "test-genetic_findings-gregor",
         "hgvsp": "test-genetic_findings-gregor",
         "zygosity": "Heterozygous",
-        "allele_balance": "test-genetic_findings-gregor",
-        "heteroplasmy_percentage": "test-genetic_findings-gregor",
+        "allele_balance_or_heteroplasmy_percentage": "test-genetic_findings-gregor",
         "variant_inheritance": "de novo",
         "linked_variant": "test-genetic_findings-gregor",
         "linked_variant_phase": "in trans",
@@ -162,17 +161,6 @@ def test_condition_inheritance_normalization(get_validator, genetic_findings_sam
     validator.validate(genetic_findings_sample)
     assert validator.errors == {}
     assert validator.document["condition_inheritance"] == "Autosomal recessive"
-
-
-def test_gregor_variant_classification_normalization(
-    get_validator, genetic_findings_sample
-):
-    """Test that a sample's gregor_variant_classification properly normalizes with coerce: initialcase"""
-    validator = get_validator
-    genetic_findings_sample["gregor_variant_classification"] = "benign"
-    validator.validate(genetic_findings_sample)
-    assert validator.errors == {}
-    assert validator.document["gregor_variant_classification"] == "Benign"
 
 
 def test_phenotype_contribution_normalization(get_validator, genetic_findings_sample):

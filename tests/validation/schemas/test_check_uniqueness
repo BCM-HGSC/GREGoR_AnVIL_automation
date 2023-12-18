@@ -1,8 +1,5 @@
 import pytest
-from pathlib import Path
 
-from gregor_anvil_automation.validation.sample import SampleValidator
-from gregor_anvil_automation.validation.schema import get_schema
 from gregor_anvil_automation.utils.issue import Issue
 from gregor_anvil_automation.utils.types import Sample, Table
 from gregor_anvil_automation.utils.mappings import UNIQUE_MAPPING
@@ -67,7 +64,9 @@ def test_check_uniqueness(
     uniqueness_sample, uniqueness_table, get_issues
 ):
     """Test that check_uniqueness sample passes validation"""
+    table = Table(uniqueness_table)
+    sample = Sample(uniqueness_sample)
     issues = get_issues
     row = uniqueness_table.index("aligned_dna_short_read_id")
-    assert check_uniqueness(uniqueness_sample, uniqueness_table, issues) == False
-    assert issues == {uniqueness_table, f"Value aligned_dna_short_read_id already exists in the table uniqueness_table in row {row}", "uniqueness_table", row}
+    assert check_uniqueness(sample, table, issues) == False
+    assert issues == {table, f"Value aligned_dna_short_read_id already exists in the table uniqueness_table in row {row}", "uniqueness_table", row}

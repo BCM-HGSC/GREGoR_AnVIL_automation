@@ -6,10 +6,6 @@ from ..utils.mappings import UNIQUE_MAPPING
 
 def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):
     """Checks if the given list of values is unique"""
-    # TODO: Work on this given the new input. It will not return anything but
-    # add on to the existing ongoing issues list. I recommend using test
-    # as you develop this so you can get instant feedback.
-    # Use the UNIQUE_MAPPING dict given
     table = samples.get(table_name)
     if table and table in UNIQUE_MAPPING:
         for value in table:
@@ -22,8 +18,6 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
                     row,
                 ]
                 issues.append(new_issue)
-                return False
-    return True
 
 
 def check_value_exist_in_source(field_name: str, table: Table, table_source: Table):

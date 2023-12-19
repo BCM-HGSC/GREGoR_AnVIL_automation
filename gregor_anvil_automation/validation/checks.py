@@ -6,18 +6,20 @@ from ..utils.mappings import UNIQUE_MAPPING
 
 def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):
     """Checks if the given list of values is unique"""
-    table = samples.get(table_name)
-    if table and table in UNIQUE_MAPPING:
-        for value in table:
-            if table.count(value) > 1:
-                row = table.index(value)
-                new_issue = Issue[
-                    table,
-                    f"Value {value} already exists in the table {table_name} in row {row}",
-                    table_name,
-                    row,
-                ]
-                issues.append(new_issue)
+    table = UNIQUE_MAPPING.get(table_name)
+    if table:
+        sample = table.get(samples)
+        if sample:
+            for value in sample:
+                if table.count(value) > 1:
+                    row = table.index(value)
+                    new_issue = Issue[
+                        table,
+                        f"Value {value} already exists in the table {table_name} in row {row}",
+                        table_name,
+                        row,
+                    ]
+                    issues.append(new_issue)
 
 
 def check_value_exist_in_source(field_name: str, table: Table, table_source: Table):

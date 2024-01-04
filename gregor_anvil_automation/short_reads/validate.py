@@ -5,7 +5,7 @@ from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 
 from gregor_anvil_automation.utils.utils import get_table_samples
-from ..utils.types import Sample
+from ..utils.types import Sample, Table
 from ..utils.issue import Issue
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator

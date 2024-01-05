@@ -17,9 +17,9 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
                     if value in unique_values:
                         new_issue = Issue(
                             field,
-                            f"Value {field} already exists in the table {table_name} in row {sample.row_number}",
+                            f"Value {field} already exists in the table {table_name} in row {sample['row_number']}",
                             table_name,
-                            sample.row_number,
+                            sample["row_number"],
                         )
                         issues.append(new_issue)
                     else:

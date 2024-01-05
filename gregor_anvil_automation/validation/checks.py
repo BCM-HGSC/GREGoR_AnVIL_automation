@@ -7,14 +7,23 @@ from ..utils.mappings import CROSS_REF_CHECK, UNIQUE_MAPPING
 
 def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):
     """Checks if the given list of values is unique"""
-    # TODO: Work on this given the new input. It will not return anything but
-    # add on to the existing ongoing issues list. I recommend using test
-    # as you develop this so you can get instant feedback.
-    # Use the UNIQUE_MAPPING dict given
-    for sample in samples:
-        if samples.count(sample) > 1:
-            return False
-    return True
+    fields_to_check = UNIQUE_MAPPING.get(table_name)
+    if fields_to_check and samples:
+        for field in fields_to_check:
+            unique_values = set()
+            for sample in samples:
+                if field in sample:
+                    value = sample.get(field)
+                    if value in unique_values:
+                        new_issue = Issue(
+                            field,
+                            f"Value {field} already exists in the table {table_name} in row {sample.row_number}",
+                            table_name,
+                            sample.row_number,
+                        )
+                        issues.append(new_issue)
+                    else:
+                        unique_values.add(value)
 
 
 def check_value_exist_in_source(field_name: str, table: Table, table_source: Table):

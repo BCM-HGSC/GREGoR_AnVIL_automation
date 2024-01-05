@@ -114,19 +114,23 @@ def test_check_uniqueness_initial_issues_no_sample_issues(
     samples = [uniqueness_sample_valid_2, uniqueness_sample_valid_3]
     value = "aligned_dna_short_read_id"
     row = uniqueness_sample_valid_3["row_number"]
-    issues = Issue(
-        "aligned_dna_short_read_id",
-        f"test-issue with {value}",
-        table_name,
-        row,
-    )
+    issues = [
+        Issue(
+            "aligned_dna_short_read_id",
+            f"test-issue with {value}",
+            table_name,
+            row,
+        )
+    ]
     check_uniqueness(samples, table_name, issues)
-    assert issues == Issue(
-        "aligned_dna_short_read_id",
-        f"test-issue with {value}",
-        table_name,
-        row,
-    )
+    assert issues == [
+        Issue(
+            "aligned_dna_short_read_id",
+            f"test-issue with {value}",
+            table_name,
+            row,
+        )
+    ]
 
 
 def test_check_uniqueness_initial_issues_and_sample_issues(

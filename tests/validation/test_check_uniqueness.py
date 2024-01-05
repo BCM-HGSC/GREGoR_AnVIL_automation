@@ -39,7 +39,7 @@ def fixture_uniqueness_sample2():
     }
 
 
-@pytest.fixture(name="uniqueness_table_no_issues", scope="function")
+@pytest.fixture(name="aligned_dna_short_read", scope="function")
 def fixture_uniqueness_table_no_issues(uniqueness_sample, uniqueness_sample2):
     return [
         uniqueness_sample,
@@ -47,7 +47,7 @@ def fixture_uniqueness_table_no_issues(uniqueness_sample, uniqueness_sample2):
     ]
 
 
-@pytest.fixture(name="uniqueness_table_issues", scope="function")
+@pytest.fixture(name="AlignedShortRead", scope="function")
 def fixture_uniqueness_table_issues(uniqueness_sample):
     return [
         uniqueness_sample,
@@ -55,82 +55,88 @@ def fixture_uniqueness_table_issues(uniqueness_sample):
     ]
 
 
-def test_check_uniqueness_no_issues(uniqueness_sample):
+def test_check_uniqueness_no_issues(aligned_dna_short_read):
     """Test that check_uniqueness sample passes validation with no issues"""
-    table_name = "uniqueness_table_no_issues"
-    sample = uniqueness_sample
+    table_name = "aligned_dna_short_read"
+    table = aligned_dna_short_read
     issues = []
-    check_uniqueness(sample, table_name, issues)
+    issues = check_uniqueness(table, table_name, issues)
     assert issues == []
 
 
-def test_check_uniqueness_sample_issues_no_initial_issues(
-    uniqueness_sample, uniqueness_table_issues
-):
+def test_check_uniqueness_sample_issues_no_initial_issues(AlignedShortRead):
     """Test that check_uniqueness sample passes validation with sample issues"""
-    table_name = "uniqueness_table_issues"
-    table = uniqueness_table_issues
-    sample = uniqueness_sample
+    table_name = "AlignedShortRead"
+    table = AlignedShortRead
+    value = "aligned_dna_short_read_id"
+    row = 1
     issues = []
-    row = uniqueness_table_issues[1]["aligned_dna_short_read_id"]
-    check_uniqueness(sample, table_name, issues)
-    assert issues == {
-        table,
-        f"Value aligned_dna_short_read_id already exists in the table uniqueness_table_issues in row {row}",
-        "uniqueness_table_issues",
-        row,
-    }
+    issues = check_uniqueness(table, table_name, issues)
+    assert issues == set(
+        {
+            "aligned_dna_short_read_id",
+            f"Value {value} already exists in the table {table_name} in row {row}",
+            "uniqueness_table_issues",
+            row,
+        }
+    )
 
 
-def test_check_uniqueness_initial_issues_no_sample_issues(
-    uniqueness_sample, uniqueness_table_no_issues
-):
+def test_check_uniqueness_initial_issues_no_sample_issues(AlignedShortRead):
     """Test that check_uniqueness sample passes validation with initial issues"""
-    table = uniqueness_table_no_issues
-    table_name = "uniqueness_table_no_issues"
-    sample = uniqueness_sample
-    row = uniqueness_table_no_issues[1]["aligned_dna_short_read_id"]
-    issues = [
-        table,
-        f"test-issue with aligned_dna_short_read_id",
-        "uniqueness_table_no_issues",
-        row,
-    ]
-    check_uniqueness(sample, table_name, issues)
-    assert issues == {
-        table,
-        f"test-issue with aligned_dna_short_read_id",
-        "uniqueness_table_no_issues",
-        row,
-    }
+    table_name = "AlignedShortRead"
+    table = AlignedShortRead
+    value = "aligned_dna_short_read_id"
+    row = 1
+    issues = set(
+        [
+            "aligned_dna_short_read_id",
+            f"test-issue with {value}",
+            table_name,
+            row,
+        ]
+    )
+    issues = check_uniqueness(table, table_name, issues)
+    assert issues == set(
+        {
+            "aligned_dna_short_read_id",
+            f"test-issue with {value}",
+            table_name,
+            row,
+        }
+    )
 
 
-def test_check_uniqueness_initial_issues_and_sample_issues(
-    uniqueness_sample, uniqueness_table_issues
-):
+def test_check_uniqueness_initial_issues_and_sample_issues(AlignedShortRead):
     """Test that check_uniqueness sample passes validation with initial issues and sample issues"""
-    table = uniqueness_table_issues
-    table_name = "uniqueness_table_issues"
-    sample = uniqueness_sample
-    row = uniqueness_table_issues[1]["aligned_dna_short_read_id"]
-    issues = [
-        table,
-        f"test-issue with aligned_dna_short_read_id",
-        "uniqueness_table_issues",
-        row,
+    table_name = "AlignedShortRead"
+    table = AlignedShortRead
+    value = "aligned_dna_short_read_id"
+    row = 1
+    issues = set(
+        [
+            "aligned_dna_short_read_id",
+            f"test-issue with {value}",
+            table_name,
+            row,
+        ]
+    )
+    issues = check_uniqueness(table, table_name, issues)
+    assert issues == [
+        set(
+            {
+                "aligned_dna_short_read_id",
+                f"test-issue with {value}",
+                table_name,
+                row,
+            }
+        ),
+        set(
+            {
+                "aligned_dna_short_read_id",
+                f"Value {value} already exists in the table {table_name} in row {row}",
+                table_name,
+                row,
+            }
+        ),
     ]
-    check_uniqueness(sample, table_name, issues)
-    assert issues == {
-        {
-            table,
-            f"test-issue with aligned_dna_short_read_id",
-            "uniqueness_table_issues",
-            row,
-        },
-        {
-            table,
-            f"Value aligned_dna_short_read_id already exists in the table uniqueness_table_issues in row {row}",
-            "uniqueness_table_issues",
-            row,
-        },
-    }

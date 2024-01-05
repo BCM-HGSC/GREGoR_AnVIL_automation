@@ -14,16 +14,15 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
                 if field in sample:
                     value = sample.get(field)
                     if value in unique_values:
-                        new_issue = Issue[
+                        new_issue = Issue(
                             field,
                             f"Value {field} already exists in the table {table_name} in row {sample.row_number}",
                             table_name,
                             sample.row_number,
-                        ]
+                        )
                         issues.append(new_issue)
                     else:
                         unique_values.add(value)
-    return issues
 
 
 def check_value_exist_in_source(field_name: str, table: Table, table_source: Table):

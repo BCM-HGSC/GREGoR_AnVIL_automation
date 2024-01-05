@@ -10,16 +10,16 @@ TABLE_NAME_MAPPINGS = {
 
 
 UNIQUE_MAPPING = {
-    "participant": {"participant_id"},
-    "family": {"family_id"},
-    "phenotype": {"participant_id"},
-    "analyte": {"analyte_id", "participant_id"},
-    "experiment_dna_short_read": {"analyte_id", "experiment_dna_short_read_id"},
-    "aligned_dna_short_read": {
+    "participant": ["participant_id"],
+    "family": ["family_id"],
+    "phenotype": ["participant_id"],
+    "analyte": ["analyte_id", "participant_id"],
+    "experiment_dna_short_read": ["analyte_id", "experiment_dna_short_read_id"],
+    "aligned_dna_short_read": [
         "aligned_dna_short_read_id",
         "experiment_dna_short_read_id",
-    },
-    "experiment_nanopore": {"experiment_nanopore_id", "analyte_id"},
-    "aligned_nanopore": {"aligned_nanopore_id", "experiment_nanopore_id"},
-    "genetic_findings": {"genetic_findings_id", "participant_id"},
+    ],
+    "experiment_nanopore": ["experiment_nanopore_id", "analyte_id"],
+    "aligned_nanopore": ["aligned_nanopore_id", "experiment_nanopore_id"],
+    "genetic_findings": ["genetic_findings_id", "participant_id"],
 }

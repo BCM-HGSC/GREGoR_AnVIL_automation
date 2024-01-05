@@ -20,19 +20,23 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
     issues = []
     # Validate files
     validate_tables(
-        batch_id=batch_id, gcp_bucket_name=config.gcp_bucket_name, tables=tables
+        batch_id=batch_id,
+        gcp_bucket_name=config.gcp_bucket_name,
+        issues=issues,
+        tables=tables,
     )
     # If all ok, generate
 
     # If any errors, email issues
 
     # If all is good, email of success and files generated
-
+    pprint.pprint(issues)
     return 0
 
 
-def validate_tables(batch_id: str, gcp_bucket_name: str, tables: list[Table]):
-    issues = []
+def validate_tables(
+    batch_id: str, gcp_bucket_name: str, issues: list[Issue], tables: list[Table]
+):
     ids = defaultdict(set)
     for table_name, samples in tables.items():
         # Validate sample by sample using cerberus

@@ -1,31 +1,28 @@
+from collections import defaultdict
 from pathlib import Path
-from typing import Set
 
 from addict import Dict
+from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 
 from gregor_anvil_automation.utils.utils import get_table_samples
-from ..utils.types import Sample
+from ..utils.types import Sample, Table
 from ..utils.issue import Issue
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
-from ..validation.checks import *
+from ..validation.checks import check_cross_references, check_uniqueness
+
+import pprint
 
 
 def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int:
     """The short_reads entry point"""
-    print(batch_id)
     tables = get_table_samples(excel_path)
-    # import pprint
-
-    # pprint.pprint(tables["participant"])
     issues = []
     # Validate files
-    for table_name, samples in tables.items():
-        issues = validate_table(
-            table_name, samples, batch_id, config.destination.gcp.bucket_name
-        )
-
-    # If all ok, generate tsvs
+    validate_tables(
+        batch_id=batch_id, gcp_bucket_name=config.gcp_bucket_name, tables=tables
+    )
+    # If all ok, generate
 
     # If any errors, email issues
 
@@ -34,19 +31,45 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
     return 0
 
 
-def validate_table(
-    table_name: str, samples: list[Sample], batch_id: str, gcp_bucket: str
-) -> list[Issue]:
-    """Validates a table and returns a list of issues, if any found."""
+def validate_tables(batch_id: str, gcp_bucket_name: str, tables: list[Table]):
     issues = []
-    # Validate table wide issues
-    get_table_wide_issues()
-    # Validate sample by sample using cerberus
-    # Load schema
+    ids = defaultdict(set)
+    for table_name, samples in tables.items():
+        # Validate sample by sample using cerberus
+        samples = normalize_and_validate_samples(
+            batch_id=batch_id,
+            gcp_bucket=gcp_bucket_name,
+            issues=issues,
+            samples=samples,
+            table_name=table_name,
+        )
+        # Validate Table Wide Issues which as of now is just unique checking
+        check_uniqueness(samples, table_name, issues)
+        if table_name in REFERENCE_SOURCE:
+            ids[REFERENCE_SOURCE[table_name]].update(
+                sample[REFERENCE_SOURCE[table_name]] for sample in samples
+            )
+    # Cross Reference Checks
+    check_cross_references(ids, tables, issues)
+
+
+def normalize_and_validate_samples(
+    batch_id: str,
+    gcp_bucket: str,
+    issues: list[dict],
+    samples: list[Sample],
+    table_name: str,
+):
+    """Normalizes and validate samples"""
     schema = get_schema(table_name)
-    sample_validator = SampleValidator(schema=schema, batch_id=batch_id, gcp_bucket=gcp_bucket)
+    sample_validator = SampleValidator(
+        schema=schema, batch_id=batch_id, gcp_bucket=gcp_bucket
+    )
+    sample_validator.allow_unknown = True
+    normalized_samples = []
     for sample in samples:
         sample_validator.validate(sample)
+        normalized_samples.append(sample_validator.document)
         issues.extend(
             convert_errors_to_issues(
                 errors=sample_validator.errors,
@@ -54,13 +77,7 @@ def validate_table(
                 row=sample["row_number"],
             )
         )
-    return issues
-
-
-def get_table_wide_issues():
-    """Returns issues if"""
-    # Check uniqueness..
-    # Check all the things
+    return normalized_samples
 
 
 def convert_errors_to_issues(errors: list[dict], **kwargs) -> list[dict[str, str]]:

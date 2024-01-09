@@ -73,16 +73,16 @@ def test_generate_csv_valid_table_tsv(valid_tables, common_file_path):
         data_headers = value[0].keys()
         generate_csv(file_path, data_headers, value, "\t")
 
-    analyte_control = f"{common_file_path}/analyte_control.tsv" 
+    analyte_control = f"{common_file_path}/analyte_control.tsv"
     family_control = f"{common_file_path}/family_control.tsv"
     participant_control = f"{common_file_path}/participant_control.tsv"
     analyte_result = f"{common_file_path}/analyte_result.tsv"
     family_result = f"{common_file_path}/family_result.tsv"
     participant_result = f"{common_file_path}/participant_result.tsv"
 
-    assert(filecmp.cmp(analyte_control, analyte_result, shallow=False))
-    assert(filecmp.cmp(family_control, family_result, shallow=False))
-    assert(filecmp.cmp(participant_control, participant_result, shallow=False))
+    assert filecmp.cmp(analyte_control, analyte_result, shallow=False)
+    assert filecmp.cmp(family_control, family_result, shallow=False)
+    assert filecmp.cmp(participant_control, participant_result, shallow=False)
 
 
 def test_generate_csv_valid_issues_csv(valid_issues, common_file_path):

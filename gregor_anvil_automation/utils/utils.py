@@ -57,7 +57,7 @@ def generate_csv(
                 f=file, fieldnames=data_headers, delimiter=delimiter
             )
             writer.writeheader()
-            writer.writerows(data) # This could be an problem for issues
+            writer.writerows(data)  # This could be an problem for issues
             """
             writerows requires Iterable[Mapping[Any, Any]].
             data is a list[dict[str, str]] which works.

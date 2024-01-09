@@ -54,7 +54,23 @@ def generate_csv(
     if file_path and data_headers and data and delimiter == "," or delimiter == "\t":
         with open(file_path, "w", encoding="utf-8") as file:
             writer = csv.DictWriter(
-                f=file, fieldnames=data_headers, delimeter=delimiter
+                f=file, fieldnames=data_headers, delimiter=delimiter
             )
             writer.writeheader()
-            writer.writerows(data)
+            writer.writerows(data) # This could be an problem for issues
+            """
+            writerows requires Iterable[Mapping[Any, Any]].
+            data is a list[dict[str, str]] which works.
+            issues is a list[Issue] which is a list of a class.
+            However, that class is essentially just a dict which is a Map
+            meaning issues could be considered a list[dict[Any, Any]].
+            The question remains if it really does count as a Map.
+            If this errors out then this is probably the issue.
+            Would either have to adjust what data expects to take in to be more general
+            or have no specifics on it and just only account for those two instances in
+            the code itself, throwing out all others.
+            It looks like classes are a Map, just will have to see if that's right.
+
+            Turns out the Issue object is not an Iterable so aren't even into Map yet.
+            Also need to fill out issues_control way want to
+            """

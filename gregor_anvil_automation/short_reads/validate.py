@@ -12,7 +12,7 @@ from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
 
-import pprint
+import pprint # Remove
 
 
 def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int:
@@ -39,7 +39,7 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
         generate_csv(file_path, data_headers, issues, ",")
 
     # If all is good, email of success and files generated
-    pprint.pprint(issues)
+    pprint.pprint(issues) # Remove
     return 0
 
 

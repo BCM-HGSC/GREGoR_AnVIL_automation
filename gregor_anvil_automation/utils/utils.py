@@ -53,7 +53,7 @@ def generate_file(
     """Generates either a csv or tsv file depending on the passed in delimiter"""
     # MT: Lets just assume they are giving us these items.
     # https://stackoverflow.com/questions/11360858/what-is-the-eafp-principle-in-python
-    if file_path and data_headers and data:
+    try:
         with open(file_path, "w", encoding="utf-8") as file:
             writer = csv.DictWriter(
                 f=file, fieldnames=data_headers, delimiter=delimiter
@@ -75,4 +75,9 @@ def generate_file(
 
             Turns out the Issue object is not an Iterable so aren't even into Map yet.
             Also need to fill out issues_control way want to
+
+            Solution - in validate.py will convert passed in issues into a dict
+            Means it will be handled before this so this works
             """
+    except NameError:
+        print("Variable yet to be defined.")  # Handle in some other way

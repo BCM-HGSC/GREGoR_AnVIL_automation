@@ -1,25 +1,16 @@
-"""So far only checks generate_csv()"""
+"""So far only checks generate_file()"""
+from pathlib import Path
 import filecmp
 
 import pytest
 
 from gregor_anvil_automation.utils.issue import Issue
-from gregor_anvil_automation.utils.utils import generate_csv
+from gregor_anvil_automation.utils.utils import generate_file
 
 
-@pytest.fixture(name="valid_tables")
-def fixture_valid_tables():
+@pytest.fixture(name="valid_table")
+def fixture_valid_table():
     return {
-        "participant": [
-            {
-                "participant_id": "test-participant_id-001",
-                "family_id": "test-family_id-001",
-            },
-            {
-                "participant_id": "test-participant_id-002",
-                "family_id": "test-family_id-002",
-            },
-        ],
         "analyte": [
             {
                 "participant_id": "test-participant_id-001",
@@ -29,11 +20,7 @@ def fixture_valid_tables():
                 "participant_id": "test-participant_id-002",
                 "analyte_id": "test-analyte_id-002",
             },
-        ],
-        "family": [
-            {"family_id": "test-family_id-001"},
-            {"family_id": "test-family_id-002"},
-        ],
+        ]
     }
 
 
@@ -63,12 +50,11 @@ def fixture_valid_issues():
 
 @pytest.fixture(name="common_file_path")
 def fixture_common_file_path():
-    # Hint `Path`
     # To see if your code is working move around the gregor directory and run `pytest`
-    return "tests/utils/test_files"
+    return Path(".")
 
 
-def test_generate_csv_valid_table_tsv(valid_tables, common_file_path):
+def test_generate_csv_valid_table_tsv(valid_table, common_file_path):
     """Test that check_utils successfully generates {table_name}_result.tsv"""
     """
     Get rid of for loop -- sometimes unavoidable but in here it is. Adds
@@ -81,13 +67,12 @@ def test_generate_csv_valid_table_tsv(valid_tables, common_file_path):
 
     Pytest - look into tmp_path so you are not keeping the result tsvs
     """
-    for key, value in valid_tables.items():
-        file_path = f"{common_file_path}/{key}_result.tsv"
-        data_headers = value[0].keys()
-        generate_csv(file_path, data_headers, value, "\t")
+    file_path = f"{common_file_path}/analyte_result.tsv"
+    data_headers = ["participant_id", "analyte_id"]
+    generate_file(file_path, data_headers, valid_table, "\t")
 
     analyte_control = f"{common_file_path}/analyte_control.tsv"
-    analyte_result = f"{common_file_path}/analyte_result.tsv"
+    analyte_result = file_path
 
     assert filecmp.cmp(analyte_control, analyte_result, shallow=False)
 
@@ -97,7 +82,7 @@ def test_generate_csv_valid_issues_csv(valid_issues, common_file_path):
     for issue in valid_issues:
         file_path = f"{common_file_path}/issues_result.csv"
         data_headers = ["field", "message", "table_name", "row"]
-        generate_csv(file_path, data_headers, issue, ",")
+        generate_file(file_path, data_headers, issue, ",")
 
     with open(f"{common_file_path}/issues_control.csv", "r") as i_control:
         issues_control = i_control.readlines()

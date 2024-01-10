@@ -7,7 +7,7 @@ from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 from gregor_anvil_automation.utils.utils import get_table_samples
 from ..utils.types import Sample, Table
 from ..utils.issue import Issue
-from ..utils.utils import generate_csv
+from ..utils.utils import generate_file
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
@@ -30,7 +30,7 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
     for table in tables:
         file_path = ""  # TBD
         data_headers = []  # TBD
-        generate_csv(file_path, data_headers, table, "\t")
+        generate_file(file_path, data_headers, table, "\t")
 
     file_path = ""  # TBD
     data_headers = []  # TBD
@@ -39,7 +39,7 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
         # MT: dataclasses convert to dictionary
         # I believe your answer will be: `asdict` OR more advance look into `__iter__`
         list_of_issues = []
-        generate_csv(file_path, data_headers, issues, ",")
+        generate_file(file_path, data_headers, issues, ",")
 
     # If all is good, email of success and files generated
     pprint.pprint(issues)  # Remove

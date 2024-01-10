@@ -63,26 +63,33 @@ def fixture_valid_issues():
 
 @pytest.fixture(name="common_file_path")
 def fixture_common_file_path():
+    # Hint `Path`
+    # To see if your code is working move around the gregor directory and run `pytest`
     return "tests/utils/test_files"
 
 
 def test_generate_csv_valid_table_tsv(valid_tables, common_file_path):
     """Test that check_utils successfully generates {table_name}_result.tsv"""
+    """
+    Get rid of for loop -- sometimes unavoidable but in here it is. Adds
+    complexity to the test.
+
+    Only have to test 1 thing so no family analyte participant etc. In reality,
+    it doesnt even have to be participant. It can be some random tsv with random
+    data unrelated to the Gregor stuff since all we care is if it generates
+    a tsv file as expected.
+
+    Pytest - look into tmp_path so you are not keeping the result tsvs
+    """
     for key, value in valid_tables.items():
         file_path = f"{common_file_path}/{key}_result.tsv"
         data_headers = value[0].keys()
         generate_csv(file_path, data_headers, value, "\t")
 
     analyte_control = f"{common_file_path}/analyte_control.tsv"
-    family_control = f"{common_file_path}/family_control.tsv"
-    participant_control = f"{common_file_path}/participant_control.tsv"
     analyte_result = f"{common_file_path}/analyte_result.tsv"
-    family_result = f"{common_file_path}/family_result.tsv"
-    participant_result = f"{common_file_path}/participant_result.tsv"
 
     assert filecmp.cmp(analyte_control, analyte_result, shallow=False)
-    assert filecmp.cmp(family_control, family_result, shallow=False)
-    assert filecmp.cmp(participant_control, participant_result, shallow=False)
 
 
 def test_generate_csv_valid_issues_csv(valid_issues, common_file_path):

@@ -47,11 +47,13 @@ def parse_yaml(yaml_path: Path) -> addict.Dict:
         return addict.Dict(yaml.safe_load(fin.read()))
 
 
-def generate_csv(
+def generate_file(
     file_path: Path, data_headers: list[str], data: list[dict[str, str]], delimiter: str
 ):
     """Generates either a csv or tsv file depending on the passed in delimiter"""
-    if file_path and data_headers and data and delimiter == "," or delimiter == "\t":
+    # MT: Lets just assume they are giving us these items.
+    # https://stackoverflow.com/questions/11360858/what-is-the-eafp-principle-in-python
+    if file_path and data_headers and data:
         with open(file_path, "w", encoding="utf-8") as file:
             writer = csv.DictWriter(
                 f=file, fieldnames=data_headers, delimiter=delimiter

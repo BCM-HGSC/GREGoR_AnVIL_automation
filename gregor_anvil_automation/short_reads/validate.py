@@ -36,6 +36,9 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
     data_headers = []  # TBD
     # If any errors, email issues in a csv file
     if issues:
+        # MT: dataclasses convert to dictionary
+        # I believe your answer will be: `asdict` OR more advance look into `__iter__`
+        list_of_issues = []
         generate_csv(file_path, data_headers, issues, ",")
 
     # If all is good, email of success and files generated

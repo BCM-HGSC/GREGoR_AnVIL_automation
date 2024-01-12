@@ -1,6 +1,7 @@
 """So far only checks generate_file()"""
 from pathlib import Path
 import filecmp
+import os
 
 import pytest
 
@@ -51,10 +52,11 @@ def fixture_valid_issues():
 @pytest.fixture(name="common_file_path")
 def fixture_common_file_path():
     # To see if your code is working move around the gregor directory and run `pytest`
-    return Path(".")
+    dir_name = os.path.dirname(__file__)
+    return dir_name
 
 
-def test_generate_csv_valid_table_tsv(valid_table, common_file_path):
+def test_generate_csv_valid_table_tsv(valid_table, common_file_path, tmp_path):
     """Test that check_utils successfully generates {table_name}_result.tsv"""
     """
     Get rid of for loop -- sometimes unavoidable but in here it is. Adds
@@ -67,26 +69,19 @@ def test_generate_csv_valid_table_tsv(valid_table, common_file_path):
 
     Pytest - look into tmp_path so you are not keeping the result tsvs
     """
-    file_path = f"{common_file_path}/analyte_result.tsv"
+    analyte_result = tmp_path / common_file_path / "test_files/analyte_result.tsv"
+    analyte_control = tmp_path / common_file_path / "test_files/analyte_control.tsv"
     data_headers = ["participant_id", "analyte_id"]
-    generate_file(file_path, data_headers, valid_table, "\t")
-
-    analyte_control = f"{common_file_path}/analyte_control.tsv"
-    analyte_result = file_path
+    generate_file(analyte_result, data_headers, valid_table["analyte"], "\t")
 
     assert filecmp.cmp(analyte_control, analyte_result, shallow=False)
 
 
-def test_generate_csv_valid_issues_csv(valid_issues, common_file_path):
+def test_generate_csv_valid_issues_csv(valid_issues, common_file_path, tmp_path):
     """Test that check_utils successfully generates issues_result.csv"""
-    for issue in valid_issues:
-        file_path = f"{common_file_path}/issues_result.csv"
-        data_headers = ["field", "message", "table_name", "row"]
-        generate_file(file_path, data_headers, issue, ",")
-
-    with open(f"{common_file_path}/issues_control.csv", "r") as i_control:
-        issues_control = i_control.readlines()
-    with open(f"{common_file_path}/issues_result.csv", "r") as i_result:
-        issues_result = i_result.readlines()
+    issues_result = tmp_path / common_file_path / "test_files/issues_result.csv"
+    issues_control = tmp_path / common_file_path / "test_files/issues_control.csv"
+    data_headers = ["field", "message", "table_name", "row"]
+    generate_file(issues_result, data_headers, valid_issues, ",")
 
     assert filecmp.cmp(issues_control, issues_result, shallow=False)

@@ -1,5 +1,6 @@
 from collections import defaultdict
 from pathlib import Path
+from dataclasses import asdict
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -39,10 +40,12 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
         # MT: dataclasses convert to dictionary
         # I believe your answer will be: `asdict` OR more advance look into `__iter__`
         list_of_issues = []
-        generate_file(file_path, data_headers, issues, ",")
+        for issue in issues:
+            list_of_issues.append(asdict(issue))
+        generate_file(file_path, data_headers, list_of_issues, ",")
 
     # If all is good, email of success and files generated
-    pprint.pprint(issues)  # Remove
+    pprint.pprint(issues)  # REMOVE
     return 0
 
 

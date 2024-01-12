@@ -51,33 +51,12 @@ def generate_file(
     file_path: Path, data_headers: list[str], data: list[dict[str, str]], delimiter: str
 ):
     """Generates either a csv or tsv file depending on the passed in delimiter"""
-    # MT: Lets just assume they are giving us these items.
-    # https://stackoverflow.com/questions/11360858/what-is-the-eafp-principle-in-python
     try:
         with open(file_path, "w", encoding="utf-8") as file:
             writer = csv.DictWriter(
                 f=file, fieldnames=data_headers, delimiter=delimiter
             )
             writer.writeheader()
-            writer.writerows(data)  # This could be an problem for issues
-            """
-            writerows requires Iterable[Mapping[Any, Any]].
-            data is a list[dict[str, str]] which works.
-            issues is a list[Issue] which is a list of a class.
-            However, that class is essentially just a dict which is a Map
-            meaning issues could be considered a list[dict[Any, Any]].
-            The question remains if it really does count as a Map.
-            If this errors out then this is probably the issue.
-            Would either have to adjust what data expects to take in to be more general
-            or have no specifics on it and just only account for those two instances in
-            the code itself, throwing out all others.
-            It looks like classes are a Map, just will have to see if that's right.
-
-            Turns out the Issue object is not an Iterable so aren't even into Map yet.
-            Also need to fill out issues_control way want to
-
-            Solution - in validate.py will convert passed in issues into a dict
-            Means it will be handled before this so this works
-            """
+            writer.writerows(data)
     except NameError:
-        print("Variable yet to be defined.")  # Handle in some other way
+        print("Variable yet to be defined.")

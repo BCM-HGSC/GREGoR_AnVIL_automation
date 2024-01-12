@@ -51,24 +51,12 @@ def fixture_valid_issues():
 
 @pytest.fixture(name="common_file_path")
 def fixture_common_file_path():
-    # To see if your code is working move around the gregor directory and run `pytest`
     dir_name = os.path.dirname(__file__)
     return dir_name
 
 
 def test_generate_csv_valid_table_tsv(valid_table, common_file_path, tmp_path):
     """Test that check_utils successfully generates {table_name}_result.tsv"""
-    """
-    Get rid of for loop -- sometimes unavoidable but in here it is. Adds
-    complexity to the test.
-
-    Only have to test 1 thing so no family analyte participant etc. In reality,
-    it doesnt even have to be participant. It can be some random tsv with random
-    data unrelated to the Gregor stuff since all we care is if it generates
-    a tsv file as expected.
-
-    Pytest - look into tmp_path so you are not keeping the result tsvs
-    """
     analyte_result = tmp_path / common_file_path / "test_files/analyte_result.tsv"
     analyte_control = tmp_path / common_file_path / "test_files/analyte_control.tsv"
     data_headers = ["participant_id", "analyte_id"]

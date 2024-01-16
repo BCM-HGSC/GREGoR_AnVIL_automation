@@ -1,4 +1,5 @@
 from pathlib import Path
+import csv
 
 import addict
 import yaml
@@ -44,3 +45,13 @@ def parse_yaml(yaml_path: Path) -> addict.Dict:
     """Parses a yaml file and return Iterator"""
     with open(yaml_path, encoding="utf-8") as fin:
         return addict.Dict(yaml.safe_load(fin.read()))
+
+
+def generate_file(
+    file_path: Path, data_headers: list[str], data: list[dict[str, str]], delimiter: str
+):
+    """Generates either a csv or tsv file depending on the passed in delimiter"""
+    with open(file_path, "w", encoding="utf-8") as file:
+        writer = csv.DictWriter(f=file, fieldnames=data_headers, delimiter=delimiter)
+        writer.writeheader()
+        writer.writerows(data)

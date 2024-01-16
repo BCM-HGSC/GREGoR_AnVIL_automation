@@ -33,12 +33,9 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
 
     # If any errors, email issues in a csv file
     if issues:
-        list_of_issues = []
         file_path = working_dir / "issues.csv"
         data_headers = ["field", "message", "table_name", "row"]
-        for issue in issues:
-            list_of_issues.append(asdict(issue))
-        generate_file(file_path, data_headers, list_of_issues, ",")
+        generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
 
     # If all is good, email of success and files generated
     return 0

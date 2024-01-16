@@ -51,12 +51,7 @@ def generate_file(
     file_path: Path, data_headers: list[str], data: list[dict[str, str]], delimiter: str
 ):
     """Generates either a csv or tsv file depending on the passed in delimiter"""
-    try:
-        with open(file_path, "w", encoding="utf-8") as file:
-            writer = csv.DictWriter(
-                f=file, fieldnames=data_headers, delimiter=delimiter
-            )
-            writer.writeheader()
-            writer.writerows(data)
-    except NameError:
-        print("Variable yet to be defined.")
+    with open(file_path, "w", encoding="utf-8") as file:
+        writer = csv.DictWriter(f=file, fieldnames=data_headers, delimiter=delimiter)
+        writer.writeheader()
+        writer.writerows(data)

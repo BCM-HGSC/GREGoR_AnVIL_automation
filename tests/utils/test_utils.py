@@ -70,9 +70,8 @@ def test_generate_csv_valid_issues_csv(valid_issues, common_file_path, tmp_path)
     issues_result = tmp_path / common_file_path / "test_files/issues_result.csv"
     issues_control = tmp_path / common_file_path / "test_files/issues_control.csv"
     data_headers = ["field", "message", "table_name", "row"]
-    list_of_issues = []
-    for issue in valid_issues:
-        list_of_issues.append(asdict(issue))
-    generate_file(issues_result, data_headers, list_of_issues, ",")
+    generate_file(
+        issues_result, data_headers, [asdict(issue) for issue in valid_issues], ","
+    )
 
     assert filecmp.cmp(issues_control, issues_result, shallow=False)

@@ -4,7 +4,6 @@ import filecmp
 import os
 
 import pytest
-import monkeypatch
 
 from gregor_anvil_automation.utils.issue import Issue
 from gregor_anvil_automation.utils.utils import generate_file
@@ -98,7 +97,7 @@ def test_find_and_load_invalid(invalid_env_file):
         assert True  # REMOVE - find better way
 
 
-def test_find_and_load_valid(valid_env_file):
+def test_find_and_load_valid(valid_env_file, monkeypatch):
     monkeypatch.setenv("EMAIL_USERNAME", "hgsc@bcm.edu")
     monkeypatch.setenv("EMAIL_PASSWORD", "123donthackme")
     monkeypatch.setenv("EMAIL_HOST", "smtp.bcm.edu")
@@ -115,7 +114,7 @@ def test_load_env_vars_invalid(invalid_env_file):
         assert True  # REMOVE - find better way
 
 
-def test_find_and_load_valid(valid_env_file):
+def test_find_and_load_valid(valid_env_file, monkeypatch):
     monkeypatch.setenv("EMAIL_USERNAME", "hgsc@bcm.edu")
     monkeypatch.setenv("EMAIL_PASSWORD", "123donthackme")
     monkeypatch.setenv("EMAIL_HOST", "smtp.bcm.edu")

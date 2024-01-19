@@ -11,10 +11,10 @@ from os import environ
 
 import addict
 
+from gregor_anvil_automation.utils.working_dir import get_working_dir
 from . import __version__
 from .short_reads import validate
 from .utils.utils import parse_yaml
-from gregor_anvil_automation.utils.working_dir import get_working_dir
 
 logger = getLogger(__name__)
 
@@ -71,6 +71,12 @@ def command_line_parser() -> Namespace:
     parser.add_argument(
         "batch_id",
         help="batch_id is passed to help normalize data",
+    )
+    parser.add_argument(
+        "--env-file",
+        default="~/.template.env",
+        type=Path,
+        help="specifies the .env file to be used",
     )
     args = parser.parse_args()
     return args

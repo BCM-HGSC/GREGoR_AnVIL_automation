@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_env_vars(custom_env_path: Optional[Path] = None) -> None:
-    """Loads the .env file to ENV variables (without actually overriding them"""
+    """Loads the .env file to ENV variables (without actually overriding them)"""
     env_path = custom_env_path or get_env_file_name()
     try:
         find_and_load(env_path)

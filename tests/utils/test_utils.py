@@ -94,7 +94,7 @@ def test_find_and_load_invalid(invalid_env_file):
     try:
         find_and_load(invalid_env_file)
     except OSError:
-        assert True  # REMOVE - find better way
+        assert True  # REMOVE - unsure if good way to test
 
 
 def test_find_and_load_valid(valid_env_file, monkeypatch):
@@ -104,14 +104,14 @@ def test_find_and_load_valid(valid_env_file, monkeypatch):
     monkeypatch.setenv("EMAIL_USERNAME", "25")
     monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", "test-utils")
     find_and_load(valid_env_file)
-    assert True  # REMOVE - don't know how to test
+    assert True  # REMOVE - need way to test
 
 
 def test_load_env_vars_invalid(invalid_env_file):
     try:
         load_env_vars(invalid_env_file)
     except OSError:
-        assert True  # REMOVE - find better way
+        assert True  # REMOVE - unsure if good way to test
 
 
 def test_load_env_vars_valid(valid_env_file, monkeypatch):
@@ -121,4 +121,4 @@ def test_load_env_vars_valid(valid_env_file, monkeypatch):
     monkeypatch.setenv("EMAIL_USERNAME", "25")
     monkeypatch.setenv("GOOGLE_APPLICATION_CREDENTIALS", "test-utils")
     load_env_vars(valid_env_file)
-    assert True  # REMOVE - don't know how to test
+    assert True  # REMOVE - need way to test

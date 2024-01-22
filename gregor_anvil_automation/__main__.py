@@ -11,7 +11,8 @@ from os import environ
 
 import addict
 
-from gregor_anvil_automation.utils.working_dir import get_working_dir
+from .utils.working_dir import get_working_dir
+from .utils.env import load_env_vars
 from . import __version__
 from .short_reads import validate
 from .utils.utils import parse_yaml
@@ -22,15 +23,17 @@ logger = getLogger(__name__)
 def main() -> int:
     """Main method of gregor workflow"""
     args = command_line_parser()
+    load_env_vars(args.env_file)
     basicConfig(level=INFO)
     config = parse_yaml(args.config_file)
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster
     with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:
-        return run_command(config, args, working_dir)
+        result = run_command(config, args, working_dir)
+    return result
 
 
-def run_command(config: addict.Dict, args, working_dir) -> int:
+def run_command(config: addict.Dict, args, working_dir: Path) -> int:
     """Runs the command given by the user"""
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0

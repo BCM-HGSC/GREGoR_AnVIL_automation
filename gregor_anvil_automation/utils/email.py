@@ -153,7 +153,7 @@ ATTACHED_ISSUES_MSG_BODY = """
 <html>
     <head></head>
     <body>
-        <p>Issues were encountered when processing records. A text file
+        <p>Issues were encountered when processing records. A CSV file
         with encountered issues is attached. Please investigate.
 
         <p><i>This is an automated message. Do not reply.</i>
@@ -162,11 +162,11 @@ ATTACHED_ISSUES_MSG_BODY = """
 """
 
 
-AW2_WGS_SUCCESS_MSG_BODY = """
+SUCCESS_MSG_BODY = """
 <html>
     <head></head>
     <body>
-        <p>A CSV file containing information of the successfully submitted
+        <p>A TSV file containing information of the successfully submitted
         samples is attached.
 
         <p><i>This is an automated message. Do not reply.</i>

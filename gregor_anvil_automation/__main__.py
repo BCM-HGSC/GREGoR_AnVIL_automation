@@ -58,7 +58,7 @@ def command_line_parser() -> Namespace:
     parser.add_argument(
         "command",
         choices=["short_reads", "long_reads"],
-        help="which type of submission to do",
+        help="Specifies type of submission to exceute",
     )
     parser.add_argument(
         "excel_path",
@@ -77,9 +77,9 @@ def command_line_parser() -> Namespace:
     )
     parser.add_argument(
         "--env-file",
-        default="~/.template.env",
+        default="~/.env",
         type=Path,
-        help="specifies the .env file to be used",
+        help="Specifies the .env file to be used or assumes .env exist in current working directory",
     )
     args = parser.parse_args()
     return args

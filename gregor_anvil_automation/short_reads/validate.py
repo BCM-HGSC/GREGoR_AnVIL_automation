@@ -28,11 +28,11 @@ def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int
     )
 
     # If any errors, email issues in a csv file
+    subject = "GREGoR AnVIL automation"
     if issues:
         file_path = working_dir / "issues.csv"
         data_headers = ["field", "message", "table_name", "row"]
         generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
-        subject = "GREGoR AnVIL automation - Issues encountered"
         send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
     # If all is good, email of success and files generated
     else:
@@ -105,7 +105,6 @@ def convert_errors_to_issues(errors: list[dict], **kwargs) -> list[dict[str, str
     issues = []
     for field, messages in errors.items():
         for message in messages:
-            # logger.error("%s: %s", field, message)
             issue = Issue(
                 **kwargs,
                 field=field,

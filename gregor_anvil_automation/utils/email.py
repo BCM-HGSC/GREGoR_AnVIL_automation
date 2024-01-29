@@ -1,4 +1,3 @@
-import logging
 import os
 import smtplib
 import ssl
@@ -12,8 +11,6 @@ from traceback import format_exception
 from typing import List
 
 import addict
-
-logger = logging.getLogger(__name__)
 
 
 class SMTPCredentials:
@@ -59,17 +56,14 @@ class Email:
 
     def send(self) -> int:
         """Sends email"""
-        logger.info("Sending email: %s", self.credentials)
         context = ssl.create_default_context()
         try:
             with smtplib.SMTP(self.credentials.host, self.credentials.port) as server:
                 if self.credentials.username and self.credentials.password:
                     server.starttls(context=context)
-                    logger.info("Email authentication provided...")
                     server.login(self.credentials.username, self.credentials.password)
                 server.send_message(self.message)
-        except Exception as e:
-            logger.error("Unable to send email: %s", e)
+        except Exception:
             return 1
         return 0
 
@@ -169,72 +163,6 @@ SUCCESS_MSG_BODY = """
         <p>A TSV file containing information of the successfully submitted
         samples is attached.
 
-        <p><i>This is an automated message. Do not reply.</i>
-    </body>
-</html>
-"""
-
-EXCEPTION_MANIFEST_BODY = """
-<html>
-    <head></head>
-    <body>
-        <p>An exception was encountered when processing manifest
-        <ul>
-            {output}
-        </ul>
-        <p> Exception </p>
-        <blockquote>
-        {traceback}
-        </blockquote>
-    </body>
-</html>
-"""
-
-EXCEPTION_SAMPLES_BODY = """
-<html>
-    <head></head>
-    <body>
-        <p>An exception was encountered when processing set of samples
-        <ul>
-            {output}
-        </ul>
-        <p> Exception </p>
-        <blockquote>
-        {traceback}
-        </blockquote>
-    </body>
-</html>
-"""
-
-SAMPLE_TRACKER_SCRIPT_BODY = """
-<html>
-    <head></head>
-    <body>
-        <p>Issues were encountered when submitting samples to Sample Tracker
-        using the Sample Tracker submission script. A CSV file
-        containing the failed submitted samples is attached with their error
-        message. Please fix the issue and try again.
-
-        <p><i>This is an automated message. Do not reply.</i>
-    </body>
-</html>
-"""
-
-
-SAMPLE_UPDATE_MSG_BODY = """
-<html>
-    <head></head>
-    <body>
-        <p>Issues were encountered when submitting status updates for files.<br>
-        <br>
-        <p><b>Issues with files</b>:<br>
-        <ul>
-            {failed}
-        </ul>
-        <br>
-        Please investigate the logs. The messages will be retried a total of 3
-        times before moving to a DLQ to be handled manually.<br><br>
-        <br></p>
         <p><i>This is an automated message. Do not reply.</i>
     </body>
 </html>

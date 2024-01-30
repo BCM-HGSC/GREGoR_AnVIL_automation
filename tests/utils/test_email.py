@@ -1,38 +1,35 @@
 import os
 import pytest
+import addict
 
-from gregor_anvil_automation.utils.email import send_email
-
-
-@pytest.fixture(name="valid_env_file")
-def fixture_valid_env_file():
-    file_path = f"{os.path.dirname(__file__)}/test_files/valid_env_file.env"
-    return file_path
+from gregor_anvil_automation.utils.email import send_email, Email, SMTPCredentials
 
 
-def test_find_and_load_invalid(tmp_path):
-    """Test that find_and_load successfully raises an error when given an invalid .env"""
-    with pytest.raises(OSError):
-        find_and_load(tmp_path / "invalid_env_file.env")
+@pytest.fixture(name="valid_config")
+def fixture_valid_config():
+    config = addict.Dict(
+        ("sender", "hgsc-submit@bcm.edu"), ("recipients", "hgsc-submit@bcm.edu")
+    )
+    return config
 
 
-def test_find_and_load_valid(valid_env_file):
-    """Test that find_and_load successfully creates environment variables when given a valid .env"""
-    os.environ.pop("MADE_UP_ENV_VAR", None)
-    assert not os.environ.get("MADE_UP_ENV_VAR")
-    find_and_load(valid_env_file)
-    assert os.environ["MADE_UP_ENV_VAR"] == "DEV"
+def test_send_email_valid(valid_config):
+    """Test that send_email successfully sends an email"""
+    subject = "Test Email"
+    body = "This is a test email."
+    attachments = []
+    credentials = SMTPCredentials()
+    email = Email(credentials)
+    email.build_message(subject, body, valid_config.sender, valid_config.recipients)
+    assert send_email(valid_config, subject, body, attachments) == email.send()
 
 
-def test_load_env_vars_invalid(tmp_path):
-    """Test that load_env_vars successfully raises an error when given an invalid .env"""
-    with pytest.raises(ENVFileDoesnotExist):
-        load_env_vars(tmp_path / "invalid_env_file.env")
-
-
-def test_load_env_vars_valid(valid_env_file):
-    """Test that load_env_vars successfully creates environment variables when given a valid .env"""
-    os.environ.pop("MADE_UP_ENV_VAR", None)
-    assert not os.environ.get("MADE_UP_ENV_VAR")
-    load_env_vars(valid_env_file)
-    assert os.environ["MADE_UP_ENV_VAR"] == "DEV"
+def test_send_email_valid(valid_config):
+    """Test that send_email successfully sends an email"""
+    subject = "Test Email"
+    body = "This is a test email."
+    attachments = []
+    credentials = SMTPCredentials()
+    email = Email(credentials)
+    email.build_message(subject, body, valid_config.sender, valid_config.recipients)
+    assert send_email(valid_config, subject, body, attachments) == email.send()

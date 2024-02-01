@@ -5,11 +5,21 @@ import addict
 import yaml
 from openpyxl import Workbook, load_workbook
 
+
+from .exceptions import InputPathDoesNotExistError
 from .types import Sample
 from .mappings import TABLE_NAME_MAPPINGS
 
 
-def get_table_samples(input_file: Path) -> dict[str, list[Sample]]:
+def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:
+    """Get tables from either an excel path or directory filled with TSVs"""
+    if not input_path.exists():
+        raise InputPathDoesNotExistError(input_path)
+    if ".xlsx" in input_path.suffixes:
+        return get_table_samples_by_excel(input_path)
+
+
+def get_table_samples_by_excel(input_file: Path) -> dict[str, list[Sample]]:
     """Reads the given excel file path and gets the sample directories"""
     workbook: Workbook = load_workbook(input_file)
     table_samples = {}

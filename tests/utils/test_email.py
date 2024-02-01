@@ -1,6 +1,7 @@
 import os
 import pytest
 import addict
+import pprint
 
 from gregor_anvil_automation.utils.email import send_email, Email, SMTPCredentials
 
@@ -8,7 +9,7 @@ from gregor_anvil_automation.utils.email import send_email, Email, SMTPCredentia
 @pytest.fixture(name="valid_config")
 def fixture_valid_config():
     config = addict.Dict(
-        ("sender", "hgsc-submit@bcm.edu"), ("recipients", "hgsc-submit@bcm.edu")
+        ("sender", "u253196@bcm.edu"), ("recipients", "u253196@bcm.edu")
     )
     return config
 
@@ -24,10 +25,10 @@ def test_send_email_valid(valid_config):
     assert send_email(valid_config, subject, body, attachments) == email.send()
 
 
-def test_send_email_valid(valid_config):
-    """Test that send_email successfully sends an email"""
-    subject = "Test Email"
-    body = "This is a test email."
+def test_send_email_valid_empty(valid_config):
+    """Test that send_email successfully sends a blank email"""
+    subject = ""
+    body = ""
     attachments = []
     credentials = SMTPCredentials()
     email = Email(credentials)

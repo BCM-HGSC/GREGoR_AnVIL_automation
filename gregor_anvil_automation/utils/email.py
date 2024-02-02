@@ -1,6 +1,7 @@
 import os
 import smtplib
 import ssl
+import logging
 import sys
 from email import encoders
 from email.mime.base import MIMEBase
@@ -11,6 +12,8 @@ from traceback import format_exception
 from typing import List
 
 import addict
+
+logger = logging.getLogger(__name__)
 
 
 class SMTPCredentials:
@@ -64,6 +67,7 @@ class Email:
                     server.login(self.credentials.username, self.credentials.password)
                 server.send_message(self.message)
         except Exception:
+            logger.exception("Unable to send email")
             return 1
         return 0
 
@@ -86,18 +90,19 @@ def build_manifest_traceback_message(body, provided_lists):
 
 
 def send_email(
-    config: addict.Dict, subject: str, body: str, attachments: List[Path] = None
+    email_config: addict.Dict, subject: str, body: str, attachments: List[Path] = None
 ) -> int:
     """Sends an email"""
     if attachments is None:
         attachments = []
     credentials = SMTPCredentials()
     email = Email(credentials)
+    print(email_config)
     email.build_message(
         subject=subject,
         body=body,
-        sender=config.sender,
-        recipients=config.recipients,
+        sender=email_config.sender,
+        recipients=email_config.recipients,
     )
     if attachments:
         email.add_attachments(attachments)

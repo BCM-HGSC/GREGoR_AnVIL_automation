@@ -9,6 +9,7 @@ experiment_id:
   type: string
   required: True
   # need to make a format check - starts with "experiment_dna_short_read." or "experiment_nanopore."
+  # seems to reference experiment_id in the experiment table which hasn't been implemented yet
 variant_type:
   type: string
   required: True

@@ -9,7 +9,7 @@ analyte_id:
   check_with: analyte_id
 experiment_sample_id:
   type: string
-  required: False
+  required: True
   check_with: experiment_sample_id
 seq_library_prep_kit_method:
   type: string
@@ -45,5 +45,8 @@ target_insert_size:
   required: False
   check_with: is_number
 sequencing_platform:
+  type: string
+  required: False
+sequencing_event_details:
   type: string
   required: False

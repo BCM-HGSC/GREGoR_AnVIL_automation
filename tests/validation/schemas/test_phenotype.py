@@ -16,6 +16,7 @@ def fixture_phenotype_sample():
         "additional_details": "test-phenotype-gregor",
         "onset_age_range": "HP:0003581",
         "additional_modifiers": "HP:0025292",
+        "syndromic": "syndromic",
     }
 
 
@@ -70,3 +71,12 @@ def test_ontology_normalization(get_validator, phenotype_sample):
     validator.validate(phenotype_sample)
     assert validator.errors == {}
     assert validator.document["ontology"] == "HPO"
+
+
+def test_syndromic_normalization(get_validator, phenotype_sample):
+    """Test that a sample's syndromic properly normalizes with coerce: lowercase"""
+    validator = get_validator
+    phenotype_sample["syndromic"] = "SYNDROMIC"
+    validator.validate(phenotype_sample)
+    assert validator.errors == {}
+    assert validator.document["syndromic"] == "syndromic"

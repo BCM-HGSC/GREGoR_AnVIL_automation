@@ -19,6 +19,7 @@ def fixture_experiment_dna_short_read_sample():
         "date_data_generation": "2023-12-25",
         "target_insert_size": "0",
         "sequencing_platform": "test-experiment_dna_short_read-gregor",
+        "sequencing_event_details": "test-experiment_dna_short_read-gregor",
     }
 
 

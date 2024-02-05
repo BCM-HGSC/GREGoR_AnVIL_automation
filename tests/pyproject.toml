@@ -1,0 +1,7 @@
+[tool.pytest.ini_options]
+markers = "integration"
+env_files = ".test.env"
+filterwarnings = [
+    "ignore:Deprecated call to `pkg_resources\\.declare_namespace\\('.*'\\):DeprecationWarning",
+    "ignore::DeprecationWarning:google.rpc",
+]

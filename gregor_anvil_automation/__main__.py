@@ -76,7 +76,7 @@ def command_line_parser() -> Namespace:
         help="batch_id is passed to help normalize data",
     )
     parser.add_argument(
-        "--env-file",
+        "--env_file",
         default="~/.env",
         type=Path,
         help="Specifies the .env file to be used or assumes .env exist in current working directory",

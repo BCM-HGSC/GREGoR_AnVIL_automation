@@ -157,8 +157,6 @@ condition_inheritance:
 gregor_variant_classification:
   type: string
   required: False
-  dependencies:
-    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - same
   allowed:
     - Benign
     - Likely benign

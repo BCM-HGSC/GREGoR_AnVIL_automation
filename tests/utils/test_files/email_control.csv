@@ -1,4 +1,0 @@
-field,message,table_name,row
-participant_id,Value participant_id already exists in the table participant in row 3,participant,3
-analyte_id,Value analyte_id already exists in the table analyte in row 3,analyte,3
-family_id,Value family_id already exists in the table family in row 3,family,3

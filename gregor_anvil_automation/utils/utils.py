@@ -17,10 +17,18 @@ def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:
         raise InputPathDoesNotExistError(input_path)
     if ".xlsx" in input_path.suffixes:
         return get_table_samples_by_excel(input_path)
+    if input_path.is_dir():
+        return get_table_samples_by_directory(input_path)
+    raise NotImplementedError
+
+
+def get_table_samples_by_directory(dir_path: Path) -> dict[str, list[Sample]]:
+    """Gets every TSV file in the directory."""
+    return {file.stem: parse_file(file, "\t") for file in dir_path.glob("*.tsv")}
 
 
 def get_table_samples_by_excel(input_file: Path) -> dict[str, list[Sample]]:
-    """Reads the given excel file path and gets the sample directories"""
+    """Reads the given excel file path and gets the samples"""
     workbook: Workbook = load_workbook(input_file)
     table_samples = {}
     for _, sheet_name in enumerate(workbook.sheetnames):
@@ -55,6 +63,17 @@ def parse_yaml(yaml_path: Path) -> addict.Dict:
     """Parses a yaml file and return Iterator"""
     with open(yaml_path, encoding="utf-8") as fin:
         return addict.Dict(yaml.safe_load(fin.read()))
+
+
+def parse_file(file_path: Path, delimiter: str) -> addict.Dict:
+    """Parses a file"""
+    data = []
+    with open(file_path, "r", encoding="utf-8") as fin:
+        reader = csv.DictReader(fin, delimiter=delimiter)
+        for idx, line in enumerate(reader, 2):
+            line["row_number"] = idx
+            data.append(line)
+    return data
 
 
 def generate_file(

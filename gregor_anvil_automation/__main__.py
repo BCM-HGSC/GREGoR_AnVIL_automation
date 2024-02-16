@@ -41,7 +41,7 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
         return_code = validate.run(
             config,
             args.excel_path,
-            (args.batch_id).strip(),
+            (args.batch_number).strip(),
             working_dir,
         )
     return return_code
@@ -72,8 +72,9 @@ def command_line_parser() -> Namespace:
         help="Path to the config YAML file",
     )
     parser.add_argument(
-        "batch_id",
-        help="batch_id is passed to help normalize data",
+        "batch_number",
+        type=int,
+        help="batch_number is passed to help normalize data",
     )
     parser.add_argument(
         "--env_file",

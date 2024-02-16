@@ -55,7 +55,7 @@ def test_aligned_nanopore_id_invalid_sample(get_validator, aligned_nanopore_samp
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
         "aligned_nanopore_id": [
-            f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
+            f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and 1, inclusively",
         ]
     }
 
@@ -68,7 +68,7 @@ def test_experiment_nanopore_id_invalid_sample(get_validator, aligned_nanopore_s
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
         "aligned_nanopore_id": [
-            f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
+            f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and 1, inclusively",
         ],
         "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"],
     }

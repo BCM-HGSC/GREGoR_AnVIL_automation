@@ -42,7 +42,7 @@ def test_analyte_valid_sample(get_validator, analyte_sample):
     assert validator.errors == {}
 
 
-def test_analyte_id_invalid_sample(get_validator, analyte_sample, batch_number):
+def test_analyte_id_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid analyte_id fails validation"""
     validator = get_validator
     analyte_sample["analyte_id"] = "TEST-TEST"
@@ -50,19 +50,20 @@ def test_analyte_id_invalid_sample(get_validator, analyte_sample, batch_number):
     validator.validate(analyte_sample)
     assert validator.errors == {
         "analyte_id": [
-            f"Value must match the format of {participant_id}_A1",
-            f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively",
+            f"Value must start with {participant_id}_A and end with a number between 1 and 1, inclusively",
+            f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and 1, inclusively",
         ],
     }
 
 
-def test_participant_id_invalid_sample(get_validator, analyte_sample, batch_number):
+def test_participant_id_invalid_sample(get_validator, analyte_sample):
     """Test that a sample with an invalid participant_id fails validation"""
     validator = get_validator
     analyte_sample["participant_id"] = "TEST-TEST"
+    participant_id = analyte_sample["participant_id"]
     validator.validate(analyte_sample)
     assert validator.errors == {
-        "analyte_id": [f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively"],
+        "analyte_id": [f"Value must start with {participant_id}_A and end with a number between 1 and 1, inclusively"],
         "participant_id": ["Value must start with BCM_Subject"],
     }
 

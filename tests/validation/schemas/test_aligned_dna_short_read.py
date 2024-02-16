@@ -41,7 +41,7 @@ def test_aligned_dna_short_read_valid_sample(
 
 
 def test_aligned_dna_short_read_id_invalid_sample(
-    get_validator, aligned_dna_short_read_sample, batch_number
+    get_validator, aligned_dna_short_read_sample
 ):
     """Test that a sample with an invalid aligned_dna_short_read_id fails validation"""
     validator = get_validator
@@ -50,16 +50,16 @@ def test_aligned_dna_short_read_id_invalid_sample(
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {
         "aligned_dna_short_read_id": [
-            f"Value must start with BCM_ and end with _A{batch_number}, inclusively"
+            f"Value must start with BCM_ and end with _A1, inclusively"
         ],
         "experiment_dna_short_read_id": [
-            f"Value must match the format of {aligned_dna_short_read_id} minus _A{batch_number}"
+            f"Value must match the format of {aligned_dna_short_read_id} minus _A1"
         ],
     }
 
 
 def test_experiment_dna_short_read_id_invalid_sample(
-    get_validator, aligned_dna_short_read_sample, batch_number
+    get_validator, aligned_dna_short_read_sample
 ):
     """Test that a sample with an invalid experiment_dna_short_read_id fails validation"""
     validator = get_validator
@@ -70,7 +70,7 @@ def test_experiment_dna_short_read_id_invalid_sample(
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {
         "experiment_dna_short_read_id": [
-            f"Value must match the format of {aligned_dna_short_read_id} minus _A{batch_number}"
+            f"Value must match the format of {aligned_dna_short_read_id} minus _A1"
         ]
     }
 

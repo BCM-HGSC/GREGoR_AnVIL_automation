@@ -23,8 +23,8 @@ class SampleValidator(Validator):
         if not experiment_nanopore_id:
             return
         if value.startswith(f"{experiment_nanopore_id}_A"):
-            if int(value.split(f"{experiment_nanopore_id}_A")):
-                value_number = int(value.split(f"{experiment_nanopore_id}_A"))[1]
+            if int(value.split(f"{experiment_nanopore_id}_A")[-1]):
+                value_number = int(value.split(f"{experiment_nanopore_id}_A")[1])
             else:
                 return
         if not value.startswith(f"{experiment_nanopore_id}_A") or not (value_number >= 1 and value_number <= self.batch_number):
@@ -40,8 +40,8 @@ class SampleValidator(Validator):
             - Ends with a number between 1 and {batch_number}, inclusively
         """
         if value.startswith("BCM_"):
-            if int(value.split("_A")):
-                value_number = int(value.split("_A"))[-1]
+            if int(value.split("_A")[-1]):
+                value_number = int(value.split("_A")[-1])
             else:
                 return
         if not value.startswith("BCM_") or not (value_number >= 1 and value_number <= self.batch_number):
@@ -67,8 +67,8 @@ class SampleValidator(Validator):
             - Ends in _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively
         """
         if value.startswith("BCM_Subject_"):
-            if int(value.split("_A")):
-                value_number = int(value.split("_A"))[-1]
+            if int(value.split("_A")[-1]):
+                value_number = int(value.split("_A")[-1])
             else:
                 return
         if not value.startswith("BCM_Subject_") or not (value_number >= 1 and value_number <= self.batch_number) or not value.endswith(
@@ -94,8 +94,8 @@ class SampleValidator(Validator):
         if not participant_id:
             return
         if value.startswith(f"{participant_id}_A"):
-            if int(value.split(f"{participant_id}_A")):
-                value_number = int(value.split(f"{participant_id}_A"))[-1]
+            if int(value.split(f"{participant_id}_A")[-1]):
+                value_number = int(value.split(f"{participant_id}_A")[-1])
             else:
                 return
         if not value.startswith(f"{participant_id}_A") or not (value_number >= 1 and value_number <= self.batch_number):

@@ -8,7 +8,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="analyte_sample", scope="function")
 def fixture_analyte_sample():
     return {
-        "analyte_id": "BCM_Subject_TEST_1_test-batch_number",
+        "analyte_id": "BCM_Subject_TEST_1_A1",
         "participant_id": "BCM_Subject_TEST_1",
         "analyte_type": "DNA",
         "analyte_processing_details": "test-analyte-gregor",
@@ -31,7 +31,7 @@ def fixture_analyte_sample():
 def fixture_get_validator():
     schema = get_schema("analyte")
     return SampleValidator(
-        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -42,7 +42,7 @@ def test_analyte_valid_sample(get_validator, analyte_sample):
     assert validator.errors == {}
 
 
-def test_analyte_id_invalid_sample(get_validator, analyte_sample):
+def test_analyte_id_invalid_sample(get_validator, analyte_sample, batch_number):
     """Test that a sample with an invalid analyte_id fails validation"""
     validator = get_validator
     analyte_sample["analyte_id"] = "TEST-TEST"
@@ -50,19 +50,19 @@ def test_analyte_id_invalid_sample(get_validator, analyte_sample):
     validator.validate(analyte_sample)
     assert validator.errors == {
         "analyte_id": [
-            f"Value must match the format of {participant_id}_test-batch_number",
-            "Value must start with BCM_Subject_ and end with _1_test-batch_number, _2_test-batch_number, _3_test-batch_number, or _4_test-batch_number",
+            f"Value must match the format of {participant_id}_A1",
+            f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively",
         ],
     }
 
 
-def test_participant_id_invalid_sample(get_validator, analyte_sample):
+def test_participant_id_invalid_sample(get_validator, analyte_sample, batch_number):
     """Test that a sample with an invalid participant_id fails validation"""
     validator = get_validator
     analyte_sample["participant_id"] = "TEST-TEST"
     validator.validate(analyte_sample)
     assert validator.errors == {
-        "analyte_id": ["Value must match the format of TEST-TEST_test-batch_number"],
+        "analyte_id": [f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively"],
         "participant_id": ["Value must start with BCM_Subject"],
     }
 

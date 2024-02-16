@@ -15,9 +15,9 @@ from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
 
 
-def run(config: Dict, excel_path: Path, batch_id: str, working_dir: Path) -> int:
+def run(config: Dict, input_path: Path, batch_id: str, working_dir: Path) -> int:
     """The short_reads entry point"""
-    tables = get_table_samples(excel_path)
+    tables = get_table_samples(input_path)
     issues = []
     # Validate files
     validate_tables(

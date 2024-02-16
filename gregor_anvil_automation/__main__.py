@@ -40,8 +40,7 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
     if args.command == "short_reads":
         return_code = validate.run(
             config,
-            args.excel_path,
-            (args.batch_number).strip(),
+            args.input_path,,
             working_dir,
         )
     return return_code
@@ -61,9 +60,9 @@ def command_line_parser() -> Namespace:
         help="Specifies type of submission to exceute",
     )
     parser.add_argument(
-        "excel_path",
+        "input_path",
         type=Path,
-        help="Path to excel provided by the PM",
+        help="Path to excel provided by the PM or path to directory containing TSVs",
     )
     parser.add_argument(
         "--config_file",
@@ -82,8 +81,7 @@ def command_line_parser() -> Namespace:
         type=Path,
         help="Specifies the .env file to be used or assumes .env exist in current working directory",
     )
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 if __name__ == "__main__":

@@ -40,7 +40,8 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
     if args.command == "short_reads":
         return_code = validate.run(
             config,
-            args.input_path,,
+            args.input_path,
+            (args.batch_number).strip(),
             working_dir,
         )
     return return_code

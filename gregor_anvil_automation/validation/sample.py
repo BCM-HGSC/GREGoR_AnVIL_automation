@@ -106,17 +106,15 @@ class SampleValidator(Validator):
         Valid if:
             - experiment_dna_short_read_id == aligned_dna_short_read_id WITHOUT
                 the batch_number.
-            - batch_number is equal to 1 or greater
         """
         aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
         if not aligned_dna_short_read_id:
             return
         experiment_dna_short_read_id = aligned_dna_short_read_id.split(f"_A")[0]
-        value_number = aligned_dna_short_read_id.split(f"_A")[-1]
         if value != experiment_dna_short_read_id:
             self._error(
                 field,
-                f"Value must match the format of {aligned_dna_short_read_id} minus _A{value_number}",
+                f"Value must match the format of {aligned_dna_short_read_id} minus _A{self.batch_number}",
             )
 
     def _check_with_experiment_sample_id(self, field: str, value: str):

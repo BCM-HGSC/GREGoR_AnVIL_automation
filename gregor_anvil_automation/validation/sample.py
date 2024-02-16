@@ -8,35 +8,35 @@ from cerberus import Validator
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
-    def __init__(self, batch_id, gcp_bucket, *args, **kwargs):
+    def __init__(self, batch_number, gcp_bucket, *args, **kwargs):
         super(Validator, self).__init__(*args, **kwargs)
-        self.batch_id = batch_id
+        self.batch_number = batch_number
         self.gcp_bucket = gcp_bucket
 
     def _check_with_aligned_nanopore_id(self, field: str, value: str):
         """Checks that `aligned_nanopore_id` is valid.
         Valid if:
-            - {experiment_nanopore_id}_{batch_id}
+            - {experiment_nanopore_id}_{batch_number}
         """
         experiment_nanopore_id = self.document.get("experiment_nanopore_id")
         if not experiment_nanopore_id:
             return
-        aligned_nanopore_id = f"{experiment_nanopore_id}_{self.batch_id}"
+        aligned_nanopore_id = f"{experiment_nanopore_id}_{self.batch_number}"
         if value != aligned_nanopore_id:
             self._error(
                 field,
-                f"Value must match the format of {experiment_nanopore_id}_{self.batch_id}",
+                f"Value must match the format of {experiment_nanopore_id}_{self.batch_number}",
             )
 
     def _check_with_aligned_dna_short_read_id(self, field: str, value: str):
         """Checks that `aligned_dna_short_read_id` is valid.
         Valid if:
             - Starts with BCM_
-            - Ends in _{batch_id}
+            - Ends in _{batch_number}
         """
-        if not value.startswith("BCM_") or not value.endswith((f"_{self.batch_id}")):
+        if not value.startswith("BCM_") or not value.endswith((f"_{self.batch_number}")):
             self._error(
-                field, f"Value must start with BCM_ and end with _{self.batch_id}"
+                field, f"Value must start with BCM_ and end with _{self.batch_number}"
             )
 
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
@@ -54,28 +54,28 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - Starts with BCM_Subject_
-            - Ends in _1_{batch_id}, _2_{batch_id}, _3_{batch_id}, or _4_{batch_id}"""
+            - Ends in _1_{batch_number}, _2_{batch_number}, _3_{batch_number}, or _4_{batch_number}"""
         if not value.startswith("BCM_Subject_") or not value.endswith(
             (
-                f"_1_{self.batch_id}",
-                f"_2_{self.batch_id}",
-                f"_3_{self.batch_id}",
-                f"_4_{self.batch_id}",
+                f"_1_{self.batch_number}",
+                f"_2_{self.batch_number}",
+                f"_3_{self.batch_number}",
+                f"_4_{self.batch_number}",
             )
         ):
             self._error(
                 field,
-                f"Value must start with BCM_Subject_ and end with _1_{self.batch_id}, _2_{self.batch_id}, _3_{self.batch_id}, or _4_{self.batch_id}",
+                f"Value must start with BCM_Subject_ and end with _1_{self.batch_number}, _2_{self.batch_number}, _3_{self.batch_number}, or _4_{self.batch_number}",
             )
 
     def _check_with_analyte_id_matches_participant_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:
         Valid if:
-            - {participant_id}_{batch_id}"""
+            - {participant_id}_{batch_number}"""
         participant_id = self.document.get("participant_id")
         if not participant_id:
             return
-        analyte_id = f"{participant_id}_{self.batch_id}"
+        analyte_id = f"{participant_id}_{self.batch_number}"
         if value != analyte_id:
             self._error(field, f"Value must match the format of {analyte_id}")
 
@@ -89,12 +89,12 @@ class SampleValidator(Validator):
         if not aligned_dna_short_read_id:
             return
         experiment_dna_short_read_id = aligned_dna_short_read_id.replace(
-            f"_{self.batch_id}", ""
+            f"_{self.batch_number}", ""
         )
         if value != experiment_dna_short_read_id:
             self._error(
                 field,
-                f"Value must match the format of {aligned_dna_short_read_id} minus _{self.batch_id}",
+                f"Value must match the format of {aligned_dna_short_read_id} minus _{self.batch_number}",
             )
 
     def _check_with_experiment_sample_id(self, field: str, value: str):

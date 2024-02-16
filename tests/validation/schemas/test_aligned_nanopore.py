@@ -8,7 +8,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="aligned_nanopore_sample", scope="function")
 def fixture_aligned_nanopore_sample():
     return {
-        "aligned_nanopore_id": "BCM_ONTWGS_TEST_test-batch_id",
+        "aligned_nanopore_id": "BCM_ONTWGS_TEST_test-batch_number",
         "experiment_nanopore_id": "BCM_ONTWGS_TEST",
         "aligned_nanopore_file": "",
         "aligned_nanopore_index_file": "",
@@ -36,7 +36,7 @@ def fixture_aligned_nanopore_sample():
 def fixture_get_validator():
     schema = get_schema("aligned_nanopore")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -55,7 +55,7 @@ def test_aligned_nanopore_id_invalid_sample(get_validator, aligned_nanopore_samp
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
         "aligned_nanopore_id": [
-            f"Value must match the format of {experiment_nanopore_id}_test-batch_id"
+            f"Value must match the format of {experiment_nanopore_id}_test-batch_number"
         ]
     }
 
@@ -67,7 +67,7 @@ def test_experiment_nanopore_id_invalid_sample(get_validator, aligned_nanopore_s
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
         "aligned_nanopore_id": [
-            "Value must match the format of TEST-TEST_test-batch_id"
+            "Value must match the format of TEST-TEST_test-batch_number"
         ],
         "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"],
     }

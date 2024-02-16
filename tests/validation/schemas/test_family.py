@@ -21,7 +21,7 @@ def fixture_family_sample():
 def fixture_get_validator():
     schema = get_schema("family")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
     )
 
 

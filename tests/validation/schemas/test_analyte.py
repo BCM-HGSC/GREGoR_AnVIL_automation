@@ -8,7 +8,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="analyte_sample", scope="function")
 def fixture_analyte_sample():
     return {
-        "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
+        "analyte_id": "BCM_Subject_TEST_1_test-batch_number",
         "participant_id": "BCM_Subject_TEST_1",
         "analyte_type": "DNA",
         "analyte_processing_details": "test-analyte-gregor",
@@ -31,7 +31,7 @@ def fixture_analyte_sample():
 def fixture_get_validator():
     schema = get_schema("analyte")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -50,8 +50,8 @@ def test_analyte_id_invalid_sample(get_validator, analyte_sample):
     validator.validate(analyte_sample)
     assert validator.errors == {
         "analyte_id": [
-            f"Value must match the format of {participant_id}_test-batch_id",
-            "Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id",
+            f"Value must match the format of {participant_id}_test-batch_number",
+            "Value must start with BCM_Subject_ and end with _1_test-batch_number, _2_test-batch_number, _3_test-batch_number, or _4_test-batch_number",
         ],
     }
 
@@ -62,7 +62,7 @@ def test_participant_id_invalid_sample(get_validator, analyte_sample):
     analyte_sample["participant_id"] = "TEST-TEST"
     validator.validate(analyte_sample)
     assert validator.errors == {
-        "analyte_id": ["Value must match the format of TEST-TEST_test-batch_id"],
+        "analyte_id": ["Value must match the format of TEST-TEST_test-batch_number"],
         "participant_id": ["Value must start with BCM_Subject"],
     }
 

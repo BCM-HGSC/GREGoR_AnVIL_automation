@@ -1,4 +1,5 @@
 """Custom cerberus validator for GREGoR project"""
+
 from datetime import datetime
 from string import capwords
 
@@ -46,7 +47,8 @@ class SampleValidator(Validator):
                     raise ValueError
             except ValueError:
                 self._error(
-                    field, f"Value must start with BCM_ and end with _A{self.batch_number}, inclusively"
+                    field,
+                    f"Value must start with BCM_ and end with _A{self.batch_number}, inclusively",
                 )
 
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
@@ -71,12 +73,16 @@ class SampleValidator(Validator):
                 value_number = int(value.split("_A")[-1])
             else:
                 return
-        if not value.startswith("BCM_Subject_") or not (1 <= value_number >= 1 and value_number <= self.batch_number) or not value.endswith(
-            (
-                f"_1_A{value_number}",
-                f"_2_A{value_number}",
-                f"_3_A{value_number}",
-                f"_4_A{value_number}",
+        if (
+            not value.startswith("BCM_Subject_")
+            or not (1 <= value_number <= self.batch_number)
+            or not value.endswith(
+                (
+                    f"_1_A{value_number}",
+                    f"_2_A{value_number}",
+                    f"_3_A{value_number}",
+                    f"_4_A{value_number}",
+                )
             )
         ):
             self._error(
@@ -94,12 +100,15 @@ class SampleValidator(Validator):
         if not participant_id:
             return
         if value.startswith(f"{participant_id}_A"):
-            try: 
+            try:
                 value_number = int(value.split(f"{participant_id}_A")[-1])
                 if not (1 <= value_number <= self.batch_number):
                     raise ValueError
             except ValueError:
-                self._error(field, f"Value must start with {participant_id}_A and end with a number between 1 and {self.batch_number}, inclusively")
+                self._error(
+                    field,
+                    f"Value must start with {participant_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
+                )
 
     def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
         """Checks that the `experiment_dna_short_read_id` is valid.

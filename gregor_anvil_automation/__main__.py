@@ -41,7 +41,7 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
         return_code = validate.run(
             config,
             args.input_path,
-            (args.batch_number).strip(),
+            args.batch_number,
             working_dir,
         )
     return return_code

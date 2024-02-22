@@ -8,7 +8,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="experiment_nanopore_sample", scope="function")
 def fixture_experiment_nanopore_sample():
     return {
-        "experiment_nanopore_id": "BCM_ONTWGS_TEST",
+        "experiment_nanopore_id": "BCM_ONTWGS_BHTEST_1",
         "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
         "experiment_sample_id": "test-experiment_nanopore-gregor",
         "seq_library_prep_kit_method": "LSK109",
@@ -47,7 +47,9 @@ def test_experiment_nanopore_id_invalid_sample(
     experiment_nanopore_sample["experiment_nanopore_id"] = "TEST-TEST"
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {
-        "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"]
+        "experiment_nanopore_id": [
+            "Value must start with BCM_ONTWGS_BH and end with _{some_number}",
+        ]
     }
 
 

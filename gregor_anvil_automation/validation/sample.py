@@ -42,12 +42,15 @@ class SampleValidator(Validator):
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
         """Checks that `experiment_nanopore_id` is valid.
         Valid if:
-            - BCM_ONTWGS_*
+            - Starts with BCM_ONTWGS_BH
+            - Ends with _{some_number}
         """
-        if not value.startswith("BCM_ONTWGS_"):
+        if value.split("_")[-1]:
+            end_string = value.split("_")[-1]
+        if not value.startswith("BCM_ONTWGS_BH") or not isinstance(end_string, int):
             self._error(
                 field,
-                "Value must start with BCM_ONTWGS_",
+                "Value must start with BCM_ONTWGS_BH and end with _{some_number}",
             )
 
     def _check_with_analyte_id(self, field: str, value: str):

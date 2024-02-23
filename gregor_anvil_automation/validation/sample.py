@@ -255,6 +255,8 @@ class SampleValidator(Validator):
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
         """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY/MM/DD to YYYY-MM-DD format"""
+        if value == "NA":
+            return value
         try:
             value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
         except ValueError:

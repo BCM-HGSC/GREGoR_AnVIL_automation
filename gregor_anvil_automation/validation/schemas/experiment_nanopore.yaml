@@ -52,6 +52,7 @@ sequencing_platform:
     - Oxford Nanopore MinION Mk1C
     - Oxford Nanopore MinION Mk1B
     - Oxford Nanopore Flongle
+    - NA
 chemistry_type:
   type: string
   required: False

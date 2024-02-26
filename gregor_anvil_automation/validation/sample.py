@@ -53,15 +53,29 @@ class SampleValidator(Validator):
                 f"Value must start with BCM_ and end with _A{self.batch_number}, inclusively",
             )
 
-    def _check_with_experiment_nanopore_id(self, field: str, value: str):
-        """Checks that `experiment_nanopore_id` is valid.
+    def _check_with_experiment_nanopore_id_start(self, field: str, value: str):
+        """Checks that `experiment_nanopore_id` has a valid start.
         Valid if:
-            - BCM_ONTWGS_*
+            - Starts with BCM_ONTWGS_BH
         """
-        if not value.startswith("BCM_ONTWGS_"):
+        if not value.startswith("BCM_ONTWGS_BH"):
             self._error(
                 field,
-                "Value must start with BCM_ONTWGS_",
+                "Value must start with BCM_ONTWGS_BH",
+            )
+
+    def _check_with_experiment_nanopore_id_end(self, field: str, value: str):
+        """Checks that `experiment_nanopore_id` has a valid end.
+        Valid if:
+            - Ends with _{some_number}
+        """
+        end_string = ""
+        if value.split("_")[-1]:
+            end_string = value.split("_")[-1]
+        if not end_string.isnumeric():
+            self._error(
+                field,
+                "Value must end with _{some_number}",
             )
 
     def _check_with_analyte_id(self, field: str, value: str):
@@ -287,6 +301,8 @@ class SampleValidator(Validator):
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
         """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY/MM/DD to YYYY-MM-DD format"""
+        if value == "NA":
+            return value
         try:
             value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
         except ValueError:

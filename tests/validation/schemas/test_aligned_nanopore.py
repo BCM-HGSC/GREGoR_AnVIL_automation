@@ -9,7 +9,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 def fixture_aligned_nanopore_sample():
     return {
         "aligned_nanopore_id": "BCM_ONTWGS_TEST_A1",
-        "experiment_nanopore_id": "BCM_ONTWGS_TEST",
+        "experiment_nanopore_id": "BCM_ONTWGS_BHTEST_1",
         "aligned_nanopore_file": "",
         "aligned_nanopore_index_file": "",
         "md5sum": "test-aligned_nanopore-gregor",
@@ -35,9 +35,7 @@ def fixture_aligned_nanopore_sample():
 @pytest.fixture(name="get_validator")
 def fixture_get_validator():
     schema = get_schema("aligned_nanopore")
-    return SampleValidator(
-        schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket"
-    )
+    return SampleValidator(schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket")
 
 
 def test_aligned_nanopore_valid_sample(get_validator, aligned_nanopore_sample):
@@ -70,7 +68,10 @@ def test_experiment_nanopore_id_invalid_sample(get_validator, aligned_nanopore_s
         "aligned_nanopore_id": [
             f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and 1, inclusively",
         ],
-        "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"],
+        "experiment_nanopore_id": [
+            "Value must end with _{some_number}",
+            "Value must start with BCM_ONTWGS_BH",
+        ],
     }
 
 

@@ -27,6 +27,7 @@ recontactable:
   allowed:
     - "Yes"
     - "No"
+    - Na
 prior_testing:
   type: string
   required: False

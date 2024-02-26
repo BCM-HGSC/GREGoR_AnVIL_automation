@@ -131,3 +131,14 @@ def test_date_data_generation_normalization(
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
     assert validator.document["date_data_generation"] == "2023-12-25"
+
+
+def test_date_data_generation_normalization_when_na(
+    get_validator, experiment_dna_short_read_sample
+):
+    """Test that a sample's date_data_generation properly passes NA through with coerce: year_month_date"""
+    validator = get_validator
+    experiment_dna_short_read_sample["date_data_generation"] = "NA"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {}
+    assert validator.document["date_data_generation"] == "NA"

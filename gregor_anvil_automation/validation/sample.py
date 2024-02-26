@@ -23,16 +23,17 @@ class SampleValidator(Validator):
         experiment_nanopore_id = self.document.get("experiment_nanopore_id")
         if not experiment_nanopore_id:
             return
-        if value.startswith(f"{experiment_nanopore_id}_A"):
-            try:
-                value_number = int(value.split(f"{experiment_nanopore_id}_A")[1])
-                if not (1 <= value_number <= self.batch_number):
-                    raise ValueError
-            except ValueError:
-                self._error(
-                    field,
-                    f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
-                )
+        try:
+            value_number = int(value.split(f"{experiment_nanopore_id}_A")[-1])
+            if not value.startswith(f"{experiment_nanopore_id}_A") or not (
+                1 <= value_number <= self.batch_number
+            ):
+                raise ValueError
+        except ValueError:
+            self._error(
+                field,
+                f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
+            )
 
     def _check_with_aligned_dna_short_read_id(self, field: str, value: str):
         """Checks that `aligned_dna_short_read_id` is valid.
@@ -40,16 +41,17 @@ class SampleValidator(Validator):
             - Starts with BCM_
             - Ends with a number between 1 and {batch_number}, inclusively
         """
-        if value.startswith("BCM_"):
-            try:
-                value_number = int(value.split("_A")[-1])
-                if not (1 <= value_number <= self.batch_number):
-                    raise ValueError
-            except ValueError:
-                self._error(
-                    field,
-                    f"Value must start with BCM_ and end with _A{self.batch_number}, inclusively",
-                )
+        try:
+            value_number = int(value.split("_A")[-1])
+            if not value.startswith("BCM_") or not (
+                1 <= value_number <= self.batch_number
+            ):
+                raise ValueError
+        except ValueError:
+            self._error(
+                field,
+                f"Value must start with BCM_ and end with _A{self.batch_number}, inclusively",
+            )
 
     def _check_with_experiment_nanopore_id(self, field: str, value: str):
         """Checks that `experiment_nanopore_id` is valid.
@@ -99,16 +101,17 @@ class SampleValidator(Validator):
         participant_id = self.document.get("participant_id")
         if not participant_id:
             return
-        if value.startswith(f"{participant_id}_A"):
-            try:
-                value_number = int(value.split(f"{participant_id}_A")[-1])
-                if not (1 <= value_number <= self.batch_number):
-                    raise ValueError
-            except ValueError:
-                self._error(
-                    field,
-                    f"Value must start with {participant_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
-                )
+        try:
+            value_number = int(value.split(f"{participant_id}_A")[-1])
+            if not value.startswith(f"{participant_id}_A") or not (
+                1 <= value_number <= self.batch_number
+            ):
+                raise ValueError
+        except ValueError:
+            self._error(
+                field,
+                f"Value must start with {participant_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
+            )
 
     def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
         """Checks that the `experiment_dna_short_read_id` is valid.
@@ -119,7 +122,7 @@ class SampleValidator(Validator):
         aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
         if not aligned_dna_short_read_id:
             return
-        experiment_dna_short_read_id = aligned_dna_short_read_id.split(f"_A")[0]
+        experiment_dna_short_read_id = aligned_dna_short_read_id.split("_A")[0]
         if value != experiment_dna_short_read_id:
             self._error(
                 field,

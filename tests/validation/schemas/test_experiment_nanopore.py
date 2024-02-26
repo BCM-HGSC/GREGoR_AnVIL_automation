@@ -48,7 +48,8 @@ def test_experiment_nanopore_id_invalid_sample(
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {
         "experiment_nanopore_id": [
-            "Value must start with BCM_ONTWGS_BH and end with _{some_number}",
+            "Value must start with BCM_ONTWGS_BH",
+            "Value must end with _{some_number}",
         ]
     }
 

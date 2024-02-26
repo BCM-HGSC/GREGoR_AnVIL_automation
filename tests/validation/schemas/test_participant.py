@@ -170,6 +170,15 @@ def test_gregor_center_normalization(get_validator, participant_sample):
     assert validator.document["gregor_center"] == "BCM"
 
 
+def test_recontactable_normalization(get_validator, participant_sample):
+    """Test that a sample's recontactable properly normalizes with coerce: initialcase"""
+    validator = get_validator
+    participant_sample["recontactable"] = "yes"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
+    assert validator.document["recontactable"] == "Yes"
+
+
 def test_proband_relationship_normalization(get_validator, participant_sample):
     """Test that a sample's proband_relationship properly normalizes with coerce: titlecase"""
     validator = get_validator

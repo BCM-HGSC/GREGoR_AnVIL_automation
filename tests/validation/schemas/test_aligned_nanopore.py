@@ -70,8 +70,8 @@ def test_experiment_nanopore_id_invalid_sample(get_validator, aligned_nanopore_s
             "Value must match the format of TEST-TEST_test-batch_id"
         ],
         "experiment_nanopore_id": [
-            "Value must start with BCM_ONTWGS_BH",
             "Value must end with _{some_number}",
+            "Value must start with BCM_ONTWGS_BH",
         ],
     }
 

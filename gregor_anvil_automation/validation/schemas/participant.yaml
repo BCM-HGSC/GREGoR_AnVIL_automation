@@ -23,10 +23,10 @@ consent_code:
 recontactable:
   type: string
   required: False
-  coerce: initialcase
   allowed:
     - "Yes"
     - "No"
+    - NA
 prior_testing:
   type: string
   required: False

@@ -12,7 +12,7 @@ def fixture_genetic_findings_sample():
         "participant_id": "BCM_Subject_BHTEST_1",
         "experiment_id": "test-genetic_findings-gregor",
         "variant_type": "SNV/INDEL",
-        "variant_reference_assembly": "GrCh38",
+        "variant_reference_assembly": "GRCh38",
         "chrom": "1",
         "pos": "256",
         "ref": "C",

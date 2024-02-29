@@ -57,6 +57,7 @@ onset_age_range:
     - HP:0034198
     - HP:0034197
     - HP:0011462
+    - NA
 additional_modifiers:
   type: string
   required: False
@@ -289,3 +290,4 @@ additional_modifiers:
     - MONDO:0024495
     - MONDO:0024490
     - MONDO:0024496
+    - NA

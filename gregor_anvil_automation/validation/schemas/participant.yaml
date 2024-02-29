@@ -108,6 +108,7 @@ reported_ethnicity:
   allowed:
     - Hispanic or Latino
     - Not Hispanic or Latino
+    - NA
 ancestry_detail:
   type: string
   required: False

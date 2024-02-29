@@ -300,36 +300,65 @@ class SampleValidator(Validator):
         return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
-        """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY/MM/DD to YYYY-MM-DD format"""
+        """Coerces values with the format of:
+        - M/D/YY
+        - M-D-YY
+        - M/D/YYYY
+        - M-D-YYYY
+        - MM/DD/YYYY
+        - MM-DD-YYYY
+        - YYYY/MM/DD
+        to the format of YYYY-MM-DD
+        """
         if value == "NA":
             return value
-
-        try:
-            value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
-        except ValueError:
+        formats = [
+            "%Y-%m-%d",
+            "%Y/%m/%d",
+            "%m-%d-%Y",
+            "%m/%d/%Y",
+        ]
+        for date_string in formats:
             try:
                 value = datetime.strftime(
-                    datetime.strptime(value, "%Y/%m/%d"), "%Y-%m-%d"
+                    datetime.strptime(value, date_string), "%Y-%m-%d"
                 )
             except ValueError:
-                try:
-                    value = datetime.strftime(
-                        datetime.strptime(value, "%m-%d-%Y"), "%Y-%m-%d"
-                    )
-                except ValueError:
-                    try:
-                        value = datetime.strftime(
-                            datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
-                        )
-                    except ValueError:
-                        try:
-                            value = datetime.strftime(
-                                datetime.strptime(value, "%02d-%02d-%d"), "%Y-%m-%d"
-                            )
-                        except ValueError:
-                            value = datetime.strftime(
-                                datetime.strptime(value, "%02d/%02d/%d"), "%Y-%m-%d"
-                            )
+                pass
+        # try:
+        #     month_substring = value.split("-")[0]
+        #     month = f"0{month_substring}"
+        #     date_substring = value.split("-")[1]
+        #     date = f"0{date_substring}"
+        #     year = int(value.split("-")[2])
+        #     if year < 100:
+        #         if year > 96:
+        #             year = f"19{year}"
+        #         else:
+        #             year = f"20{year}"
+        #             # Will need update come year 2100
+        #     elif year < 1000:
+        #         return value
+        #     value = f"{year}-{month}-{date}"
+        # except ValueError:
+        #     pass
+        # try:
+        #     month_substring = value.split("/")[0]
+        #     month = f"0{month_substring}"
+        #     date_substring = value.split("/")[1]
+        #     date = f"0{date_substring}"
+        #     year = int(value.split("/")[2])
+        #     if year < 100:
+        #         if year > 96:
+        #             year = f"19{year}"
+        #         else:
+        #             year = f"20{year}"
+        #             # Will need update come year 2100
+        #     elif year < 1000:
+        #         return value
+        #     value = f"{year}-{month}-{date}"
+        # except ValueError:
+        #     pass
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:

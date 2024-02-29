@@ -130,8 +130,8 @@ gene_known_for_phenotype:
 known_condition_name:
   type: string
   required: False
-  dependencies:
-    gene_known_for_phenotype: Known
+  dependencies: gene_known_for_phenotype
+  check_with: known_condition_name
 condition_id:
   type: string
   required: False

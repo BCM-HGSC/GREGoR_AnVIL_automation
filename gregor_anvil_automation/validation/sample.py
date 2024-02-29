@@ -303,6 +303,7 @@ class SampleValidator(Validator):
         """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY/MM/DD to YYYY-MM-DD format"""
         if value == "NA":
             return value
+
         try:
             value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
         except ValueError:
@@ -316,9 +317,19 @@ class SampleValidator(Validator):
                         datetime.strptime(value, "%m-%d-%Y"), "%Y-%m-%d"
                     )
                 except ValueError:
-                    value = datetime.strftime(
-                        datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
-                    )
+                    try:
+                        value = datetime.strftime(
+                            datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
+                        )
+                    except ValueError:
+                        try:
+                            value = datetime.strftime(
+                                datetime.strptime(value, "%02d-%02d-%d"), "%Y-%m-%d"
+                            )
+                        except ValueError:
+                            value = datetime.strftime(
+                                datetime.strptime(value, "%02d/%02d/%d"), "%Y-%m-%d"
+                            )
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:

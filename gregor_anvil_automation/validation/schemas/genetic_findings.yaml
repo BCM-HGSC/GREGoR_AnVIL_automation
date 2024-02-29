@@ -23,7 +23,7 @@ variant_reference_assembly:
   type: string
   required: True
   allowed:
-    - GrCh38
+    - GRCh38
     - CHM13
 chrom:
   type: string

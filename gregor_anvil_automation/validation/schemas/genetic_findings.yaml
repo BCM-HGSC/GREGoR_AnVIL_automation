@@ -190,8 +190,6 @@ phenotype_contribution:
 partial_contribution_explained:
   type: string
   required: False # references phenotype.term_id
-  dependencies:
-    phenotype_contribution: Partial # required if partial contribution (above)
 additional_family_members_with_variant:
   type: string
   required: False # references participant.participant_id

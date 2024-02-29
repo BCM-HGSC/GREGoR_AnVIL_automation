@@ -9,7 +9,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 def fixture_experiment_nanopore_sample():
     return {
         "experiment_nanopore_id": "BCM_ONTWGS_BHTEST_1",
-        "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
+        "analyte_id": "BCM_Subject_TEST_1_A1",
         "experiment_sample_id": "test-experiment_nanopore-gregor",
         "seq_library_prep_kit_method": "LSK109",
         "fragmentation_method": "test-experiment_nanopore-gregor",
@@ -27,9 +27,7 @@ def fixture_experiment_nanopore_sample():
 @pytest.fixture(name="get_validator")
 def fixture_get_validator():
     schema = get_schema("experiment_nanopore")
-    return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
-    )
+    return SampleValidator(schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket")
 
 
 def test_experiment_nanopore_valid_sample(get_validator, experiment_nanopore_sample):
@@ -61,7 +59,7 @@ def test_analyte_id_invalid_sample(get_validator, experiment_nanopore_sample):
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {
         "analyte_id": [
-            "Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+            f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and 1, inclusively",
         ]
     }
 

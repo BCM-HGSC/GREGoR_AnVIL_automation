@@ -8,7 +8,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="aligned_dna_short_read_sample", scope="function")
 def fixture_aligned_dna_short_read_sample():
     return {
-        "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_id",
+        "aligned_dna_short_read_id": "BCM_BHTEST_A1",
         "experiment_dna_short_read_id": "BCM_BHTEST",
         "aligned_dna_short_read_file": "",
         "aligned_dna_short_read_index_file": "",
@@ -27,7 +27,7 @@ def fixture_aligned_dna_short_read_sample():
 def fixture_get_validator():
     schema = get_schema("aligned_dna_short_read")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -46,13 +46,14 @@ def test_aligned_dna_short_read_id_invalid_sample(
     """Test that a sample with an invalid aligned_dna_short_read_id fails validation"""
     validator = get_validator
     aligned_dna_short_read_sample["aligned_dna_short_read_id"] = "TEST-TEST"
+    aligned_dna_short_read_id = aligned_dna_short_read_sample["aligned_dna_short_read_id"]
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {
         "aligned_dna_short_read_id": [
-            "Value must start with BCM_ and end with _test-batch_id"
+            f"Value must start with BCM_ and end with _A1, inclusively"
         ],
         "experiment_dna_short_read_id": [
-            "Value must match the format of TEST-TEST minus _test-batch_id"
+            f"Value must match the format of {aligned_dna_short_read_id} minus _A1"
         ],
     }
 
@@ -69,7 +70,7 @@ def test_experiment_dna_short_read_id_invalid_sample(
     validator.validate(aligned_dna_short_read_sample)
     assert validator.errors == {
         "experiment_dna_short_read_id": [
-            f"Value must match the format of {aligned_dna_short_read_id} minus _test-batch_id"
+            f"Value must match the format of {aligned_dna_short_read_id} minus _A1"
         ]
     }
 

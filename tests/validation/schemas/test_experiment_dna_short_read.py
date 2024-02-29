@@ -9,7 +9,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 def fixture_experiment_dna_short_read_sample():
     return {
         "experiment_dna_short_read_id": "BCM_TEST",
-        "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
+        "analyte_id": "BCM_Subject_TEST_1_A1",
         "experiment_sample_id": "TEST",
         "seq_library_prep_kit_method": "test-experiment_dna_short_read-gregor",
         "read_length": "0",
@@ -25,9 +25,7 @@ def fixture_experiment_dna_short_read_sample():
 @pytest.fixture(name="get_validator")
 def fixture_get_validator():
     schema = get_schema("experiment_dna_short_read")
-    return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
-    )
+    return SampleValidator(schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket")
 
 
 def test_experiment_dna_short_read_valid_sample(
@@ -59,7 +57,7 @@ def test_analyte_id_invalid_sample(get_validator, experiment_dna_short_read_samp
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {
         "analyte_id": [
-            "Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+            f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and 1, inclusively",
         ]
     }
 

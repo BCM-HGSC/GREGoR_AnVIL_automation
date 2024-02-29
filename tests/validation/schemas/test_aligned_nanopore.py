@@ -8,7 +8,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="aligned_nanopore_sample", scope="function")
 def fixture_aligned_nanopore_sample():
     return {
-        "aligned_nanopore_id": "BCM_ONTWGS_TEST_A1",
+        "aligned_nanopore_id": "BCM_ONTWGS_BHTEST_1_A1",
         "experiment_nanopore_id": "BCM_ONTWGS_BHTEST_1",
         "aligned_nanopore_file": "",
         "aligned_nanopore_index_file": "",

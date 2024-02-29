@@ -325,40 +325,38 @@ class SampleValidator(Validator):
                 )
             except ValueError:
                 pass
-        # try:
-        #     month_substring = value.split("-")[0]
-        #     month = f"0{month_substring}"
-        #     date_substring = value.split("-")[1]
-        #     date = f"0{date_substring}"
-        #     year = int(value.split("-")[2])
-        #     if year < 100:
-        #         if year > 96:
-        #             year = f"19{year}"
-        #         else:
-        #             year = f"20{year}"
-        #             # Will need update come year 2100
-        #     elif year < 1000:
-        #         return value
-        #     value = f"{year}-{month}-{date}"
-        # except ValueError:
-        #     pass
-        # try:
-        #     month_substring = value.split("/")[0]
-        #     month = f"0{month_substring}"
-        #     date_substring = value.split("/")[1]
-        #     date = f"0{date_substring}"
-        #     year = int(value.split("/")[2])
-        #     if year < 100:
-        #         if year > 96:
-        #             year = f"19{year}"
-        #         else:
-        #             year = f"20{year}"
-        #             # Will need update come year 2100
-        #     elif year < 1000:
-        #         return value
-        #     value = f"{year}-{month}-{date}"
-        # except ValueError:
-        #     pass
+        try:
+            month_substring = value.split("-")[0]
+            month = f"0{month_substring}"
+            date_substring = value.split("-")[1]
+            date = f"0{date_substring}"
+            year = int(value.split("-")[2])
+            if 96 < year < 100:
+                year = f"19{year}"
+            elif year < 96:
+                year = f"20{year}"
+                # Will need update come year 2100
+            elif year < 1000:
+                return value
+            value = f"{year}-{month}-{date}"
+        except ValueError:
+            pass
+        try:
+            month_substring = value.split("/")[0]
+            month = f"0{month_substring}"
+            date_substring = value.split("/")[1]
+            date = f"0{date_substring}"
+            year = int(value.split("/")[2])
+            if 96 < year < 100:
+                year = f"19{year}"
+            elif year < 96:
+                year = f"20{year}"
+                # Will need update come year 2100
+            elif year < 1000:
+                return value
+            value = f"{year}-{month}-{date}"
+        except ValueError:
+            pass
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:

@@ -285,7 +285,9 @@ class SampleValidator(Validator):
         - A string other than NA if gene_known_for_phenotype is Known
         """
         gene_known_for_phenotype = self.document.get("gene_known_for_phenotype")
-        if gene_known_for_phenotype == "Known" and value == "NA":
+        if gene_known_for_phenotype == "Known" and (
+            value == "" or value.lower() == "na"
+        ):
             self._error(
                 field, "Value may only be NA if gene_known_for_phenotype is not Known"
             )

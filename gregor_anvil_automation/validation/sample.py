@@ -4,6 +4,7 @@ from datetime import datetime
 from string import capwords
 
 from cerberus import Validator
+from dateutil.parser import parse
 
 
 class SampleValidator(Validator):
@@ -312,49 +313,8 @@ class SampleValidator(Validator):
         """
         if value == "NA":
             return value
-        formats = [
-            "%Y-%m-%d",
-            "%Y/%m/%d",
-            "%m-%d-%Y",
-            "%m/%d/%Y",
-        ]
-        for date_string in formats:
-            try:
-                value = datetime.strftime(
-                    datetime.strptime(value, date_string), "%Y-%m-%d"
-                )
-            except ValueError:
-                pass
         try:
-            month_substring = value.split("-")[0]
-            month = f"0{month_substring}"
-            date_substring = value.split("-")[1]
-            date = f"0{date_substring}"
-            year = int(value.split("-")[2])
-            if 96 < year < 100:
-                year = f"19{year}"
-            elif year < 96:
-                year = f"20{year}"
-                # Will need update come year 2100
-            elif year < 1000:
-                return value
-            value = f"{year}-{month}-{date}"
-        except ValueError:
-            pass
-        try:
-            month_substring = value.split("/")[0]
-            month = f"0{month_substring}"
-            date_substring = value.split("/")[1]
-            date = f"0{date_substring}"
-            year = int(value.split("/")[2])
-            if 96 < year < 100:
-                year = f"19{year}"
-            elif year < 96:
-                year = f"20{year}"
-                # Will need update come year 2100
-            elif year < 1000:
-                return value
-            value = f"{year}-{month}-{date}"
+            value = datetime.strftime(parse(value), "%Y-%m-%d")
         except ValueError:
             pass
         return value

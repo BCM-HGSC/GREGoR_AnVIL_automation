@@ -58,8 +58,26 @@ def test_participant_id_invalid_sample(get_validator, participant_sample):
     validator.validate(participant_sample)
     assert validator.errors == {
         "participant_id": [
-            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
+            "Value must start with BCM_Subject and end with _{a number}",
         ]
+    }
+
+
+def test_participant_id_invalid_sample_different_subject_id(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid participant_id fails validation"""
+    validator = get_validator
+    participant_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
+    participant_id = participant_sample["participant_id"]
+    validator.validate(participant_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with {participant_id}_A and end with a number between 1 and 1, inclusively"
+        ],
+        "participant_id": [
+            "Value must start with BCM_Subject and end with _{a number}",
+        ],
     }
 
 
@@ -83,6 +101,20 @@ def test_paternal_id_invalid_sample(get_validator, participant_sample):
     }
 
 
+def test_paternal_id_invalid_sample_different_subject_id(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid paternal_id fails validation"""
+    validator = get_validator
+    participant_sample["paternal_id"] = "BCM_Subject_TEST-TEST_1"
+    validator.validate(participant_sample)
+    assert validator.errors == {
+        "paternal_id": [
+            "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
+        ],
+    }
+
+
 def test_maternal_id_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid maternal_id fails validation"""
     validator = get_validator
@@ -92,6 +124,20 @@ def test_maternal_id_invalid_sample(get_validator, participant_sample):
         "maternal_id": [
             "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`"
         ]
+    }
+
+
+def test_maternal_id_invalid_sample_different_subject_id(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid maternal_id fails validation"""
+    validator = get_validator
+    participant_sample["maternal_id"] = "BCM_Subject_TEST-TEST_1"
+    validator.validate(participant_sample)
+    assert validator.errors == {
+        "maternal_id": [
+            "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
+        ],
     }
 
 

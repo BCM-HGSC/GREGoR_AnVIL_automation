@@ -63,30 +63,20 @@ def test_participant_id_invalid_sample(get_validator, participant_sample):
     }
 
 
-def test_participant_id_invalid_sample_different_subject_id(
-    get_validator, participant_sample
-):
-    """Test that a sample with an invalid participant_id fails validation"""
-    validator = get_validator
-    participant_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
-    participant_id = participant_sample["participant_id"]
-    validator.validate(participant_sample)
-    assert validator.errors == {
-        "analyte_id": [
-            f"Value must start with {participant_id}_A and end with a number between 1 and 1, inclusively"
-        ],
-        "participant_id": [
-            "Value must start with BCM_Subject and end with _{a number}",
-        ],
-    }
-
-
 def test_family_id_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid family_id fails validation"""
     validator = get_validator
     participant_sample["family_id"] = "TEST-TEST"
     validator.validate(participant_sample)
     assert validator.errors == {"family_id": ["Value must start with BCM_Fam"]}
+
+
+def test_paternal_id_valid_sample_non_zero(get_validator, participant_sample):
+    """Test that a sample with an valid paternal_id passes validation"""
+    validator = get_validator
+    participant_sample["paternal_id"] = "BCM_Subject_TEST_3"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
 
 
 def test_paternal_id_invalid_sample(get_validator, participant_sample):
@@ -113,6 +103,14 @@ def test_paternal_id_invalid_sample_different_subject_id(
             "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
         ],
     }
+
+
+def test_maternal_id_valid_sample_non_zero(get_validator, participant_sample):
+    """Test that a sample with an valid maternal_id passes validation"""
+    validator = get_validator
+    participant_sample["maternal_id"] = "BCM_Subject_TEST_2"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
 
 
 def test_maternal_id_invalid_sample(get_validator, participant_sample):

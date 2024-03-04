@@ -46,6 +46,24 @@ def test_participant_id_invalid_sample(get_validator, phenotype_sample):
     }
 
 
+def test_participant_id_invalid_sample_different_subject_id(
+    get_validator, phenotype_sample
+):
+    """Test that a sample with an invalid participant_id fails validation"""
+    validator = get_validator
+    phenotype_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
+    participant_id = phenotype_sample["participant_id"]
+    validator.validate(phenotype_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with {participant_id}_A and end with a number between 1 and 1, inclusively"
+        ],
+        "participant_id": [
+            "Value must start with BCM_Subject and end with _{a number}",
+        ],
+    }
+
+
 def test_term_id_invalid_sample(get_validator, phenotype_sample):
     """Test that a sample with an invalid term_id fails validation"""
     validator = get_validator

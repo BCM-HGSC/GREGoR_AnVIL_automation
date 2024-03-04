@@ -4,6 +4,7 @@ from datetime import datetime
 from string import capwords
 
 from cerberus import Validator
+from dateutil.parser import parse
 
 
 class SampleValidator(Validator):
@@ -300,25 +301,22 @@ class SampleValidator(Validator):
         return value.upper() if value else value
 
     def _normalize_coerce_year_month_date(self, value: str) -> str:
-        """Coerces value of MM-DD-YYYY, MM/DD/YYYY, or YYYY/MM/DD to YYYY-MM-DD format"""
+        """Coerces values with the format of:
+        - M/D/YY
+        - M-D-YY
+        - M/D/YYYY
+        - M-D-YYYY
+        - MM/DD/YYYY
+        - MM-DD-YYYY
+        - YYYY/MM/DD
+        to the format of YYYY-MM-DD
+        """
         if value == "NA":
             return value
         try:
-            value = datetime.strftime(datetime.strptime(value, "%Y-%m-%d"), "%Y-%m-%d")
+            value = datetime.strftime(parse(value), "%Y-%m-%d")
         except ValueError:
-            try:
-                value = datetime.strftime(
-                    datetime.strptime(value, "%Y/%m/%d"), "%Y-%m-%d"
-                )
-            except ValueError:
-                try:
-                    value = datetime.strftime(
-                        datetime.strptime(value, "%m-%d-%Y"), "%Y-%m-%d"
-                    )
-                except ValueError:
-                    value = datetime.strftime(
-                        datetime.strptime(value, "%m/%d/%Y"), "%Y-%m-%d"
-                    )
+            pass
         return value
 
     def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:

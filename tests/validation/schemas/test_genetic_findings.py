@@ -65,7 +65,25 @@ def test_participant_id_invalid_sample(get_validator, genetic_findings_sample):
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "participant_id": [
-            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4",
+            "Value must start with BCM_Subject and end with _{a number}",
+        ],
+    }
+
+
+def test_participant_id_invalid_sample_different_subject_id(
+    get_validator, genetic_findings_sample
+):
+    """Test that a sample with an invalid participant_id fails validation"""
+    validator = get_validator
+    genetic_findings_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
+    participant_id = genetic_findings_sample["participant_id"]
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with {participant_id}_A and end with a number between 1 and 1, inclusively"
+        ],
+        "participant_id": [
+            "Value must start with BCM_Subject and end with _{a number}",
         ],
     }
 

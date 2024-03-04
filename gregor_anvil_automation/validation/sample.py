@@ -178,14 +178,17 @@ class SampleValidator(Validator):
         """Checks that participant id is valid.
         A valid participant id is:
             - starts with BCM_Subject_
-            - ends with _1, _2, _3, or _4
+            - ends with _{a number}"
         """
-        if not value.startswith("BCM_Subject_") or not value.endswith(
-            ("_1", "_2", "_3", "_4")
+        end_string = value.split("_")[-1]
+        if (
+            not value.startswith("BCM_Subject_")
+            or not end_string.isnumeric()
+            or not value.endswith((f"_{end_string}"))
         ):
             self._error(
                 field,
-                "Value must start with BCM_Subject and end with either _1, _2, _3, or _4",
+                "Value must start with BCM_Subject and end with _{a number}",
             )
 
     def _check_with_maternal_id_is_valid(self, field: str, value: str):
@@ -200,8 +203,9 @@ class SampleValidator(Validator):
         participant_id = self.document.get("participant_id")
         if not participant_id or value == "0":
             return
-        maternal_id = "_".join(participant_id.split("_")[:-1]) + "_2"
-        if not self.document["participant_id"].endswith("_1") or value != maternal_id:
+        participant_substring = "_".join(participant_id.split("_")[:-1])
+        maternal_id = f"{participant_substring}_2"
+        if value != maternal_id:
             self._error(
                 field,
                 "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
@@ -219,8 +223,9 @@ class SampleValidator(Validator):
         participant_id = self.document.get("participant_id")
         if not participant_id or value == "0":
             return
-        paternal_id = "_".join(participant_id.split("_")[:-1]) + "_3"
-        if not self.document["participant_id"].endswith("_1") or value != paternal_id:
+        participant_substring = "_".join(participant_id.split("_")[:-1])
+        paternal_id = f"{participant_substring}_2"
+        if value != paternal_id:
             self._error(
                 field,
                 "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",

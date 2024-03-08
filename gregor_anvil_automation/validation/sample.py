@@ -179,14 +179,17 @@ class SampleValidator(Validator):
         """Checks that participant id is valid.
         A valid participant id is:
             - starts with BCM_Subject_
-            - ends with _1, _2, _3, or _4
+            - ends with _{a number}
         """
-        if not value.startswith("BCM_Subject_") or not value.endswith(
-            ("_1", "_2", "_3", "_4")
+        end_string = value.split("_")[-1]
+        if (
+            not value.startswith("BCM_Subject_")
+            or not end_string.isnumeric()
+            or not value.endswith((f"_{end_string}"))
         ):
             self._error(
                 field,
-                "Value must start with BCM_Subject and end with either _1, _2, _3, or _4",
+                "Value must start with BCM_Subject and end with _{a number}",
             )
 
     def _check_with_maternal_id_is_valid(self, field: str, value: str):

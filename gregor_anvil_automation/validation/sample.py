@@ -279,7 +279,7 @@ class SampleValidator(Validator):
         if not value.startswith(tuple(ontology)):
             self._error(field, "Value must start with HP: or MONDO:")
 
-    def _check_with_known_condition_name(self, field: str, value: str):
+    def _check_with_gene_known_for_phenotype_is_known(self, field: str, value: str):
         """Checks that field's value is:
         - NA if gene_known_for_phenotype is Candidate or some string
         - A string other than NA if gene_known_for_phenotype is Known

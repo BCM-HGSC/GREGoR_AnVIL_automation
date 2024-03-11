@@ -134,7 +134,7 @@ def test_maternal_id_invalid_sample_different_subject_id(
     validator.validate(participant_sample)
     assert validator.errors == {
         "maternal_id": [
-            "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
+            "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
         ],
     }
 

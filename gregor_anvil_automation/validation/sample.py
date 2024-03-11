@@ -165,12 +165,12 @@ class SampleValidator(Validator):
         if value.strip().upper() != "NA":
             self._error(field, "Value must be NA")
 
-    def _check_with_is_number(self, field: str, value: str):
+    def _check_with_is_int(self, field: str, value: str):
         """Checks that the field's value is a valid integer"""
         if not value.isdigit():
             self._error(field, "Value requires an int")
 
-    def _check_with_is_number_or_na(self, field: str, value: str):
+    def _check_with_is_int_or_na(self, field: str, value: str):
         """Checks that the field's value is the string `NA` or a valid integer"""
         if value.strip().upper() != "NA" and not value.isdigit():
             self._error(field, "Value must be NA or an int")

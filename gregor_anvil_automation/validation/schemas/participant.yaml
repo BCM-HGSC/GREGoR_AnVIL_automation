@@ -115,7 +115,7 @@ ancestry_detail:
 age_at_last_observation:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_int_or_na
 affected_status:
   type: string
   required: True
@@ -130,7 +130,7 @@ phenotype_description:
 age_at_enrollment:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_int_or_na
 solve_status:
   type: string
   required: True

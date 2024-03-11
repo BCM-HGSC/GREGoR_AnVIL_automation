@@ -133,14 +133,16 @@ def test_age_at_last_observation_invalid_sample(get_validator, participant_sampl
     participant_sample["age_at_last_observation"] = "TEST-TEST"
     validator.validate(participant_sample)
     assert validator.errors == {
-        "age_at_last_observation": ["Value must be NA or an int"]
+        "age_at_last_observation": ["Value must be NA or a float"]
     }
 
 
-def test_age_at_last_observation_is_int_valid_sample(get_validator, participant_sample):
+def test_age_at_last_observation_is_float_valid_sample(
+    get_validator, participant_sample
+):
     """Test that a sample with a age_at_last_observation with a string number passes validation"""
     validator = get_validator
-    participant_sample["age_at_last_observation"] = "12345"
+    participant_sample["age_at_last_observation"] = "12345.12345"
     validator.validate(participant_sample)
     assert validator.errors == {}
 

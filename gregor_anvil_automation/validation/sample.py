@@ -225,7 +225,7 @@ class SampleValidator(Validator):
         if not participant_id or value == "0":
             return
         participant_substring = "_".join(participant_id.split("_")[:-1])
-        paternal_id = f"{participant_substring}_2"
+        paternal_id = f"{participant_substring}_3"
         if value != paternal_id:
             self._error(
                 field,

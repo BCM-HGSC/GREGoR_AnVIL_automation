@@ -181,7 +181,7 @@ class SampleValidator(Validator):
             try:
                 float(value)
             except ValueError:
-                self._error(field, "Value must be NA or an float")
+                self._error(field, "Value must be NA or a float")
 
     def _check_with_participant_id(self, field: str, value: str):
         """Checks that participant id is valid.

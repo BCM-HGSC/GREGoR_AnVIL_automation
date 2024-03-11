@@ -179,7 +179,7 @@ class SampleValidator(Validator):
         """Checks that participant id is valid.
         A valid participant id is:
             - starts with BCM_Subject_
-            - ends with _{a number}"
+            - ends with _{a number}
         """
         end_string = value.split("_")[-1]
         if (

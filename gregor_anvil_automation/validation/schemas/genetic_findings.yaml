@@ -58,7 +58,7 @@ chrom:
 pos:
   type: string
   required: True
-  check_with: is_number
+  check_with: is_int
 ref:
   type: string
   required: True

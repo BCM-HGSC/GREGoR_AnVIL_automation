@@ -175,6 +175,14 @@ class SampleValidator(Validator):
         if value.strip().upper() != "NA" and not value.isdigit():
             self._error(field, "Value must be NA or an int")
 
+    def _check_with_is_float_or_na(self, field: str, value: str):
+        """Checks that the field's value is the string `NA` or a valid float"""
+        if value.strip().upper() != "NA":
+            try:
+                float(value)
+            except ValueError:
+                self._error(field, "Value must be NA or an float")
+
     def _check_with_participant_id(self, field: str, value: str):
         """Checks that participant id is valid.
         A valid participant id is:

@@ -52,14 +52,54 @@ def test_experiment_nanopore_id_invalid_sample(
     }
 
 
-def test_analyte_id_invalid_sample(get_validator, experiment_nanopore_sample):
+def test_analyte_id_invalid_sample_no_passes(get_validator, experiment_nanopore_sample):
     """Test that a sample with an invalid analyte_id fails validation"""
     validator = get_validator
     experiment_nanopore_sample["analyte_id"] = "TEST-TEST"
     validator.validate(experiment_nanopore_sample)
     assert validator.errors == {
         "analyte_id": [
-            f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and 1, inclusively",
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
+        ]
+    }
+
+
+def test_analyte_id_invalid_sample_no_start(get_validator, experiment_nanopore_sample):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_nanopore_sample["analyte_id"] = "TEST-TEST_1_A1"
+    validator.validate(experiment_nanopore_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
+        ]
+    }
+
+
+def test_analyte_id_invalid_sample_no_mid_num(
+    get_validator, experiment_nanopore_sample
+):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_nanopore_sample["analyte_id"] = "BCM_Subject_TEST-TEST_A1"
+    validator.validate(experiment_nanopore_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
+        ]
+    }
+
+
+def test_analyte_id_invalid_sample_no_end_num(
+    get_validator, experiment_nanopore_sample
+):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_nanopore_sample["analyte_id"] = "BCM_Subject_TEST-TEST_1_A"
+    validator.validate(experiment_nanopore_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
         ]
     }
 

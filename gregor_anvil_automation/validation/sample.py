@@ -83,28 +83,26 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - Starts with BCM_Subject_
-            - Ends in _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively
+            - Ends in _{a number}_A and then a number between 1 and {batch_number}, inclusively
         """
         if value.startswith("BCM_Subject_"):
-            if int(value.split("_A")[-1]):
+            if value.split("_A")[-1].isnumeric() and value.split("_")[-2].isnumeric():
                 value_number = int(value.split("_A")[-1])
+                num_substring = int(value.split("_")[-2])
             else:
+                self._error(
+                    field,
+                    f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and {self.batch_number}, inclusively",
+                )
                 return
         if (
             not value.startswith("BCM_Subject_")
             or not (1 <= value_number <= self.batch_number)
-            or not value.endswith(
-                (
-                    f"_1_A{value_number}",
-                    f"_2_A{value_number}",
-                    f"_3_A{value_number}",
-                    f"_4_A{value_number}",
-                )
-            )
+            or not value.endswith((f"_{num_substring}_A{value_number}",))
         ):
             self._error(
                 field,
-                f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {self.batch_number}, inclusively",
+                f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and {self.batch_number}, inclusively",
             )
 
     def _check_with_analyte_id_matches_participant_id(self, field: str, value: str):

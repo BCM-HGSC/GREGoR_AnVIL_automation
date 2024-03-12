@@ -293,6 +293,19 @@ class SampleValidator(Validator):
         if not value.startswith(tuple(ontology)):
             self._error(field, "Value must start with HP: or MONDO:")
 
+    def _check_with_gene_known_for_phenotype_is_known(self, field: str, value: str):
+        """Checks that field's value is:
+        - NA if gene_known_for_phenotype is Candidate or some string
+        - A string other than NA if gene_known_for_phenotype is Known
+        """
+        gene_known_for_phenotype = self.document.get("gene_known_for_phenotype")
+        if gene_known_for_phenotype == "Known" and (
+            value == "" or value.lower() == "na"
+        ):
+            self._error(
+                field, "Value may only be NA if gene_known_for_phenotype is not Known"
+            )
+
     def _normalize_coerce_initialcase(self, value: str) -> str:
         """Coerces value to initialcase"""
         if value.strip():

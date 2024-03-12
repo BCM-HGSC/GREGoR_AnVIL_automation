@@ -204,8 +204,9 @@ class SampleValidator(Validator):
         participant_id = self.document.get("participant_id")
         if not participant_id or value == "0":
             return
-        maternal_id = "_".join(participant_id.split("_")[:-1]) + "_2"
-        if not self.document["participant_id"].endswith("_1") or value != maternal_id:
+        participant_substring = "_".join(participant_id.split("_")[:-1])
+        maternal_id = f"{participant_substring}_2"
+        if value != maternal_id:
             self._error(
                 field,
                 "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
@@ -223,8 +224,9 @@ class SampleValidator(Validator):
         participant_id = self.document.get("participant_id")
         if not participant_id or value == "0":
             return
-        paternal_id = "_".join(participant_id.split("_")[:-1]) + "_3"
-        if not self.document["participant_id"].endswith("_1") or value != paternal_id:
+        participant_substring = "_".join(participant_id.split("_")[:-1])
+        paternal_id = f"{participant_substring}_3"
+        if value != paternal_id:
             self._error(
                 field,
                 "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",

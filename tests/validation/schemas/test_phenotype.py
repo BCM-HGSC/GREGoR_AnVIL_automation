@@ -41,7 +41,7 @@ def test_participant_id_invalid_sample(get_validator, phenotype_sample):
     validator.validate(phenotype_sample)
     assert validator.errors == {
         "participant_id": [
-            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
+            "Value must start with BCM_Subject and end with _{a number}",
         ]
     }
 

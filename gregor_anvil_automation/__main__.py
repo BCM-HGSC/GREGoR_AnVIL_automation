@@ -82,6 +82,11 @@ def command_line_parser() -> Namespace:
         type=Path,
         help="Specifies the .env file to be used or assumes .env exist in current working directory",
     )
+    parser.add_argument(
+        "metadata_map_file",
+        type=Path,
+        help="Path to a CSV to help populate main tables",
+    )
     return parser.parse_args()
 
 

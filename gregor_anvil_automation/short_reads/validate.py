@@ -27,23 +27,30 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         tables=tables,
     )
 
-    # If any errors, email issues in a csv file
-    subject = "GREGoR AnVIL automation"
-    if issues:
-        file_path = working_dir / "issues.csv"
-        data_headers = ["field", "message", "table_name", "row"]
-        generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
-        send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
-    # If all is good, email of success and files generated
-    else:
-        file_paths = []
-        for table_name, table in tables.items():
-            # If all ok, generate tsvs of each table
-            file_path = working_dir / f"{table_name}.tsv"
-            data_headers = table[0].keys()
-            generate_file(file_path, data_headers, table, "\t")
-            file_paths.append(file_path)
-        send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
+    # # If any errors, email issues in a csv file
+    # subject = "GREGoR AnVIL automation"
+    # if issues:
+    #     file_path = working_dir / "issues.csv"
+    #     data_headers = ["field", "message", "table_name", "row"]
+    #     generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
+    #     send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
+    # # If all is good, email of success and files generated
+    # else:
+    #     file_paths = []
+    #     for table_name, table in tables.items():
+    #         # If all ok, generate tsvs of each table
+    #         file_path = working_dir / f"{table_name}.tsv"
+    #         data_headers = table[0].keys()
+    #         generate_file(file_path, data_headers, table, "\t")
+    #         file_paths.append(file_path)
+    #     send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
+    return 0
+
+
+def apply_metadata_map_file(
+    metadata_map_file: Path, tables: list[Table], gcp_bucket_name: Path
+):
+    """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
     return 0
 
 

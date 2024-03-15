@@ -6,6 +6,7 @@ a script by running:
 
 from argparse import ArgumentParser, Namespace
 from logging import basicConfig, getLogger, INFO
+import logging.config
 from pathlib import Path
 from os import environ
 
@@ -20,12 +21,19 @@ from .utils.utils import parse_yaml
 logger = getLogger(__name__)
 
 
+def setup_logging():
+    """Setting up logging with a config file"""
+    yaml_config = parse_yaml("logging_config.yaml")
+    logging.config.dictConfig(yaml_config)
+
+
 def main() -> int:
     """Main method of gregor workflow"""
     args = command_line_parser()
     load_env_vars(args.env_file)
     basicConfig(level=INFO)
     config = parse_yaml(args.config_file)
+    setup_logging()
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster
     with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:

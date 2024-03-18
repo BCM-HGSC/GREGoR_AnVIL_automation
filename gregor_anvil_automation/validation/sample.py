@@ -147,17 +147,12 @@ class SampleValidator(Validator):
     def _check_with_experiment_sample_id(self, field: str, value: str):
         """Checks that the `experiment_sample_id` is valid.
         Valid if:
-            - experiment_sample_id == experiment_dna_short_read_id
-              (without the BCM part)
+            - experiment_sample_id is not empty
         """
-        experiment_dna_short_read_id = self.document.get("experiment_dna_short_read_id")
-        if not experiment_dna_short_read_id:
-            return
-        experiment_sample_id = experiment_dna_short_read_id.replace("BCM_", "")
-        if value != experiment_sample_id:
+        if not value:
             self._error(
                 field,
-                f"Value must match the format of {experiment_dna_short_read_id} minus BCM_",
+                "Value must not be empty",
             )
 
     def _check_with_is_na(self, field: str, value: str):

@@ -46,7 +46,6 @@ def test_experiment_dna_short_read_id_invalid_sample(
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {
         "experiment_dna_short_read_id": ["Value must start with BCM_"],
-        "experiment_sample_id": ["Value must match the format of TEST-TEST minus BCM_"],
     }
 
 
@@ -67,16 +66,9 @@ def test_experiment_sample_id_invalid_sample(
 ):
     """Test that a sample with an invalid experiment_sample_id fails validation"""
     validator = get_validator
-    experiment_dna_short_read_sample["experiment_sample_id"] = "TEST-TEST"
-    experiment_dna_short_read_id = experiment_dna_short_read_sample[
-        "experiment_dna_short_read_id"
-    ]
+    experiment_dna_short_read_sample["experiment_sample_id"] = ""
     validator.validate(experiment_dna_short_read_sample)
-    assert validator.errors == {
-        "experiment_sample_id": [
-            f"Value must match the format of {experiment_dna_short_read_id} minus BCM_"
-        ]
-    }
+    assert validator.errors == {"experiment_sample_id": ["Value must not be empty"]}
 
 
 def test_read_length_invalid_sample(get_validator, experiment_dna_short_read_sample):

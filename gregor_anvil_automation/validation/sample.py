@@ -83,29 +83,46 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - Starts with BCM_Subject_
-            - Ends in _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively
+            - Ends in _{a number}_A and then a number between 1 and {batch_number}, inclusively
+
+        This should be used whenever `analyte_id` is not povided along with the `participant_id`.
         """
-        if value.startswith("BCM_Subject_"):
-            if int(value.split("_A")[-1]):
-                value_number = int(value.split("_A")[-1])
-            else:
-                return
-        if (
-            not value.startswith("BCM_Subject_")
-            or not (1 <= value_number <= self.batch_number)
-            or not value.endswith(
-                (
-                    f"_1_A{value_number}",
-                    f"_2_A{value_number}",
-                    f"_3_A{value_number}",
-                    f"_4_A{value_number}",
-                )
-            )
-        ):
+        error_message = f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and {self.batch_number}, inclusively"
+        if not value.startswith("BCM_Subject_"):
             self._error(
                 field,
-                f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {self.batch_number}, inclusively",
+                error_message,
             )
+            return
+
+        parts = value.split("_")
+        if len(parts) != 5:
+            self._error(
+                field,
+                error_message,
+            )
+            return
+        if not parts[3].isnumeric():
+            self._error(
+                field,
+                error_message,
+            )
+            return
+        try:
+            given_batch_number = int(parts[-1][1:])
+            int(parts[-2])
+        except ValueError:
+            self._error(
+                field,
+                error_message,
+            )
+            return
+        if not 1 <= given_batch_number <= self.batch_number:
+            self._error(
+                field,
+                error_message,
+            )
+            return
 
     def _check_with_analyte_id_matches_participant_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:

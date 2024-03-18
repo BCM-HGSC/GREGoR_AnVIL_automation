@@ -58,11 +58,21 @@ def apply_metadata_map_file(
 ):
     """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
     metadata = parse_file(metadata_map_file, ",")
+    metadata_field_indices = {
+        "experiment_dna_short_read_id": 0,
+        "aligned_dna_short_read_id": 1,
+        "cram_file_name": 2,
+        "crai_file_name": 3,
+        "sm_tag": 4,
+        "md5sum": 5,
+    }
     experiment_dna_short_read = tables.get("experiment_dna_short_read")
     # experiment_dna_short_read["experiment_dna_short_read"] = (
     #     "experiment_dna_short_read_id" in metadata
     # )
-    experiment_dna_short_read["experiment_sample_id"] = "sm_tag" in metadata
+    experiment_dna_short_read["experiment_sample_id"] = metadata[
+        metadata_field_indices["sm_tag"]
+    ]
     aligned_short_read = tables.get("aligned_dna_short_read")
     # aligned_short_read["aligned_dna_short_read_id"] = (
     #     "aligned_dna_short_read_id" in metadata
@@ -70,15 +80,15 @@ def apply_metadata_map_file(
     # aligned_short_read["experiment_dna_short_read_id"] = (
     #     "experiment_dna_short_read_id" in metadata
     # )
-    cram_file_name = "cram_file_name" in metadata
+    cram_file_name = metadata[metadata_field_indices["cram_file_name"]]
     aligned_dna_short_read_file_path = f"gs://{gcp_bucket_name}/{cram_file_name}"
     aligned_short_read["aligned_dna_short_read_file"] = aligned_dna_short_read_file_path
-    crai_file_name = "crai_file_name" in metadata
+    crai_file_name = metadata[metadata_field_indices["crai_file_name"]]
     aligned_dna_short_read_index_file_path = f"gs://{gcp_bucket_name}/{crai_file_name}"
     aligned_short_read[
         "aligned_dna_short_read_index_file"
     ] = aligned_dna_short_read_index_file_path
-    aligned_short_read["md5sum"] = "md5sum" in metadata
+    aligned_short_read["md5sum"] = metadata[metadata_field_indices["md5sum"]]
 
 
 def validate_tables(

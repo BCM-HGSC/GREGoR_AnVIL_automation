@@ -8,14 +8,20 @@ from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 from gregor_anvil_automation.utils.utils import get_table_samples
 from ..utils.types import Sample, Table
 from ..utils.issue import Issue
-from ..utils.utils import generate_file
+from ..utils.utils import generate_file, parse_file
 from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
 
 
-def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) -> int:
+def run(
+    config: Dict,
+    input_path: Path,
+    batch_number: str,
+    working_dir: Path,
+    metadata_map_file: Path,
+) -> int:
     """The short_reads entry point"""
     tables = get_table_samples(input_path)
     issues = []
@@ -26,32 +32,47 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         issues=issues,
         tables=tables,
     )
-
-    # # If any errors, email issues in a csv file
-    # subject = "GREGoR AnVIL automation"
-    # if issues:
-    #     file_path = working_dir / "issues.csv"
-    #     data_headers = ["field", "message", "table_name", "row"]
-    #     generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
-    #     send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
-    # # If all is good, email of success and files generated
-    # else:
-    #     file_paths = []
-    #     for table_name, table in tables.items():
-    #         # If all ok, generate tsvs of each table
-    #         file_path = working_dir / f"{table_name}.tsv"
-    #         data_headers = table[0].keys()
-    #         generate_file(file_path, data_headers, table, "\t")
-    #         file_paths.append(file_path)
-    #     send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
+    apply_metadata_map_file(metadata_map_file, tables, config.gcp_bucket_name)
+    # If any errors, email issues in a csv file
+    subject = "GREGoR AnVIL automation"
+    if issues:
+        file_path = working_dir / "issues.csv"
+        data_headers = ["field", "message", "table_name", "row"]
+        generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
+        send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
+    # If all is good, email of success and files generated
+    else:
+        file_paths = []
+        for table_name, table in tables.items():
+            # If all ok, generate tsvs of each table
+            file_path = working_dir / f"{table_name}.tsv"
+            data_headers = table[0].keys()
+            generate_file(file_path, data_headers, table, "\t")
+            file_paths.append(file_path)
+        send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 
 
 def apply_metadata_map_file(
-    metadata_map_file: Path, tables: list[Table], gcp_bucket_name: Path
+    metadata_map_file: Path, tables: dict[str, list[Sample]], gcp_bucket_name: Path
 ):
     """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
-    return 0
+    metadata = parse_file(metadata_map_file, ",")
+    exp_short_read = tables.get("experiment_dna_short_read")
+    exp_short_read["experiment_dna_short_read"] = metadata[0]
+    exp_short_read["experiment_sample_id"] = metadata[4]
+    aligned_short_read = tables.get("aligned_dna_short_read")
+    aligned_short_read["aligned_dna_short_read_id"] = metadata[1]
+    aligned_short_read["experiment_dna_short_read_id"] = metadata[0]
+    cram_file_name = metadata[2]
+    aligned_dna_short_read_file_path = f"gs://{gcp_bucket_name}/{cram_file_name}"
+    aligned_short_read["aligned_dna_short_read_file"] = aligned_dna_short_read_file_path
+    crai_file_name = metadata[3]
+    aligned_dna_short_read_index_file_path = f"gs://{gcp_bucket_name}/{crai_file_name}"
+    aligned_short_read[
+        "aligned_dna_short_read_index_file"
+    ] = aligned_dna_short_read_index_file_path
+    aligned_short_read["md5sum"] = metadata[5]
 
 
 def validate_tables(

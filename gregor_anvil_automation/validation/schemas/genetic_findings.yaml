@@ -76,13 +76,10 @@ gene:
   required: True
 transcript:
   type: string
-  required: True # relies on gene which is always required
 hgvsc:
   type: string
-  required: True # relies on gene which is always required
 hgvsp:
   type: string
-  required: True # relies on gene which is always required
 zygosity:
   type: string
   required: True

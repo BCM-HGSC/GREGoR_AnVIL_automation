@@ -59,11 +59,12 @@ tissue_affected_status:
   allowed:
     - "Yes"
     - "No"
+    - Na
   coerce: initialcase
 age_at_collection:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_int_or_na
 participant_drugs_intake:
   type: string
   required: False
@@ -76,11 +77,11 @@ hours_since_last_meal:
 passage_number:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_int_or_na
 time_to_freeze:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_int_or_na
 sample_transformation_detail:
   type: string
   required: False

@@ -8,8 +8,8 @@ from gregor_anvil_automation.validation.schema import get_schema
 @pytest.fixture(name="aligned_nanopore_sample", scope="function")
 def fixture_aligned_nanopore_sample():
     return {
-        "aligned_nanopore_id": "BCM_ONTWGS_TEST_test-batch_id",
-        "experiment_nanopore_id": "BCM_ONTWGS_TEST",
+        "aligned_nanopore_id": "BCM_ONTWGS_BHTEST_1_A1",
+        "experiment_nanopore_id": "BCM_ONTWGS_BHTEST_1",
         "aligned_nanopore_file": "",
         "aligned_nanopore_index_file": "",
         "md5sum": "test-aligned_nanopore-gregor",
@@ -36,9 +36,7 @@ def fixture_aligned_nanopore_sample():
 @pytest.fixture(name="get_validator")
 def fixture_get_validator():
     schema = get_schema("aligned_nanopore")
-    return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
-    )
+    return SampleValidator(schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket")
 
 
 def test_aligned_nanopore_valid_sample(get_validator, aligned_nanopore_sample):
@@ -56,7 +54,7 @@ def test_aligned_nanopore_id_invalid_sample(get_validator, aligned_nanopore_samp
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
         "aligned_nanopore_id": [
-            f"Value must match the format of {experiment_nanopore_id}_test-batch_id"
+            f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and 1, inclusively",
         ]
     }
 
@@ -65,12 +63,16 @@ def test_experiment_nanopore_id_invalid_sample(get_validator, aligned_nanopore_s
     """Test that a sample with an invalid experiment_nanopore_id fails validation"""
     validator = get_validator
     aligned_nanopore_sample["experiment_nanopore_id"] = "TEST-TEST"
+    experiment_nanopore_id = aligned_nanopore_sample["experiment_nanopore_id"]
     validator.validate(aligned_nanopore_sample)
     assert validator.errors == {
         "aligned_nanopore_id": [
-            "Value must match the format of TEST-TEST_test-batch_id"
+            f"Value must start with {experiment_nanopore_id}_A and end with a number between 1 and 1, inclusively",
         ],
-        "experiment_nanopore_id": ["Value must start with BCM_ONTWGS_"],
+        "experiment_nanopore_id": [
+            "Value must end with _{some_number}",
+            "Value must start with BCM_ONTWGS_BH",
+        ],
     }
 
 

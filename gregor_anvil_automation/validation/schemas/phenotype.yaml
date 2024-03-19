@@ -57,6 +57,7 @@ onset_age_range:
     - HP:0034198
     - HP:0034197
     - HP:0011462
+    - NA
 additional_modifiers:
   type: string
   empty: False

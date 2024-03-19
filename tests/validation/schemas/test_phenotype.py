@@ -24,7 +24,7 @@ def fixture_phenotype_sample():
 def fixture_get_validator():
     schema = get_schema("phenotype")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -42,7 +42,7 @@ def test_participant_id_invalid_sample(get_validator, phenotype_sample):
     validator.validate(phenotype_sample)
     assert validator.errors == {
         "participant_id": [
-            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
+            "Value must start with BCM_Subject and end with _{a number}",
         ]
     }
 

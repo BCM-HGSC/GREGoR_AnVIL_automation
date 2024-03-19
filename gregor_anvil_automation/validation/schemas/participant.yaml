@@ -27,6 +27,7 @@ recontactable:
   allowed:
     - "Yes"
     - "No"
+    - Na
 prior_testing:
   type: string
   required: False
@@ -107,13 +108,14 @@ reported_ethnicity:
   allowed:
     - Hispanic or Latino
     - Not Hispanic or Latino
+    - NA
 ancestry_detail:
   type: string
   required: False
 age_at_last_observation:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_float_or_na
 affected_status:
   type: string
   required: True
@@ -128,7 +130,7 @@ phenotype_description:
 age_at_enrollment:
   type: string
   required: False
-  check_with: is_number_or_na
+  check_with: is_int_or_na
 solve_status:
   type: string
   required: True

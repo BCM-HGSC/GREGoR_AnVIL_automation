@@ -40,7 +40,7 @@ def fixture_participant_sample():
 def fixture_get_validator():
     schema = get_schema("participant")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -58,7 +58,7 @@ def test_participant_id_invalid_sample(get_validator, participant_sample):
     validator.validate(participant_sample)
     assert validator.errors == {
         "participant_id": [
-            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4"
+            "Value must start with BCM_Subject and end with _{a number}",
         ]
     }
 
@@ -69,6 +69,14 @@ def test_family_id_invalid_sample(get_validator, participant_sample):
     participant_sample["family_id"] = "TEST-TEST"
     validator.validate(participant_sample)
     assert validator.errors == {"family_id": ["Value must start with BCM_Fam"]}
+
+
+def test_paternal_id_valid_sample_non_zero(get_validator, participant_sample):
+    """Test that a sample with an valid paternal_id passes validation"""
+    validator = get_validator
+    participant_sample["paternal_id"] = "BCM_Subject_TEST_3"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
 
 
 def test_paternal_id_invalid_sample(get_validator, participant_sample):
@@ -83,6 +91,28 @@ def test_paternal_id_invalid_sample(get_validator, participant_sample):
     }
 
 
+def test_paternal_id_invalid_sample_different_subject_id(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid paternal_id fails validation"""
+    validator = get_validator
+    participant_sample["paternal_id"] = "BCM_Subject_TEST-TEST_1"
+    validator.validate(participant_sample)
+    assert validator.errors == {
+        "paternal_id": [
+            "Value must be '0' or match the format of BCM_Subject_######_3, and match the subject id in `participant_id`",
+        ],
+    }
+
+
+def test_maternal_id_valid_sample_non_zero(get_validator, participant_sample):
+    """Test that a sample with an valid maternal_id passes validation"""
+    validator = get_validator
+    participant_sample["maternal_id"] = "BCM_Subject_TEST_2"
+    validator.validate(participant_sample)
+    assert validator.errors == {}
+
+
 def test_maternal_id_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid maternal_id fails validation"""
     validator = get_validator
@@ -95,6 +125,20 @@ def test_maternal_id_invalid_sample(get_validator, participant_sample):
     }
 
 
+def test_maternal_id_invalid_sample_different_subject_id(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid maternal_id fails validation"""
+    validator = get_validator
+    participant_sample["maternal_id"] = "BCM_Subject_TEST-TEST_1"
+    validator.validate(participant_sample)
+    assert validator.errors == {
+        "maternal_id": [
+            "Value must be '0' or match the format of BCM_Subject_######_2, and match the subject id in `participant_id`",
+        ],
+    }
+
+
 def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
     """Test that a sample with an invalid twin_id fails validation"""
     validator = get_validator
@@ -103,10 +147,34 @@ def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
     assert validator.errors == {"twin_id": ["Value does not contain `participant_id`"]}
 
 
-def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
+def test_twin_id_no_two_ids_invalid_sample_one(get_validator, participant_sample):
     """Test that a sample with an invalid twin_id fails validation"""
     validator = get_validator
     participant_sample["twin_id"] = "BCM_Subject_TEST_1"
+    validator.validate(participant_sample)
+    assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
+
+
+def test_twin_id_no_two_ids_invalid_sample_three_spaces(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid twin_id fails validation"""
+    validator = get_validator
+    participant_sample[
+        "twin_id"
+    ] = "BCM_Subject_TEST_1 BCM_Subject_TEST_2 BCM_Subject_TEST_3"
+    validator.validate(participant_sample)
+    assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
+
+
+def test_twin_id_no_two_ids_invalid_sample_three_pipes(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid twin_id fails validation"""
+    validator = get_validator
+    participant_sample[
+        "twin_id"
+    ] = "BCM_Subject_TEST_1|BCM_Subject_TEST_2|BCM_Subject_TEST_3"
     validator.validate(participant_sample)
     assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
 
@@ -118,12 +186,10 @@ def test_twin_id_no_matching_invalid_sample(get_validator, participant_sample):
     participant_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
     participant_id = participant_sample["participant_id"]
     subject_id = participant_id.split("_")[2]
-    matching = (
-        f"BCM_Subject_{subject_id}_{'4' if participant_id.endswith('_1') else '1'}"
-    )
+    matching = f"BCM_Subject_{subject_id}_"
     validator.validate(participant_sample)
     assert validator.errors == {
-        "twin_id": [f"Twin id does not match expected format of: {matching}"]
+        "twin_id": [f"Twin id does not match expected format of: {matching}`a number`"]
     }
 
 
@@ -133,14 +199,16 @@ def test_age_at_last_observation_invalid_sample(get_validator, participant_sampl
     participant_sample["age_at_last_observation"] = "TEST-TEST"
     validator.validate(participant_sample)
     assert validator.errors == {
-        "age_at_last_observation": ["Value must be NA or an int"]
+        "age_at_last_observation": ["Value must be NA or a float"]
     }
 
 
-def test_age_at_last_observation_is_int_valid_sample(get_validator, participant_sample):
+def test_age_at_last_observation_is_float_valid_sample(
+    get_validator, participant_sample
+):
     """Test that a sample with a age_at_last_observation with a string number passes validation"""
     validator = get_validator
-    participant_sample["age_at_last_observation"] = "12345"
+    participant_sample["age_at_last_observation"] = "12345.12345"
     validator.validate(participant_sample)
     assert validator.errors == {}
 

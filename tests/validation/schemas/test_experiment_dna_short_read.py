@@ -9,7 +9,7 @@ from gregor_anvil_automation.validation.schema import get_schema
 def fixture_experiment_dna_short_read_sample():
     return {
         "experiment_dna_short_read_id": "BCM_TEST",
-        "analyte_id": "BCM_Subject_TEST_1_test-batch_id",
+        "analyte_id": "BCM_Subject_TEST_1_A1",
         "experiment_sample_id": "TEST",
         "seq_library_prep_kit_method": "test-experiment_dna_short_read-gregor",
         "read_length": "0",
@@ -26,9 +26,7 @@ def fixture_experiment_dna_short_read_sample():
 @pytest.fixture(name="get_validator")
 def fixture_get_validator():
     schema = get_schema("experiment_dna_short_read")
-    return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
-    )
+    return SampleValidator(schema=schema, batch_number=1, gcp_bucket="test-gcp-bucket")
 
 
 def test_experiment_dna_short_read_valid_sample(
@@ -49,18 +47,61 @@ def test_experiment_dna_short_read_id_invalid_sample(
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {
         "experiment_dna_short_read_id": ["Value must start with BCM_"],
-        "experiment_sample_id": ["Value must match the format of TEST-TEST minus BCM_"],
     }
 
 
-def test_analyte_id_invalid_sample(get_validator, experiment_dna_short_read_sample):
+def test_analyte_id_invalid_sample_no_passes(
+    get_validator, experiment_dna_short_read_sample
+):
     """Test that a sample with an invalid anlyte_id fails validation"""
     validator = get_validator
     experiment_dna_short_read_sample["analyte_id"] = "TEST-TEST"
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {
         "analyte_id": [
-            "Value must start with BCM_Subject_ and end with _1_test-batch_id, _2_test-batch_id, _3_test-batch_id, or _4_test-batch_id"
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
+        ]
+    }
+
+
+def test_analyte_id_invalid_sample_no_start(
+    get_validator, experiment_dna_short_read_sample
+):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_dna_short_read_sample["analyte_id"] = "TEST-TEST_1_A1"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
+        ]
+    }
+
+
+def test_analyte_id_invalid_sample_no_mid_num(
+    get_validator, experiment_dna_short_read_sample
+):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_dna_short_read_sample["analyte_id"] = "BCM_Subject_TEST-TEST_A1"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
+        ]
+    }
+
+
+def test_analyte_id_invalid_sample_no_end_num(
+    get_validator, experiment_dna_short_read_sample
+):
+    """Test that a sample with an invalid anlyte_id fails validation"""
+    validator = get_validator
+    experiment_dna_short_read_sample["analyte_id"] = "BCM_Subject_TEST-TEST_1_A"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {
+        "analyte_id": [
+            f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and 1, inclusively",
         ]
     }
 
@@ -70,16 +111,9 @@ def test_experiment_sample_id_invalid_sample(
 ):
     """Test that a sample with an invalid experiment_sample_id fails validation"""
     validator = get_validator
-    experiment_dna_short_read_sample["experiment_sample_id"] = "TEST-TEST"
-    experiment_dna_short_read_id = experiment_dna_short_read_sample[
-        "experiment_dna_short_read_id"
-    ]
+    experiment_dna_short_read_sample["experiment_sample_id"] = ""
     validator.validate(experiment_dna_short_read_sample)
-    assert validator.errors == {
-        "experiment_sample_id": [
-            f"Value must match the format of {experiment_dna_short_read_id} minus BCM_"
-        ]
-    }
+    assert validator.errors == {"experiment_sample_id": ["Value must not be empty"]}
 
 
 def test_read_length_invalid_sample(get_validator, experiment_dna_short_read_sample):
@@ -132,3 +166,25 @@ def test_date_data_generation_normalization(
     validator.validate(experiment_dna_short_read_sample)
     assert validator.errors == {}
     assert validator.document["date_data_generation"] == "2023-12-25"
+
+
+def test_date_data_generation_normalization_farthest(
+    get_validator, experiment_dna_short_read_sample
+):
+    """Test that a sample's date_data_generation properly normalizes with coerce: year_month_date"""
+    validator = get_validator
+    experiment_dna_short_read_sample["date_data_generation"] = "1/1/23"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {}
+    assert validator.document["date_data_generation"] == "2023-01-01"
+
+
+def test_date_data_generation_normalization_when_na(
+    get_validator, experiment_dna_short_read_sample
+):
+    """Test that a sample's date_data_generation properly passes NA through with coerce: year_month_date"""
+    validator = get_validator
+    experiment_dna_short_read_sample["date_data_generation"] = "NA"
+    validator.validate(experiment_dna_short_read_sample)
+    assert validator.errors == {}
+    assert validator.document["date_data_generation"] == "NA"

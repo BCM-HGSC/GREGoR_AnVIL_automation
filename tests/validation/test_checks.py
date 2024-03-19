@@ -11,7 +11,7 @@ from gregor_anvil_automation.validation.checks import check_cross_references, ch
 def fixture_uniqueness_sample_valid_2():
     return addict.Dict(
         {
-            "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_id",
+            "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_number",
             "experiment_dna_short_read_id": "BCM_BHTEST",
             "aligned_dna_short_read_file": "",
             "aligned_dna_short_read_index_file": "",
@@ -32,7 +32,7 @@ def fixture_uniqueness_sample_valid_2():
 def fixture_uniqueness_sample_invalid_3():
     return addict.Dict(
         {
-            "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_id",
+            "aligned_dna_short_read_id": "BCM_BHTEST_test-batch_number",
             "experiment_dna_short_read_id": "BCM_BHTEST",
             "aligned_dna_short_read_file": "",
             "aligned_dna_short_read_index_file": "",
@@ -53,7 +53,7 @@ def fixture_uniqueness_sample_invalid_3():
 def fixture_uniqueness_sample_valid_3():
     return addict.Dict(
         {
-            "aligned_dna_short_read_id": "BCM_BHTEST2_test-batch_id",
+            "aligned_dna_short_read_id": "BCM_BHTEST2_test-batch_number",
             "experiment_dna_short_read_id": "BCM_BHTEST2",
             "aligned_dna_short_read_file": "",
             "aligned_dna_short_read_index_file": "",

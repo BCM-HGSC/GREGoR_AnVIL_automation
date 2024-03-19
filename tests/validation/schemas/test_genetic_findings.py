@@ -12,7 +12,7 @@ def fixture_genetic_findings_sample():
         "participant_id": "BCM_Subject_BHTEST_1",
         "experiment_id": "test-genetic_findings-gregor",
         "variant_type": "SNV/INDEL",
-        "variant_reference_assembly": "GrCh38",
+        "variant_reference_assembly": "GRCh38",
         "chrom": "1",
         "pos": "256",
         "ref": "C",
@@ -47,7 +47,7 @@ def fixture_genetic_findings_sample():
 def fixture_get_validator():
     schema = get_schema("genetic_findings")
     return SampleValidator(
-        schema=schema, batch_id="test-batch_id", gcp_bucket="test-gcp-bucket"
+        schema=schema, batch_number="test-batch_number", gcp_bucket="test-gcp-bucket"
     )
 
 
@@ -65,7 +65,7 @@ def test_participant_id_invalid_sample(get_validator, genetic_findings_sample):
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "participant_id": [
-            "Value must start with BCM_Subject and end with either _1, _2, _3, or _4",
+            "Value must start with BCM_Subject and end with _{a number}",
         ],
     }
 
@@ -78,6 +78,96 @@ def test_pos_invalid_sample(get_validator, genetic_findings_sample):
     assert validator.errors == {
         "pos": [
             "Value requires an int",
+        ],
+    }
+
+
+def test_known_condition_name_valid_na(get_validator, genetic_findings_sample):
+    """Test that a sample with a gene_known_for_phenotype of 'Candidate' and a known_condition_name of 'NA' passes validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Candidate"
+    genetic_findings_sample["known_condition_name"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {}
+
+
+def test_known_condition_name_invalid_sample(get_validator, genetic_findings_sample):
+    """Test that a sample with an invalid known_condition_name fails validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Known"
+    genetic_findings_sample["known_condition_name"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {
+        "known_condition_name": [
+            "Value may only be NA if gene_known_for_phenotype is not Known"
+        ],
+    }
+
+
+def test_condition_id_valid_na(get_validator, genetic_findings_sample):
+    """Test that a sample with a gene_known_for_phenotype of 'Candidate' and a condition_id of 'NA' passes validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Candidate"
+    genetic_findings_sample["condition_id"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {}
+
+
+def test_condition_id_invalid_sample(get_validator, genetic_findings_sample):
+    """Test that a sample with an invalid condition_id fails validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Known"
+    genetic_findings_sample["condition_id"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {
+        "condition_id": [
+            "Value may only be NA if gene_known_for_phenotype is not Known"
+        ],
+    }
+
+
+def test_condition_inheritance_valid_na(get_validator, genetic_findings_sample):
+    """Test that a sample with a gene_known_for_phenotype of 'Candidate' and a condition_inheritance of 'NA' passes validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Candidate"
+    genetic_findings_sample["condition_inheritance"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {}
+
+
+def test_condition_inheritance_invalid_sample(get_validator, genetic_findings_sample):
+    """Test that a sample with an invalid condition_inheritance fails validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Known"
+    genetic_findings_sample["condition_inheritance"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {
+        "condition_inheritance": [
+            "Value may only be NA if gene_known_for_phenotype is not Known"
+        ],
+    }
+
+
+def test_gregor_variant_classification_valid_na(get_validator, genetic_findings_sample):
+    """Test that a sample with a gene_known_for_phenotype of 'Candidate' and a gregor_variant_classification of 'NA' passes validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Candidate"
+    genetic_findings_sample["gregor_variant_classification"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {}
+
+
+def test_gregor_variant_classification_invalid_sample(
+    get_validator, genetic_findings_sample
+):
+    """Test that a sample with an invalid gregor_variant_classification fails validation"""
+    validator = get_validator
+    genetic_findings_sample["gene_known_for_phenotype"] = "Known"
+    genetic_findings_sample["gregor_variant_classification"] = "NA"
+    validator.validate(genetic_findings_sample)
+    assert validator.errors == {
+        "gregor_variant_classification": [
+            "Value may only be NA if gene_known_for_phenotype is not Known"
         ],
     }
 

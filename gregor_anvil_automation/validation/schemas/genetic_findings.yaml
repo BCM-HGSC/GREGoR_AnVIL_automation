@@ -24,7 +24,7 @@ variant_reference_assembly:
   type: string
   required: True
   allowed:
-    - GrCh38
+    - GRCh38
     - CHM13
 chrom:
   type: string
@@ -59,7 +59,7 @@ chrom:
 pos:
   type: string
   required: True
-  check_with: is_number
+  check_with: is_int
 ref:
   type: string
   required: True
@@ -119,6 +119,7 @@ linked_variant_phase:
     - in trans
     - in cis
     - unknown
+    - na
   coerce: lowercase
 gene_known_for_phenotype:
   type: string
@@ -130,18 +131,18 @@ gene_known_for_phenotype:
 known_condition_name:
   type: string
   required: False
-  dependencies:
-    gene_known_for_phenotype: Known
+  dependencies: gene_known_for_phenotype
+  check_with: gene_known_for_phenotype_is_known
 condition_id:
   type: string
   required: False
-  dependencies:
-    gene_known_for_phenotype: Known
+  dependencies: gene_known_for_phenotype
+  check_with: gene_known_for_phenotype_is_known
 condition_inheritance:
   type: string
   required: False
-  dependencies:
-    gene_known_for_phenotype: Known # depends on gene_known_for_phenotype - same
+  dependencies: gene_known_for_phenotype
+  check_with: gene_known_for_phenotype_is_known
   allowed:
     - Autosomal recessive
     - Autosomal dominant
@@ -153,10 +154,13 @@ condition_inheritance:
     - Digenic
     - Other
     - Unknown
+    - Na
   coerce: initialcase
 gregor_variant_classification:
   type: string
   required: False
+  dependencies: gene_known_for_phenotype
+  check_with: gene_known_for_phenotype_is_known
   allowed:
     - Benign
     - Likely benign
@@ -168,6 +172,7 @@ gregor_variant_classification:
     - Pathogenic
     - Curation in progress
     - Well-established P/LP
+    - NA
 gregor_clinvar_scv:
   type: string
   required: False # "currently optional, to consider whether required if already submitted"
@@ -188,8 +193,6 @@ phenotype_contribution:
 partial_contribution_explained:
   type: string
   required: False # references phenotype.term_id
-  dependencies:
-    phenotype_contribution: Partial # required if partial contribution (above)
 additional_family_members_with_variant:
   type: string
   required: False # references participant.participant_id

@@ -17,7 +17,7 @@ seq_library_prep_kit_method:
 read_length:
   type: string
   required: False
-  check_with: is_number
+  check_with: is_int
 experiment_type:
   type: string
   required: True
@@ -43,7 +43,7 @@ date_data_generation:
 target_insert_size:
   type: string
   required: False
-  check_with: is_number
+  check_with: is_int
 sequencing_platform:
   type: string
   required: False

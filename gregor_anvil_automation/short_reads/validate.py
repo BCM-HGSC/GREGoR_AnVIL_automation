@@ -60,7 +60,6 @@ def apply_metadata_map_file(
     metadata = get_table_samples(metadata_map_file)[0]
     aligned_dna_short_read_files_path_header = f"gs://{gcp_bucket_name}"
 
-    # Use enumerate here instead of range(len)
     for experiment_idx, experiment_value in enumerate(
         tables.get("experiment_dna_short_read")
     ):

@@ -80,3 +80,21 @@ def test_syndromic_normalization(get_validator, phenotype_sample):
     validator.validate(phenotype_sample)
     assert validator.errors == {}
     assert validator.document["syndromic"] == "syndromic"
+
+
+def test_additional_modifiers(get_validator, phenotype_sample):
+    """Verifies that sample's `additional_modifiers` is correctly validated"""
+    validator = get_validator
+    phenotype_sample["additional_modifiers"] = "TEST"
+    validator.validate(phenotype_sample)
+    assert validator.errors == {
+        "additional_modifiers": ["Values ({'TEST'}) are not accepted"]
+    }
+    phenotype_sample["additional_modifiers"] = "HP:0011009 | MONDO:0024490"
+    validator.validate(phenotype_sample)
+    assert validator.errors == {}
+    phenotype_sample["additional_modifiers"] = "TEST | MONDO:0024490"
+    validator.validate(phenotype_sample)
+    assert validator.errors == {
+        "additional_modifiers": ["Values ({'TEST'}) are not accepted"]
+    }

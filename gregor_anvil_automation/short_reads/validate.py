@@ -8,7 +8,7 @@ from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 from gregor_anvil_automation.utils.utils import get_table_samples
 from ..utils.types import Sample, Table
 from ..utils.issue import Issue
-from ..utils.utils import generate_file, parse_file
+from ..utils.utils import generate_file
 from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
@@ -57,38 +57,52 @@ def apply_metadata_map_file(
     metadata_map_file: Path, tables: dict[str, list[Sample]], gcp_bucket_name: Path
 ):
     """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
-    metadata = parse_file(metadata_map_file, ",")
-    metadata_field_indices = {
-        "experiment_dna_short_read_id": 0,
-        "aligned_dna_short_read_id": 1,
-        "cram_file_name": 2,
-        "crai_file_name": 3,
-        "sm_tag": 4,
-        "md5sum": 5,
-    }
-    experiment_dna_short_read = tables.get("experiment_dna_short_read")
-    # experiment_dna_short_read["experiment_dna_short_read"] = (
-    #     "experiment_dna_short_read_id" in metadata
-    # )
-    experiment_dna_short_read["experiment_sample_id"] = metadata[
-        metadata_field_indices["sm_tag"]
-    ]
-    aligned_short_read = tables.get("aligned_dna_short_read")
-    # aligned_short_read["aligned_dna_short_read_id"] = (
-    #     "aligned_dna_short_read_id" in metadata
-    # )
-    # aligned_short_read["experiment_dna_short_read_id"] = (
-    #     "experiment_dna_short_read_id" in metadata
-    # )
-    cram_file_name = metadata[metadata_field_indices["cram_file_name"]]
-    aligned_dna_short_read_file_path = f"gs://{gcp_bucket_name}/{cram_file_name}"
-    aligned_short_read["aligned_dna_short_read_file"] = aligned_dna_short_read_file_path
-    crai_file_name = metadata[metadata_field_indices["crai_file_name"]]
-    aligned_dna_short_read_index_file_path = f"gs://{gcp_bucket_name}/{crai_file_name}"
-    aligned_short_read[
-        "aligned_dna_short_read_index_file"
-    ] = aligned_dna_short_read_index_file_path
-    aligned_short_read["md5sum"] = metadata[metadata_field_indices["md5sum"]]
+    metadata = get_table_samples(metadata_map_file)[0]
+    aligned_dna_short_read_files_path_header = f"gs://{gcp_bucket_name}"
+
+    # Use enumerate here instead of range(len)
+    for experiment_idx, experiment_value in enumerate(
+        tables.get("experiment_dna_short_read")
+    ):
+        if not experiment_value.get("experiment_sample_id"):
+            for metadata_idx, metadata_value in enumerate(metadata):
+                if metadata_value.get(
+                    "experiment_dna_short_read_id"
+                ) and experiment_value.get(
+                    "experiment_dna_short_read_id"
+                ) == metadata_value.get(
+                    "experiment_dna_short_read_id"
+                ):
+                    tables.get("experiment_dna_short_read")[experiment_idx][
+                        "experiment_sample_id"
+                    ] = metadata[metadata_idx].get("sm_tag")
+
+    for aligned_idx, aligned_value in enumerate(tables.get("aligned_dna_short_read")):
+        if not aligned_value.get("aligned_dna_short_read_file"):
+            for metadata_idx, metadata_value in enumerate(metadata):
+                if metadata_value.get(
+                    "aligned_dna_short_read_id"
+                ) and aligned_value.get(
+                    "aligned_dna_short_read_id"
+                ) == metadata_value.get(
+                    "aligned_dna_short_read_id"
+                ):
+                    if metadata_value.get("cram_file_name"):
+                        cram_file_name = metadata_value.get("cram_file_name")
+                        aligned_dna_short_read_file_path = f"{aligned_dna_short_read_files_path_header}/{cram_file_name}"
+                        tables.get("aligned_dna_short_read")[aligned_idx][
+                            "aligned_dna_short_read_file"
+                        ] = aligned_dna_short_read_file_path
+                    if metadata_value.get("crai_file_name"):
+                        crai_file_name = metadata_value.get("crai_file_name")
+                        aligned_dna_short_read_index_file_path = f"{aligned_dna_short_read_files_path_header}/{crai_file_name}"
+                        tables.get("aligned_dna_short_read")[aligned_idx][
+                            "aligned_dna_short_read_index_file"
+                        ] = aligned_dna_short_read_index_file_path
+                    if metadata_value.get("md5sum"):
+                        tables.get("aligned_dna_short_read")[aligned_idx][
+                            "md5sum"
+                        ] = metadata[metadata_idx].get("md5sum")
 
 
 def validate_tables(

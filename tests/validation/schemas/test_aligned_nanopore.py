@@ -29,6 +29,7 @@ def fixture_aligned_nanopore_sample():
         "read_error_rate": "NA",
         "mapped_reads_pct": "NA",
         "methylation_called": "TRUE",
+        "quality_issues": "test-aligned_nanopore-gregor",
     }
 
 

@@ -96,3 +96,6 @@ methylation_called:
     - "TRUE"
     - "FALSE"
   coerce: uppercase
+quality_issues:
+  type: string
+  required: False

@@ -6,6 +6,8 @@ from string import capwords
 from cerberus import Validator
 from dateutil.parser import parse
 
+from gregor_anvil_automation.utils.mappings import phenotype_additional_modifiers
+
 
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
@@ -14,6 +16,23 @@ class SampleValidator(Validator):
         super(Validator, self).__init__(*args, **kwargs)
         self.batch_number = batch_number
         self.gcp_bucket = gcp_bucket
+
+    def _check_with_additional_modifiers(self, field: str, value: str):
+        """Checks that `additional_modifiers` has a valid one from
+        the given dict.
+        """
+        if value == "NA":
+            return
+        parts = value.split("|")
+        if not_valid := {
+            part.strip()
+            for part in parts
+            if part.strip() not in phenotype_additional_modifiers
+        }:
+            self._error(
+                field,
+                f"Values ({not_valid}) are not accepted",
+            )
 
     def _check_with_aligned_nanopore_id(self, field: str, value: str):
         """Checks that `aligned_nanopore_id` is valid.

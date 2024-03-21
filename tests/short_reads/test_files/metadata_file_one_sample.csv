@@ -1,0 +1,2 @@
+experiment_dna_short_read_id,aligned_dna_short_read_id,cram_file_name,crai_file_name,sm_tag,md5sum
+BCM_TEST-001,BCM_aligned_dna_short_read_id-001,some_name_001.hgv.cram,some_name_001.hgv.cram.crai,BH-####1,FAKESUM-001

@@ -1,0 +1,11 @@
+experiment_dna_short_read_id,aligned_dna_short_read_id,cram_file_name,crai_file_name,sm_tag,md5sum
+BCM_TEST-001,BCM_aligned_dna_short_read_id-001,some_name_001.hgv.cram,some_name_001.hgv.cram.crai,BH-####1,FAKESUM-001
+BCM_TEST-002,BCM_aligned_dna_short_read_id-002,some_name_002.hgv.cram,some_name_002.hgv.cram.crai,BH-####2,FAKESUM-002
+BCM_TEST-003,BCM_aligned_dna_short_read_id-003,some_name_003.hgv.cram,some_name_003.hgv.cram.crai,BH-####3,FAKESUM-003
+BCM_TEST-004,BCM_aligned_dna_short_read_id-004,some_name_004.hgv.cram,some_name_004.hgv.cram.crai,BH-####4,FAKESUM-004
+BCM_TEST-005,BCM_aligned_dna_short_read_id-005,some_name_005.hgv.cram,some_name_005.hgv.cram.crai,BH-####5,FAKESUM-005
+BCM_TEST-006,BCM_aligned_dna_short_read_id-006,some_name_006.hgv.cram,some_name_006.hgv.cram.crai,BH-####6,FAKESUM-006
+BCM_TEST-007,BCM_aligned_dna_short_read_id-007,some_name_007.hgv.cram,some_name_007.hgv.cram.crai,BH-####7,FAKESUM-007
+BCM_TEST-008,BCM_aligned_dna_short_read_id-008,some_name_008.hgv.cram,some_name_008.hgv.cram.crai,BH-####8,FAKESUM-008
+BCM_TEST-009,BCM_aligned_dna_short_read_id-009,some_name_009.hgv.cram,some_name_009.hgv.cram.crai,BH-####9,FAKESUM-009
+BCM_TEST-010,BCM_aligned_dna_short_read_id-010,some_name_010.hgv.cram,some_name_010.hgv.cram.crai,BH-###10,FAKESUM-010

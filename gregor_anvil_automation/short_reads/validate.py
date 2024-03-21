@@ -8,7 +8,7 @@ from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 from gregor_anvil_automation.utils.utils import get_table_samples
 from ..utils.types import Sample, Table
 from ..utils.issue import Issue
-from ..utils.utils import generate_file
+from ..utils.utils import generate_file, parse_file
 from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
@@ -55,10 +55,12 @@ def run(
 
 def apply_metadata_map_file(
     metadata_map_file: Path, tables: dict[str, list[Sample]], gcp_bucket_name: Path
-):
+) -> dict[str, list[Sample]]:
     """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
-    metadata = get_table_samples(metadata_map_file)[0]
+    metadata = parse_file(metadata_map_file, ",")
     aligned_dna_short_read_files_path_header = f"gs://{gcp_bucket_name}"
+
+    print(metadata)
 
     for experiment_idx, experiment_value in enumerate(
         tables.get("experiment_dna_short_read")
@@ -75,6 +77,11 @@ def apply_metadata_map_file(
                     tables.get("experiment_dna_short_read")[experiment_idx][
                         "experiment_sample_id"
                     ] = metadata[metadata_idx].get("sm_tag")
+                    print(
+                        tables.get("experiment_dna_short_read")[experiment_idx][
+                            "experiment_sample_id"
+                        ]
+                    )
 
     for aligned_idx, aligned_value in enumerate(tables.get("aligned_dna_short_read")):
         if not aligned_value.get("aligned_dna_short_read_file"):
@@ -102,6 +109,7 @@ def apply_metadata_map_file(
                         tables.get("aligned_dna_short_read")[aligned_idx][
                             "md5sum"
                         ] = metadata[metadata_idx].get("md5sum")
+    return tables
 
 
 def validate_tables(

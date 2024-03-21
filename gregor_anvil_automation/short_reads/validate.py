@@ -1,6 +1,7 @@
 from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
+import logging
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -13,6 +14,9 @@ from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
+
+
+logger = logging.getLogger(__name__)
 
 
 def run(
@@ -53,63 +57,89 @@ def run(
     return 0
 
 
+from pprint import pprint
+
+
 def apply_metadata_map_file(
-    metadata_map_file: Path, tables: dict[str, list[Sample]], gcp_bucket_name: Path
-) -> dict[str, list[Sample]]:
+    metadata_map_file: Path,
+    tables: dict[str, list[Sample]],
+    gcp_bucket_name: Path,
+    errors: list[Issue],
+):
     """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
     metadata = parse_file(metadata_map_file, ",")
-    aligned_dna_short_read_files_path_header = f"gs://{gcp_bucket_name}"
 
-    print(metadata)
+    base_gcp_path = f"gs://{gcp_bucket_name}"
 
-    for experiment_idx, experiment_value in enumerate(
-        tables.get("experiment_dna_short_read")
-    ):
-        if not experiment_value.get("experiment_sample_id"):
-            for metadata_idx, metadata_value in enumerate(metadata):
-                if metadata_value.get(
-                    "experiment_dna_short_read_id"
-                ) and experiment_value.get(
-                    "experiment_dna_short_read_id"
-                ) == metadata_value.get(
-                    "experiment_dna_short_read_id"
-                ):
-                    tables.get("experiment_dna_short_read")[experiment_idx][
-                        "experiment_sample_id"
-                    ] = metadata[metadata_idx].get("sm_tag")
-                    print(
-                        tables.get("experiment_dna_short_read")[experiment_idx][
-                            "experiment_sample_id"
-                        ]
-                    )
+    # TODO: Handle GCP path
+    pprint(tables)
+    for line in metadata:
+        md_algn_dna_id = line["aligned_dna_short_read_id"]
+        md_expr_dna_id = line["experiment_dna_short_read_id"]
+        for sample in tables["aligned_dna_short_read"]:
+            if (
+                md_algn_dna_id == sample["aligned_dna_short_read_id"]
+                and md_expr_dna_id == sample["experiment_dna_short_read_id"]
+            ):
+                # Populate it
+                # TODO: Check if something exist that is not NA before populating
+                # Log if something already exist
+                sample["aligned_dna_short_read_file"] = line["cram_file_name"]
+                sample["md5sum"] = line["cram_file_name"]
+                sample["aligned_dna_short_read_index_file"] = line["crai_file_name"]
+            # The line in the metadata did not exist, it should.
+            # Add the error + log
+        for sample in tables["experiment_dna_short_read"]:
+            ...
 
-    for aligned_idx, aligned_value in enumerate(tables.get("aligned_dna_short_read")):
-        if not aligned_value.get("aligned_dna_short_read_file"):
-            for metadata_idx, metadata_value in enumerate(metadata):
-                if metadata_value.get(
-                    "aligned_dna_short_read_id"
-                ) and aligned_value.get(
-                    "aligned_dna_short_read_id"
-                ) == metadata_value.get(
-                    "aligned_dna_short_read_id"
-                ):
-                    if metadata_value.get("cram_file_name"):
-                        cram_file_name = metadata_value.get("cram_file_name")
-                        aligned_dna_short_read_file_path = f"{aligned_dna_short_read_files_path_header}/{cram_file_name}"
-                        tables.get("aligned_dna_short_read")[aligned_idx][
-                            "aligned_dna_short_read_file"
-                        ] = aligned_dna_short_read_file_path
-                    if metadata_value.get("crai_file_name"):
-                        crai_file_name = metadata_value.get("crai_file_name")
-                        aligned_dna_short_read_index_file_path = f"{aligned_dna_short_read_files_path_header}/{crai_file_name}"
-                        tables.get("aligned_dna_short_read")[aligned_idx][
-                            "aligned_dna_short_read_index_file"
-                        ] = aligned_dna_short_read_index_file_path
-                    if metadata_value.get("md5sum"):
-                        tables.get("aligned_dna_short_read")[aligned_idx][
-                            "md5sum"
-                        ] = metadata[metadata_idx].get("md5sum")
-    return tables
+    # for experiment_idx, experiment_value in enumerate(
+    #     tables["experiment_dna_short_read"]
+    # ):
+    #     if not experiment_value.get("experiment_sample_id"):
+    #         for metadata_idx, metadata_value in enumerate(metadata):
+    #             if metadata_value.get(
+    #                 "experiment_dna_short_read_id"
+    #             ) and experiment_value.get(
+    #                 "experiment_dna_short_read_id"
+    #             ) == metadata_value.get(
+    #                 "experiment_dna_short_read_id"
+    #             ):
+    #                 tables.get("experiment_dna_short_read")[experiment_idx][
+    #                     "experiment_sample_id"
+    #                 ] = metadata[metadata_idx].get("sm_tag")
+    #                 print(
+    #                     tables.get("experiment_dna_short_read")[experiment_idx][
+    #                         "experiment_sample_id"
+    #                     ]
+    #                 )
+
+    # for aligned_idx, aligned_value in enumerate(tables.get("aligned_dna_short_read")):
+    #     if not aligned_value.get("aligned_dna_short_read_file"):
+    #         for metadata_idx, metadata_value in enumerate(metadata):
+    #             if metadata_value.get(
+    #                 "aligned_dna_short_read_id"
+    #             ) and aligned_value.get(
+    #                 "aligned_dna_short_read_id"
+    #             ) == metadata_value.get(
+    #                 "aligned_dna_short_read_id"
+    #             ):
+    #                 if metadata_value.get("cram_file_name"):
+    #                     cram_file_name = metadata_value.get("cram_file_name")
+    #                     aligned_dna_short_read_file_path = f"{aligned_dna_short_read_files_path_header}/{cram_file_name}"
+    #                     tables.get("aligned_dna_short_read")[aligned_idx][
+    #                         "aligned_dna_short_read_file"
+    #                     ] = aligned_dna_short_read_file_path
+    #                 if metadata_value.get("crai_file_name"):
+    #                     crai_file_name = metadata_value.get("crai_file_name")
+    #                     aligned_dna_short_read_index_file_path = f"{aligned_dna_short_read_files_path_header}/{crai_file_name}"
+    #                     tables.get("aligned_dna_short_read")[aligned_idx][
+    #                         "aligned_dna_short_read_index_file"
+    #                     ] = aligned_dna_short_read_index_file_path
+    #                 if metadata_value.get("md5sum"):
+    #                     tables.get("aligned_dna_short_read")[aligned_idx][
+    #                         "md5sum"
+    #                     ] = metadata[metadata_idx].get("md5sum")
+    # return tables
 
 
 def validate_tables(

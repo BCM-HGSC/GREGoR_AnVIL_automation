@@ -57,7 +57,7 @@ def run(
     return 0
 
 
-from pprint import pprint
+# from pprint import pprint  # REMOVE
 
 
 def apply_metadata_map_file(
@@ -71,8 +71,6 @@ def apply_metadata_map_file(
 
     base_gcp_path = f"gs://{gcp_bucket_name}"
 
-    # TODO: Handle GCP path
-    pprint(tables)
     for line in metadata:
         md_algn_dna_id = line["aligned_dna_short_read_id"]
         md_expr_dna_id = line["experiment_dna_short_read_id"]
@@ -81,65 +79,39 @@ def apply_metadata_map_file(
                 md_algn_dna_id == sample["aligned_dna_short_read_id"]
                 and md_expr_dna_id == sample["experiment_dna_short_read_id"]
             ):
-                # Populate it
-                # TODO: Check if something exist that is not NA before populating
-                # Log if something already exist
-                sample["aligned_dna_short_read_file"] = line["cram_file_name"]
-                sample["md5sum"] = line["cram_file_name"]
-                sample["aligned_dna_short_read_index_file"] = line["crai_file_name"]
-            # The line in the metadata did not exist, it should.
+                if sample["aligned_dna_short_read_file"] == "NA":
+                    cram_file_name = line["cram_file_name"]
+                    sample[
+                        "aligned_dna_short_read_file"
+                    ] = f"{base_gcp_path}/{cram_file_name}"
+                else:
+                    logger.info("")  # Log if something already exist
+                if sample["aligned_dna_short_read_index_file"] == "NA":
+                    crai_file_name = line["crai_file_name"]
+                    sample[
+                        "aligned_dna_short_read_index_file"
+                    ] = f"{base_gcp_path}/{crai_file_name}"
+                else:
+                    logger.info("")  # Log if something already exist
+                if sample["md5sum"] == "NA":
+                    sample["md5sum"] = line["md5sum"]
+                else:
+                    logger.info("")  # Log if something already exist
+            # else:
+            #     field =
+            #     new_issue = Issue (
+            #         field,
+            #         f"Value {field} does not exist"
+            #     )
+            #     errors.append(new_issue)
+            # The line in the metadata did not exist, it should. - ask meaning
             # Add the error + log
         for sample in tables["experiment_dna_short_read"]:
-            ...
-
-    # for experiment_idx, experiment_value in enumerate(
-    #     tables["experiment_dna_short_read"]
-    # ):
-    #     if not experiment_value.get("experiment_sample_id"):
-    #         for metadata_idx, metadata_value in enumerate(metadata):
-    #             if metadata_value.get(
-    #                 "experiment_dna_short_read_id"
-    #             ) and experiment_value.get(
-    #                 "experiment_dna_short_read_id"
-    #             ) == metadata_value.get(
-    #                 "experiment_dna_short_read_id"
-    #             ):
-    #                 tables.get("experiment_dna_short_read")[experiment_idx][
-    #                     "experiment_sample_id"
-    #                 ] = metadata[metadata_idx].get("sm_tag")
-    #                 print(
-    #                     tables.get("experiment_dna_short_read")[experiment_idx][
-    #                         "experiment_sample_id"
-    #                     ]
-    #                 )
-
-    # for aligned_idx, aligned_value in enumerate(tables.get("aligned_dna_short_read")):
-    #     if not aligned_value.get("aligned_dna_short_read_file"):
-    #         for metadata_idx, metadata_value in enumerate(metadata):
-    #             if metadata_value.get(
-    #                 "aligned_dna_short_read_id"
-    #             ) and aligned_value.get(
-    #                 "aligned_dna_short_read_id"
-    #             ) == metadata_value.get(
-    #                 "aligned_dna_short_read_id"
-    #             ):
-    #                 if metadata_value.get("cram_file_name"):
-    #                     cram_file_name = metadata_value.get("cram_file_name")
-    #                     aligned_dna_short_read_file_path = f"{aligned_dna_short_read_files_path_header}/{cram_file_name}"
-    #                     tables.get("aligned_dna_short_read")[aligned_idx][
-    #                         "aligned_dna_short_read_file"
-    #                     ] = aligned_dna_short_read_file_path
-    #                 if metadata_value.get("crai_file_name"):
-    #                     crai_file_name = metadata_value.get("crai_file_name")
-    #                     aligned_dna_short_read_index_file_path = f"{aligned_dna_short_read_files_path_header}/{crai_file_name}"
-    #                     tables.get("aligned_dna_short_read")[aligned_idx][
-    #                         "aligned_dna_short_read_index_file"
-    #                     ] = aligned_dna_short_read_index_file_path
-    #                 if metadata_value.get("md5sum"):
-    #                     tables.get("aligned_dna_short_read")[aligned_idx][
-    #                         "md5sum"
-    #                     ] = metadata[metadata_idx].get("md5sum")
-    # return tables
+            if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
+                if sample["experiment_sample_id"] == "NA":
+                    sample["experiment_sample_id"] = line["sm_tag"]
+                else:
+                    logger.info("")  # Log if something already exist
 
 
 def validate_tables(

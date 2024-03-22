@@ -81,16 +81,16 @@ def apply_metadata_map_file(
             ):
                 if sample["aligned_dna_short_read_file"] == "NA":
                     cram_file_name = line["cram_file_name"]
-                    sample[
-                        "aligned_dna_short_read_file"
-                    ] = f"{base_gcp_path}/{cram_file_name}"
+                    sample["aligned_dna_short_read_file"] = (
+                        f"{base_gcp_path}/{cram_file_name}"
+                    )
                 else:
                     logger.info("")  # Log if something already exist
                 if sample["aligned_dna_short_read_index_file"] == "NA":
                     crai_file_name = line["crai_file_name"]
-                    sample[
-                        "aligned_dna_short_read_index_file"
-                    ] = f"{base_gcp_path}/{crai_file_name}"
+                    sample["aligned_dna_short_read_index_file"] = (
+                        f"{base_gcp_path}/{crai_file_name}"
+                    )
                 else:
                     logger.info("")  # Log if something already exist
                 if sample["md5sum"] == "NA":

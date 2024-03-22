@@ -64,7 +64,7 @@ def apply_metadata_map_file(
     metadata_map_file: Path,
     tables: dict[str, list[Sample]],
     gcp_bucket_name: Path,
-    errors: list[Issue],
+    issues: list[Issue],
 ):
     """Fills purposefully blank cells in specific tables with data from the metadata_map_file path"""
     metadata = parse_file(metadata_map_file, ",")
@@ -103,9 +103,9 @@ def apply_metadata_map_file(
             #         field,
             #         f"Value {field} does not exist"
             #     )
-            #     errors.append(new_issue)
+            #     issues.append(new_issue)
             # The line in the metadata did not exist, it should. - ask meaning
-            # Add the error + log
+            # Add the error(aka issue) + log
         for sample in tables["experiment_dna_short_read"]:
             if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
                 if sample["experiment_sample_id"] == "NA":

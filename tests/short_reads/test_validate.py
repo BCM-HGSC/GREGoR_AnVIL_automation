@@ -161,7 +161,6 @@ def test_apply_metadata_map_file_one_sample_pass(
 ):
     """Tests that the function apply_metadata_map_file passes properly"""
 
-    # Adjust to better fit new and accurate validate.py
     errors = []
     experiment_dna_short_read_sample = one_sample_tables["experiment_dna_short_read"][0]
     aligned_dna_short_read_sample = one_sample_tables["aligned_dna_short_read"][0]

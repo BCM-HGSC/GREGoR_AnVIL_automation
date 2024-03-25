@@ -83,7 +83,7 @@ def apply_metadata_map_file(
                     ] = f"{base_gcp_path}/{cram_file_name}"
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
-                    logger.info(
+                    logger.warning(
                         "Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_file that already exists",
                         md_algn_dna_id,
                         sample_index,
@@ -95,7 +95,7 @@ def apply_metadata_map_file(
                     ] = f"{base_gcp_path}/{crai_file_name}"
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
-                    logger.info(
+                    logger.warning(
                         "Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_index_file that already exists",
                         md_algn_dna_id,
                         sample_index,
@@ -104,7 +104,7 @@ def apply_metadata_map_file(
                     sample["md5sum"] = line["md5sum"]
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
-                    logger.info(
+                    logger.warning(
                         "Sample with aligned_dna_short_read_id %s at row %d has an md5sum that already exists",
                         md_algn_dna_id,
                         sample_index,
@@ -131,7 +131,7 @@ def apply_metadata_map_file(
                     sample["experiment_sample_id"] = line["sm_tag"]
                 else:
                     sample_index = tables["experiment_dna_short_read"].index(sample)
-                    logger.info(
+                    logger.warning(
                         "Sample with experiment_dna_short_read_id %s at row %d has an experiment_sample_id that already exists",
                         md_expr_dna_id,
                         sample_index,

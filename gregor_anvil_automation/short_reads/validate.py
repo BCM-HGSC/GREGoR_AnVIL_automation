@@ -36,7 +36,7 @@ def run(
         issues=issues,
         tables=tables,
     )
-    apply_metadata_map_file(metadata_map_file, tables, config.gcp_bucket_name)
+    apply_metadata_map_file(metadata_map_file, tables, config.gcp_bucket_name, issues)
     # If any errors, email issues in a csv file
     subject = "GREGoR AnVIL automation"
     if issues:
@@ -81,37 +81,76 @@ def apply_metadata_map_file(
             ):
                 if sample["aligned_dna_short_read_file"] == "NA":
                     cram_file_name = line["cram_file_name"]
-                    sample["aligned_dna_short_read_file"] = (
-                        f"{base_gcp_path}/{cram_file_name}"
-                    )
+                    sample[
+                        "aligned_dna_short_read_file"
+                    ] = f"{base_gcp_path}/{cram_file_name}"
                 else:
-                    logger.info("")  # Log if something already exist
+                    sample_index = tables["aligned_dna_short_read"].index(sample)
+                    logger.info(
+                        "Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_file that already exists",
+                        md_algn_dna_id,
+                        sample_index,
+                    )
                 if sample["aligned_dna_short_read_index_file"] == "NA":
                     crai_file_name = line["crai_file_name"]
-                    sample["aligned_dna_short_read_index_file"] = (
-                        f"{base_gcp_path}/{crai_file_name}"
-                    )
+                    sample[
+                        "aligned_dna_short_read_index_file"
+                    ] = f"{base_gcp_path}/{crai_file_name}"
                 else:
-                    logger.info("")  # Log if something already exist
+                    sample_index = tables["aligned_dna_short_read"].index(sample)
+                    logger.info(
+                        "Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_index_file that already exists",
+                        md_algn_dna_id,
+                        sample_index,
+                    )
                 if sample["md5sum"] == "NA":
                     sample["md5sum"] = line["md5sum"]
                 else:
-                    logger.info("")  # Log if something already exist
-            # else:
-            #     field =
-            #     new_issue = Issue (
-            #         field,
-            #         f"Value {field} does not exist"
-            #     )
-            #     issues.append(new_issue)
-            # The line in the metadata did not exist, it should. - ask meaning
-            # Add the error(aka issue) + log
+                    sample_index = tables["aligned_dna_short_read"].index(sample)
+                    logger.info(
+                        "Sample with aligned_dna_short_read_id %s at row %d has an md5sum that already exists",
+                        md_algn_dna_id,
+                        sample_index,
+                    )
+            else:
+                field = (
+                    "aligned_dna_short_read_id"
+                    if md_algn_dna_id != sample["aligned_dna_short_read_id"]
+                    else "experiment_dna_short_read_id"
+                )
+                new_issue = Issue(
+                    field,
+                    f"Value {field} does not exist",
+                    "aligned_dna_short_read",
+                    None,
+                )
+                issues.append(new_issue)
+                logger.error(
+                    "Value %s does not exist in table aligned_dna_short_read", field
+                )
         for sample in tables["experiment_dna_short_read"]:
             if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
                 if sample["experiment_sample_id"] == "NA":
                     sample["experiment_sample_id"] = line["sm_tag"]
                 else:
-                    logger.info("")  # Log if something already exist
+                    sample_index = tables["experiment_dna_short_read"].index(sample)
+                    logger.info(
+                        "Sample with experiment_dna_short_read_id %s at row %d has an experiment_sample_id that already exists",
+                        md_expr_dna_id,
+                        sample_index,
+                    )
+            else:
+                field = "experiment_dna_short_read_id"
+                new_issue = Issue(
+                    field,
+                    f"Value {field} does not exist",
+                    "experiment_dna_short_read",
+                    None,
+                )
+                issues.append(new_issue)
+                logger.error(
+                    "Value %s does not exist in table experiment_dna_short_read", field
+                )
 
 
 def validate_tables(

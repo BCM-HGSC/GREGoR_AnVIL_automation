@@ -57,9 +57,6 @@ def run(
     return 0
 
 
-# from pprint import pprint  # REMOVE
-
-
 def apply_metadata_map_file(
     metadata_map_file: Path,
     tables: dict[str, list[Sample]],

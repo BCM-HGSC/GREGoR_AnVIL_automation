@@ -9,4 +9,5 @@ destination:
   gcp:
     bucket_name: some-bucket
 
-working_dir: some-dir
+# Optional, leave blank if you want to use system tmp
+working_dir:

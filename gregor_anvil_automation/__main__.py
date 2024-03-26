@@ -43,6 +43,7 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
             args.input_path,
             args.batch_number,
             working_dir,
+            args.metadata_map_file,
         )
     return return_code
 

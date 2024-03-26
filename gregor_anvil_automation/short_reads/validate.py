@@ -29,14 +29,14 @@ def run(
     """The short_reads entry point"""
     tables = get_table_samples(input_path)
     issues = []
-    # Validate files
-    validate_tables(
-        batch_number=batch_number,
-        gcp_bucket_name=config.gcp_bucket_name,
-        issues=issues,
-        tables=tables,
-    )
     apply_metadata_map_file(metadata_map_file, tables, config.gcp_bucket_name, issues)
+    # Validate files
+    # validate_tables(
+    #     batch_number=batch_number,
+    #     gcp_bucket_name=config.gcp_bucket_name,
+    #     issues=issues,
+    #     tables=tables,
+    # )
     # If any errors, email issues in a csv file
     subject = "GREGoR AnVIL automation"
     if issues:
@@ -71,11 +71,13 @@ def apply_metadata_map_file(
     for line in metadata:
         md_algn_dna_id = line["aligned_dna_short_read_id"]
         md_expr_dna_id = line["experiment_dna_short_read_id"]
+        did_ever_match = False
         for sample in tables["aligned_dna_short_read"]:
             if (
                 md_algn_dna_id == sample["aligned_dna_short_read_id"]
                 and md_expr_dna_id == sample["experiment_dna_short_read_id"]
             ):
+                did_ever_match = True
                 if sample["aligned_dna_short_read_file"] == "NA":
                     cram_file_name = line["cram_file_name"]
                     sample[
@@ -109,24 +111,26 @@ def apply_metadata_map_file(
                         md_algn_dna_id,
                         sample_index,
                     )
-            else:
-                field = (
-                    "aligned_dna_short_read_id"
-                    if md_algn_dna_id != sample["aligned_dna_short_read_id"]
-                    else "experiment_dna_short_read_id"
-                )
-                new_issue = Issue(
-                    field,
-                    f"Value {field} does not exist",
-                    "aligned_dna_short_read",
-                    None,
-                )
-                issues.append(new_issue)
-                logger.error(
-                    "Value %s does not exist in table aligned_dna_short_read", field
-                )
+        if not did_ever_match:
+            field = (
+                "aligned_dna_short_read_id"
+                if md_algn_dna_id != sample["aligned_dna_short_read_id"]
+                else "experiment_dna_short_read_id"
+            )
+            new_issue = Issue(
+                field,
+                f"Value {field} does not exist",
+                "aligned_dna_short_read",
+                None,
+            )
+            issues.append(new_issue)
+            logger.error(
+                "Value %s does not exist in table aligned_dna_short_read", field
+            )
+        exp_match = False
         for sample in tables["experiment_dna_short_read"]:
             if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
+                exp_match = True
                 if sample["experiment_sample_id"] == "NA":
                     sample["experiment_sample_id"] = line["sm_tag"]
                 else:
@@ -136,18 +140,18 @@ def apply_metadata_map_file(
                         md_expr_dna_id,
                         sample_index,
                     )
-            else:
-                field = "experiment_dna_short_read_id"
-                new_issue = Issue(
-                    field,
-                    f"Value {field} does not exist",
-                    "experiment_dna_short_read",
-                    None,
-                )
-                issues.append(new_issue)
-                logger.error(
-                    "Value %s does not exist in table experiment_dna_short_read", field
-                )
+        if not exp_match:
+            field = "experiment_dna_short_read_id"
+            new_issue = Issue(
+                field,
+                f"Value {field} does not exist",
+                "experiment_dna_short_read",
+                None,
+            )
+            issues.append(new_issue)
+            logger.error(
+                "Value %s does not exist in table experiment_dna_short_read", field
+            )
 
 
 def validate_tables(

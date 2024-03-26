@@ -247,7 +247,6 @@ TABLE_NAME_MAPPINGS = {
 UNIQUE_MAPPING = {
     "participant": ["participant_id"],
     "family": ["family_id"],
-    "phenotype": ["phenotype_id"],
     "analyte": ["analyte_id"],
     "experiment_dna_short_read": ["analyte_id", "experiment_dna_short_read_id"],
     "aligned_dna_short_read": [

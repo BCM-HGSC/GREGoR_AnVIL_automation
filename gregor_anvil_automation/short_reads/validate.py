@@ -40,7 +40,8 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         for table_name, table in tables.items():
             # If all ok, generate tsvs of each table
             file_path = working_dir / f"{table_name}.tsv"
-            data_headers = table[0].keys()
+            data_headers = list(table[0].keys())
+            data_headers.remove("row_number")
             generate_file(file_path, data_headers, table, "\t")
             file_paths.append(file_path)
         send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)

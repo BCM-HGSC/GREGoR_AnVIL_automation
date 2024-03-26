@@ -17,18 +17,23 @@ from . import __version__
 from .short_reads import validate
 from .utils.utils import parse_yaml
 
+
 logger = getLogger(__name__)
 
 
 def main() -> int:
     """Main method of gregor workflow"""
+    logger.info("Loading Command Line Parser")
     args = command_line_parser()
+    logger.info("Loading Environment File")
     load_env_vars(args.env_file)
     basicConfig(level=INFO)
+    logger.info("Parsing Config File")
     config = parse_yaml(args.config_file)
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster
     with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:
+        logger.info("Running User Commands")
         result = run_command(config, args, working_dir)
     return result
 

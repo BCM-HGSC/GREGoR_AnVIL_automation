@@ -1,6 +1,7 @@
 from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
+from logging import getLogger
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -15,11 +16,16 @@ from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
 
 
+logger = getLogger(__name__)
+
+
 def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) -> int:
     """The short_reads entry point"""
+    logger.info("Retrieving Table Samples")
     tables = get_table_samples(input_path)
     issues = []
     # Validate files
+    logger.info("Validating Tables")
     validate_tables(
         batch_number=batch_number,
         gcp_bucket_name=config.gcp_bucket_name,
@@ -32,17 +38,21 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
     if issues:
         file_path = working_dir / "issues.csv"
         data_headers = ["field", "message", "table_name", "row"]
+        logger.info("Generating Issue Files")
         generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
+        logger.info("Sending Issues Email")
         send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
     # If all is good, email of success and files generated
     else:
         file_paths = []
+        logger.info("Generating Table Files")
         for table_name, table in tables.items():
             # If all ok, generate tsvs of each table
             file_path = working_dir / f"{table_name}.tsv"
             data_headers = table[0].keys()
             generate_file(file_path, data_headers, table, "\t")
             file_paths.append(file_path)
+
         send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 

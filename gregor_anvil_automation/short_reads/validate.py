@@ -33,7 +33,7 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         file_path = working_dir / "issues.csv"
         data_headers = ["field", "message", "table_name", "row"]
         generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
-        send_email(config, subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
+        send_email(config["email"], subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
     # If all is good, email of success and files generated
     else:
         file_paths = []
@@ -43,7 +43,7 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
             data_headers = table[0].keys()
             generate_file(file_path, data_headers, table, "\t")
             file_paths.append(file_path)
-        send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
+        send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 
 

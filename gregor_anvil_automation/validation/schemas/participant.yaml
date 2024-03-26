@@ -135,10 +135,11 @@ solve_status:
   type: string
   required: True
   allowed:
-    - "Yes"
-    - Likely
-    - "No"
-    - Partial
+    - Solved
+    - Partially solved
+    - Probably solved
+    - Unsolved
+    - Unaffected
   coerce: initialcase
 missing_variant_case:
   type: string

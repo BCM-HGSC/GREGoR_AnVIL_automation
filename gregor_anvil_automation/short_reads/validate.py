@@ -67,6 +67,7 @@ def validate_tables(
             ids[REFERENCE_SOURCE[table_name]].update(
                 sample[REFERENCE_SOURCE[table_name]] for sample in samples
             )
+        tables[table_name] = samples
     # Cross Reference Checks
     check_cross_references(ids, tables, issues)
 

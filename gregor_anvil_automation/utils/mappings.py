@@ -3,6 +3,15 @@
 ###################
 # HEADER MAPPINGS #
 ###################
+participant_reported_race = {
+    "American Indian or Alaska Native",
+    "Asian",
+    "Black or African American",
+    "Native Hawaiian or Other Pacific Islander",
+    "Middle Eastern or North African",
+    "White",
+}
+
 phenotype_additional_modifiers = {
     "HP:0025292",
     "HP:0011009",
@@ -235,6 +244,14 @@ phenotype_additional_modifiers = {
 }
 
 
+MULTI_FIELD_MAP = {
+    "reported_race": participant_reported_race,
+    "additional_modifiers": phenotype_additional_modifiers,
+}
+
+
+#########
+#########
 TABLE_NAME_MAPPINGS = {
     "AlignedNanopore": "aligned_nanopore",
     "ExptNanopore": "experiment_nanopore",
@@ -263,19 +280,30 @@ REFERENCE_SOURCE = {
     "analyte": "analyte_id",
     "experiment_dna_short_read": "experiment_dna_short_read_id",
     "experiment_nanopore": "experiment_nanopore_id",
+    "genetic_findings": "participant_id",
     "family": "family_id",
     "participant": "participant_id",
 }
 
 
 CROSS_REF_CHECK = [
-    # table_name : # list of foreign keys
-    ("aligned_dna_short_read", "experiment_dna_short_read_id"),
-    ("aligned_nanopore", "experiment_nanopore_id"),
-    ("analyte", "participant_id"),
-    ("experiment_dna_short_read", "analyte_id"),
-    ("experiment_nanopore", "analyte_id"),
-    ("genetic_findings", "participant_id"),
-    ("participant", "family_id"),
-    ("phenotype", "participant_id"),
+    # table_name, source primary key, foreign key
+    (
+        "aligned_dna_short_read",
+        "experiment_dna_short_read_id",
+        "experiment_dna_short_read_id",
+    ),
+    ("aligned_nanopore", "experiment_nanopore_id", "experiment_nanopore_id"),
+    ("analyte", "participant_id", "participant_id"),
+    ("experiment_dna_short_read", "analyte_id", "analyte_id"),
+    ("experiment_nanopore", "analyte_id", "analyte_id"),
+    ("genetic_findings", "participant_id", "participant_id"),
+    (
+        "genetic_findings",
+        "participant_id",
+        "additional_family_members_with_variant",
+    ),
+    ("participant", "family_id", "family_id"),
+    ("participant", "participant_id", "twin_id"),
+    ("phenotype", "participant_id", "participant_id"),
 ]

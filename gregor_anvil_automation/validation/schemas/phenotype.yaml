@@ -61,7 +61,7 @@ onset_age_range:
 additional_modifiers:
   type: string
   empty: False
-  check_with: additional_modifiers
+  check_with: field_with_multi
 syndromic:
   type: string
   required: False

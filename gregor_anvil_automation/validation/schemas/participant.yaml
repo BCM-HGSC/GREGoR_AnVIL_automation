@@ -50,6 +50,7 @@ twin_id:
   type: string
   required: False
   check_with: twin_id_is_valid
+  coerce: multi
 proband_relationship:
   type: string
   required: True
@@ -93,15 +94,8 @@ sex_detail:
 reported_race:
   type: string
   required: False
-  allowed:
-    - American Indian or Alaska Native
-    - Asian
-    - Black or African American
-    - Native Hawaiian
-    - Other Pacific Islander
-    - Middle Eastern or North African
-    - White
-    - NA
+  check_with: field_with_multi
+  coerce: multi
 reported_ethnicity:
   type: string
   required: False

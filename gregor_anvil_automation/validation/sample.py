@@ -6,7 +6,7 @@ from string import capwords
 from cerberus import Validator
 from dateutil.parser import parse
 
-from gregor_anvil_automation.utils.mappings import phenotype_additional_modifiers
+from gregor_anvil_automation.utils.mappings import MULTI_FIELD_MAP
 
 
 class SampleValidator(Validator):
@@ -17,7 +17,7 @@ class SampleValidator(Validator):
         self.batch_number = batch_number
         self.gcp_bucket = gcp_bucket
 
-    def _check_with_additional_modifiers(self, field: str, value: str):
+    def _check_with_field_with_multi(self, field: str, value: str):
         """Checks that `additional_modifiers` has a valid one from
         the given dict.
         """
@@ -25,9 +25,7 @@ class SampleValidator(Validator):
             return
         parts = value.split("|")
         if not_valid := {
-            part.strip()
-            for part in parts
-            if part.strip() not in phenotype_additional_modifiers
+            part.strip() for part in parts if part.strip() not in MULTI_FIELD_MAP[field]
         }:
             self._error(
                 field,
@@ -338,6 +336,10 @@ class SampleValidator(Validator):
             self._error(
                 field, "Value may only be NA if gene_known_for_phenotype is not Known"
             )
+
+    def _normalize_coerce_multi(self, value: str) -> str:
+        """Strips empty white spaces that can happen in muli-delimiter value"""
+        return "|".join({v.strip() for v in value.split("|")})
 
     def _normalize_coerce_initialcase(self, value: str) -> str:
         """Coerces value to initialcase"""

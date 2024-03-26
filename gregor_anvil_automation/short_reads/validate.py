@@ -34,17 +34,16 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         data_headers = ["field", "message", "table_name", "row"]
         generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
         send_email(config["email"], subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
-    # If all is good, email of success and files generated
-    else:
-        file_paths = []
-        for table_name, table in tables.items():
-            # If all ok, generate tsvs of each table
-            file_path = working_dir / f"{table_name}.tsv"
-            data_headers = list(table[0].keys())
-            data_headers.remove("row_number")
-            generate_file(file_path, data_headers, table, "\t")
-            file_paths.append(file_path)
-        send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)
+        return 1
+    file_paths = []
+    for table_name, table in tables.items():
+        # If all ok, generate tsvs of each table
+        file_path = working_dir / f"{table_name}.tsv"
+        data_headers = list(table[0].keys())
+        data_headers.remove("row_number")
+        generate_file(file_path, data_headers, table, "\t")
+        file_paths.append(file_path)
+    send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 
 

@@ -81,6 +81,8 @@ def generate_file(
 ):
     """Generates either a csv or tsv file depending on the passed in delimiter"""
     with open(file_path, "w", encoding="utf-8") as file:
-        writer = csv.DictWriter(f=file, fieldnames=data_headers, delimiter=delimiter)
+        writer = csv.DictWriter(
+            f=file, fieldnames=data_headers, delimiter=delimiter, extrasaction="ignore"
+        )
         writer.writeheader()
         writer.writerows(data)

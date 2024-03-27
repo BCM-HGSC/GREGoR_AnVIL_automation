@@ -71,7 +71,9 @@ def apply_metadata_map_file(
     for line in metadata:
         md_algn_dna_id = line["aligned_dna_short_read_id"]
         md_expr_dna_id = line["experiment_dna_short_read_id"]
-        algn_id_match = False # Specifies if at least one aligned_dna_short_read_id match was made
+        algn_id_match = (
+            False  # Specifies if at least one aligned_dna_short_read_id match was made
+        )
         for sample in tables["aligned_dna_short_read"]:
             if (
                 md_algn_dna_id == sample["aligned_dna_short_read_id"]
@@ -80,9 +82,9 @@ def apply_metadata_map_file(
                 algn_id_match = True
                 if sample["aligned_dna_short_read_file"] == "NA":
                     cram_file_name = line["cram_file_name"]
-                    sample[
-                        "aligned_dna_short_read_file"
-                    ] = f"{base_gcp_path}/{cram_file_name}"
+                    sample["aligned_dna_short_read_file"] = (
+                        f"{base_gcp_path}/{cram_file_name}"
+                    )
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
                     logger.warning(
@@ -92,9 +94,9 @@ def apply_metadata_map_file(
                     )
                 if sample["aligned_dna_short_read_index_file"] == "NA":
                     crai_file_name = line["crai_file_name"]
-                    sample[
-                        "aligned_dna_short_read_index_file"
-                    ] = f"{base_gcp_path}/{crai_file_name}"
+                    sample["aligned_dna_short_read_index_file"] = (
+                        f"{base_gcp_path}/{crai_file_name}"
+                    )
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
                     logger.warning(
@@ -127,7 +129,7 @@ def apply_metadata_map_file(
             logger.error(
                 "Value %s does not exist in table aligned_dna_short_read", field
             )
-        exp_id_match = False # Specifies if at least one experiment_dna_short_read_id match was made
+        exp_id_match = False  # Specifies if at least one experiment_dna_short_read_id match was made
         for sample in tables["experiment_dna_short_read"]:
             if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
                 exp_id_match = True

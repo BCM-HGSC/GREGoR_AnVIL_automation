@@ -71,13 +71,13 @@ def apply_metadata_map_file(
     for line in metadata:
         md_algn_dna_id = line["aligned_dna_short_read_id"]
         md_expr_dna_id = line["experiment_dna_short_read_id"]
-        did_ever_match = False
+        algn_id_match = False # Specifies if at least one aligned_dna_short_read_id match was made
         for sample in tables["aligned_dna_short_read"]:
             if (
                 md_algn_dna_id == sample["aligned_dna_short_read_id"]
                 and md_expr_dna_id == sample["experiment_dna_short_read_id"]
             ):
-                did_ever_match = True
+                algn_id_match = True
                 if sample["aligned_dna_short_read_file"] == "NA":
                     cram_file_name = line["cram_file_name"]
                     sample[
@@ -111,7 +111,7 @@ def apply_metadata_map_file(
                         md_algn_dna_id,
                         sample_index,
                     )
-        if not did_ever_match:
+        if not algn_id_match:
             field = (
                 "aligned_dna_short_read_id"
                 if md_algn_dna_id != sample["aligned_dna_short_read_id"]
@@ -127,10 +127,10 @@ def apply_metadata_map_file(
             logger.error(
                 "Value %s does not exist in table aligned_dna_short_read", field
             )
-        exp_match = False
+        exp_id_match = False # Specifies if at least one experiment_dna_short_read_id match was made
         for sample in tables["experiment_dna_short_read"]:
             if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
-                exp_match = True
+                exp_id_match = True
                 if sample["experiment_sample_id"] == "NA":
                     sample["experiment_sample_id"] = line["sm_tag"]
                 else:
@@ -140,7 +140,7 @@ def apply_metadata_map_file(
                         md_expr_dna_id,
                         sample_index,
                     )
-        if not exp_match:
+        if not exp_id_match:
             field = "experiment_dna_short_read_id"
             new_issue = Issue(
                 field,

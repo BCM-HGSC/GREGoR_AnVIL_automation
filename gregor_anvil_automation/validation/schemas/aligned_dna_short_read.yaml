@@ -9,11 +9,9 @@ experiment_dna_short_read_id:
 aligned_dna_short_read_file:
   type: string
   required: True
-  coerce: aligned_dna_short_read_file
 aligned_dna_short_read_index_file:
   type: string
   required: True
-  coerce: aligned_dna_short_read_index_file
 md5sum:
   type: string
   required: True
@@ -30,7 +28,6 @@ reference_assembly:
 reference_assembly_uri:
   type: string
   required: False
-  coerce: into_gcp_path_if_not_na
 reference_assembly_details:
   type: string
   required: False

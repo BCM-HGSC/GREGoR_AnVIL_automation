@@ -3,6 +3,59 @@
 ###################
 # HEADER MAPPINGS #
 ###################
+
+HEADER_CASE_SENSITIVE_MAP = {
+    "genetic_findings": {
+        "clingen_allele_id": "ClinGen_allele_ID",
+        "gregor_variant_classification": "GREGoR_variant_classification",
+        "gregor_clinvar_scv": "GREGoR_ClinVar_SCV",
+        "public_database_id_other": "public_database_ID_other",
+    }
+}
+
+
+CAN_NOT_BE_NA = {
+    "aligned_dna_short_read_index_file",
+    "aligned_dna_short_read_file",
+    "aligned_nanopore_index_file",
+    "aligned_nanopore_file",
+}
+
+#########################
+# HEADER VALUE MAPPINGS #
+#########################
+
+genetic_findings_condition_inheritance = {
+    "Autosomal recessive",
+    "Autosomal dominant",
+    "X-linked",
+    "Mitochondrial",
+    "Y-linked",
+    "Contiguous gene syndrome",
+    "Somatic mosaicism",
+    "Digenic",
+    "Other",
+}
+
+genetic_findings_method_of_discovery = {
+    "SR-ES",
+    "SR-GS",
+    "LR-GS",
+    "SNP array",
+    "Optical mapping",
+    "Karyotype",
+    "SR RNA-seq",
+    "LR RNA-seq",
+    "SR-ES-reanalysis",
+    "SR-GS-reanalysis",
+    "LR-GS-reanalysis",
+    "SNP array-reanalysis",
+    "Optical mapping-reanalysis",
+    "Karyotype-reanalysis",
+    "SR RNA-seq-reanalysis",
+    "LR RNA-seq-reanalysis",
+}
+
 participant_reported_race = {
     "American Indian or Alaska Native",
     "Asian",
@@ -245,8 +298,10 @@ phenotype_additional_modifiers = {
 
 
 MULTI_FIELD_MAP = {
+    "condition_inheritance": genetic_findings_condition_inheritance,
     "reported_race": participant_reported_race,
     "additional_modifiers": phenotype_additional_modifiers,
+    "method_of_discovery": genetic_findings_method_of_discovery,
 }
 
 
@@ -280,9 +335,9 @@ REFERENCE_SOURCE = {
     "analyte": "analyte_id",
     "experiment_dna_short_read": "experiment_dna_short_read_id",
     "experiment_nanopore": "experiment_nanopore_id",
-    "genetic_findings": "participant_id",
     "family": "family_id",
     "participant": "participant_id",
+    "phenotype": "term_id",
 }
 
 
@@ -303,6 +358,7 @@ CROSS_REF_CHECK = [
         "participant_id",
         "additional_family_members_with_variant",
     ),
+    ("genetic_findings", "term_id", "partial_contribution_explained"),
     ("participant", "family_id", "family_id"),
     ("participant", "participant_id", "twin_id"),
     ("phenotype", "participant_id", "participant_id"),

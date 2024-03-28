@@ -13,6 +13,7 @@ from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
 from ..validation.checks import check_cross_references, check_uniqueness
+from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
 
 
 def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) -> int:
@@ -37,6 +38,13 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         return 1
     file_paths = []
     for table_name, table in tables.items():
+        if table_name in HEADER_CASE_SENSITIVE_MAP:
+            for sample in table:
+                for old_header, new_header in HEADER_CASE_SENSITIVE_MAP[
+                    table_name
+                ].items():
+                    if old_header in sample:
+                        sample[new_header] = sample.pop(old_header)
         # If all ok, generate tsvs of each table
         file_path = working_dir / f"{table_name}.tsv"
         data_headers = list(table[0].keys())

@@ -116,7 +116,6 @@ linked_variant_phase:
     - in trans
     - in cis
     - unknown
-    - na
   coerce: lowercase
 gene_known_for_phenotype:
   type: string

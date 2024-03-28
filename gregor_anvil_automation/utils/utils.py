@@ -8,7 +8,6 @@ from openpyxl import Workbook, load_workbook
 
 from .exceptions import InputPathDoesNotExistError
 from .types import Sample
-from .mappings import TABLE_NAME_MAPPINGS
 
 
 def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:
@@ -24,39 +23,40 @@ def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:
 
 def get_table_samples_by_directory(dir_path: Path) -> dict[str, list[Sample]]:
     """Gets every TSV file in the directory."""
-    return {file.stem: parse_file(file, "\t") for file in dir_path.glob("*.tsv")}
+    data = {}
+    for file in dir_path.glob("*"):
+        if "xlsx" in file.suffix:
+            data[file.stem] = get_table_samples_by_excel(file)
+        if "tsv" in file.suffix:
+            print(file)
+            data[file.stem] = parse_file(file, "\t")
+    return data
 
 
 def get_table_samples_by_excel(input_file: Path) -> dict[str, list[Sample]]:
     """Reads the given excel file path and gets the samples"""
     workbook: Workbook = load_workbook(input_file)
-    table_samples = {}
-    for _, sheet_name in enumerate(workbook.sheetnames):
-        sheet = workbook[sheet_name]
-        max_column = sheet.max_column
-        samples = []
-        headers = []
-        for i in range(1, max_column + 1):
-            if header := sheet.cell(row=1, column=i).value:
-                headers.append(header.strip().lower().replace(" ", "_"))
-        for row_cells in sheet.iter_rows(min_row=2):
-            if all(
-                cell.value is None or cell.value.strip() == "" for cell in row_cells
-            ):
-                continue
-            sample = {
-                header: (
-                    ""
-                    if row_cells[idx].value is None
-                    else str(row_cells[idx].value).strip()
-                )
-                for idx, header in enumerate(headers)
-            }
-            sample["row_number"] = row_cells[0].row
-            samples.append(sample)
-            sheet_name = TABLE_NAME_MAPPINGS.get(sheet_name) or sheet_name.lower()
-        table_samples[sheet_name] = samples
-    return table_samples
+    sheet = workbook.active
+    max_column = sheet.max_column
+    samples = []
+    headers = []
+    for i in range(1, max_column + 1):
+        if header := sheet.cell(row=1, column=i).value:
+            headers.append(header.strip().lower().replace(" ", "_"))
+    for row_cells in sheet.iter_rows(min_row=2):
+        if all(cell.value is None or cell.value.strip() == "" for cell in row_cells):
+            continue
+        sample = {
+            header: (
+                ""
+                if row_cells[idx].value is None
+                else str(row_cells[idx].value).strip()
+            )
+            for idx, header in enumerate(headers)
+        }
+        sample["row_number"] = row_cells[0].row
+        samples.append(sample)
+    return samples
 
 
 def parse_yaml(yaml_path: Path) -> addict.Dict:

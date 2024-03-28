@@ -139,20 +139,10 @@ condition_inheritance:
   type: string
   required: False
   dependencies: gene_known_for_phenotype
-  check_with: gene_known_for_phenotype_is_known
-  allowed:
-    - Autosomal recessive
-    - Autosomal dominant
-    - X-linked
-    - Mitochondrial
-    - Y-linked
-    - Contiguous gene syndrome
-    - Somatic mosaicism
-    - Digenic
-    - Other
-    - Unknown
-    - Na
-  coerce: initialcase
+  check_with:
+    - gene_known_for_phenotype_is_known
+    - field_with_multi
+  coerce: multi
 gregor_variant_classification:
   type: string
   required: False
@@ -196,23 +186,8 @@ additional_family_members_with_variant:
 method_of_discovery:
   type: string
   required: False
-  allowed:
-    - SR-ES
-    - SR-GS
-    - LR-GS
-    - SNP array
-    - Optical mapping
-    - Karyotype
-    - SR RNA-seq
-    - LR RNA-seq
-    - SR-ES-reanalysis
-    - SR-GS-reanalysis
-    - LR-GS-reanalysis
-    - SNP array-reanalysis
-    - Optical mapping-reanalysis
-    - Karyotype-reanalysis
-    - SR RNA-seq-reanalysis
-    - LR RNA-seq-reanalysis
+  check_with: field_with_multi
+  coerce: multi
 notes:
   type: string
   required: False

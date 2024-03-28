@@ -6,16 +6,22 @@ from string import capwords
 from cerberus import Validator
 from dateutil.parser import parse
 
-from gregor_anvil_automation.utils.mappings import MULTI_FIELD_MAP
+from gregor_anvil_automation.utils.mappings import MULTI_FIELD_MAP, CAN_NOT_BE_NA
 
 
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
-    def __init__(self, batch_number, gcp_bucket, *args, **kwargs):
+    def __init__(self, batch_number, *args, **kwargs):
         super(Validator, self).__init__(*args, **kwargs)
         self.batch_number = batch_number
-        self.gcp_bucket = gcp_bucket
+
+    def _check_with_is_gcp_path(self, field: str, value: str):
+        """Checks that the given field is a google path path"""
+        if value.lower() == "na" and field not in CAN_NOT_BE_NA:
+            return
+        if "gs://" not in value:
+            self._error(field, "Does not contain a google path.")
 
     def _check_with_field_with_multi(self, field: str, value: str):
         """Checks that `additional_modifiers` has a valid one from
@@ -378,58 +384,4 @@ class SampleValidator(Validator):
             value = datetime.strftime(parse(value), "%Y-%m-%d")
         except ValueError:
             pass
-        return value
-
-    def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:
-        """Coerce value into a gcp path if not NA.
-        Expected format: "NA" or `gs://{google_bucket}/{value}`
-        """
-        if value.strip().upper() != "NA":
-            value = f"gs://{self.gcp_bucket}/{value}"
-        return value
-
-    def _normalize_coerce_aligned_dna_short_read_file(self, value: str):
-        """Coerce `aligned_dna_short_read_file` to a GCP path.
-        Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
-        Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
-        """
-        aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
-        if not aligned_dna_short_read_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
-        return value
-
-    def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
-        """Coerce `aligned_dna_short_read_index_file` to a GCP path.
-        Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
-        Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
-        """
-        aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
-        if not aligned_dna_short_read_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
-        return value
-
-    def _normalize_coerce_aligned_nanopore_file(self, value: str):
-        """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam
-        Expected format: gs://{bucket_name}/{aligned_nanopore_id}.bam
-        """
-        aligned_nanopore_id = self.document.get("aligned_nanopore_id")
-        if not aligned_nanopore_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
-        return value
-
-    def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
-        """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai
-        Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
-        """
-        aligned_nanopore_id = self.document.get("aligned_nanopore_id")
-        if not aligned_nanopore_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
         return value

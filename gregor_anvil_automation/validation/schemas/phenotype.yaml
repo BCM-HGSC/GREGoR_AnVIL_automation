@@ -68,4 +68,5 @@ syndromic:
   allowed:
     - syndromic
     - non-syndromic
+    - na
   coerce: lowercase

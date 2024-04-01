@@ -31,12 +31,12 @@ def run(
     issues = []
     apply_metadata_map_file(metadata_map_file, tables, config.gcp_bucket_name, issues)
     # Validate files
-    # validate_tables(
-    #     batch_number=batch_number,
-    #     gcp_bucket_name=config.gcp_bucket_name,
-    #     issues=issues,
-    #     tables=tables,
-    # )
+    validate_tables(
+        batch_number=batch_number,
+        gcp_bucket_name=config.gcp_bucket_name,
+        issues=issues,
+        tables=tables,
+    )
     # If any errors, email issues in a csv file
     subject = "GREGoR AnVIL automation"
     if issues:
@@ -82,25 +82,25 @@ def apply_metadata_map_file(
                 algn_id_match = True
                 if sample["aligned_dna_short_read_file"] == "NA":
                     cram_file_name = line["cram_file_name"]
-                    sample["aligned_dna_short_read_file"] = (
-                        f"{base_gcp_path}/{cram_file_name}"
-                    )
+                    sample[
+                        "aligned_dna_short_read_file"
+                    ] = f"{base_gcp_path}/{cram_file_name}"
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
                     logger.warning(
-                        "Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_file that already exists",
+                        "Metadata Map File: Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_file that already exists",
                         md_algn_dna_id,
                         sample_index,
                     )
                 if sample["aligned_dna_short_read_index_file"] == "NA":
                     crai_file_name = line["crai_file_name"]
-                    sample["aligned_dna_short_read_index_file"] = (
-                        f"{base_gcp_path}/{crai_file_name}"
-                    )
+                    sample[
+                        "aligned_dna_short_read_index_file"
+                    ] = f"{base_gcp_path}/{crai_file_name}"
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
                     logger.warning(
-                        "Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_index_file that already exists",
+                        "Metadata Map File: Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_index_file that already exists",
                         md_algn_dna_id,
                         sample_index,
                     )
@@ -109,7 +109,7 @@ def apply_metadata_map_file(
                 else:
                     sample_index = tables["aligned_dna_short_read"].index(sample)
                     logger.warning(
-                        "Sample with aligned_dna_short_read_id %s at row %d has an md5sum that already exists",
+                        "Metadata Map File: Sample with aligned_dna_short_read_id %s at row %d has an md5sum that already exists",
                         md_algn_dna_id,
                         sample_index,
                     )
@@ -127,7 +127,8 @@ def apply_metadata_map_file(
             )
             issues.append(new_issue)
             logger.error(
-                "Value %s does not exist in table aligned_dna_short_read", field
+                "Metadata Map File: Value %s does not exist in table aligned_dna_short_read",
+                field,
             )
         exp_id_match = False  # Specifies if at least one experiment_dna_short_read_id match was made
         for sample in tables["experiment_dna_short_read"]:
@@ -138,7 +139,7 @@ def apply_metadata_map_file(
                 else:
                     sample_index = tables["experiment_dna_short_read"].index(sample)
                     logger.warning(
-                        "Sample with experiment_dna_short_read_id %s at row %d has an experiment_sample_id that already exists",
+                        "Metadata Map File: Sample with experiment_dna_short_read_id %s at row %d has an experiment_sample_id that already exists",
                         md_expr_dna_id,
                         sample_index,
                     )
@@ -152,7 +153,8 @@ def apply_metadata_map_file(
             )
             issues.append(new_issue)
             logger.error(
-                "Value %s does not exist in table experiment_dna_short_read", field
+                "Metadata Map File: Value %s does not exist in table experiment_dna_short_read",
+                field,
             )
 
 

@@ -43,6 +43,7 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0
     if args.command == "short_reads":
+        logger.info("Running Short Read Validation")
         return_code = validate.run(
             config,
             args.input_path,

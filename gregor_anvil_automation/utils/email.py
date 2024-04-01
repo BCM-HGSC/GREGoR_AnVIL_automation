@@ -98,6 +98,7 @@ def send_email(
     credentials = SMTPCredentials()
     email = Email(credentials)
     print(email_config)
+    logger.info("Creating Email Message")
     email.build_message(
         subject=subject,
         body=body,
@@ -105,6 +106,7 @@ def send_email(
         recipients=email_config.recipients,
     )
     if attachments:
+        logger.info("Adding Email Attachments")
         email.add_attachments(attachments)
     return email.send()
 

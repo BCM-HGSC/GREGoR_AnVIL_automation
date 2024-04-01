@@ -1,4 +1,5 @@
 """Custom checks that we can't do with cerberus"""
+
 from collections import defaultdict
 from gregor_anvil_automation.utils.issue import Issue
 from ..utils.types import Sample, Table
@@ -43,17 +44,21 @@ def check_value_exist_in_source(field_name: str, table: Table, table_source: Tab
 
 def check_cross_references(ids: defaultdict, tables: list[Table], issues: list[Issue]):
     """Checks all the foreign keys exist in the primary table"""
-    for table_name, field in CROSS_REF_CHECK:
+    for table_name, source_field, dest_field in CROSS_REF_CHECK:
         if table_name not in tables:
             continue
-        if missing_values := {
-            sample[field]
-            for sample in tables[table_name]
-            if sample[field] not in ids[field]
-        }:
+
+        missing_values = set()
+        for sample in tables[table_name]:
+            values = sample[dest_field].split("|")
+            for value in values:
+                if value.lower() != "na" and value not in ids[source_field]:
+                    missing_values.add(value)
+
+        if missing_values:
             issues.append(
                 Issue(
-                    field=field,
+                    field=dest_field,
                     message=f"Foreign keys does not exist in original table {missing_values}",
                     table_name=table_name,
                     row=None,

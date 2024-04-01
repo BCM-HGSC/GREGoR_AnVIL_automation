@@ -9,7 +9,7 @@ analyte_id:
   check_with: analyte_id
 experiment_sample_id:
   type: string
-  required: False
+  required: True
   check_with: experiment_sample_id
 seq_library_prep_kit_method:
   type: string
@@ -32,10 +32,7 @@ targeted_regions_method:
 targeted_region_bed_file:
   type: string
   required: False
-  coerce: into_gcp_path_if_not_na
-# Note on below: Latest version submitted correctly, which we should still verify (becomes a validate not coeerce).
-# Lets see how they submit it and handle from there. Want to be consistent.
-# Will leave coerce as is for now.
+  check_with: is_gcp_path
 date_data_generation:
   type: string
   required: False
@@ -45,5 +42,8 @@ target_insert_size:
   required: False
   check_with: is_int
 sequencing_platform:
+  type: string
+  required: False
+sequencing_event_details:
   type: string
   required: False

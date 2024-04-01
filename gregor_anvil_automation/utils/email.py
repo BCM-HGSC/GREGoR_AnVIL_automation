@@ -97,7 +97,6 @@ def send_email(
         attachments = []
     credentials = SMTPCredentials()
     email = Email(credentials)
-    print(email_config)
     logger.info("Creating Email Message")
     email.build_message(
         subject=subject,

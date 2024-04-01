@@ -52,7 +52,7 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
             data_headers = table[0].keys()
             generate_file(file_path, data_headers, table, "\t")
             file_paths.append(file_path)
-
+        logger.info("Sending Table Files Email")
         send_email(config, subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 
@@ -64,6 +64,7 @@ def validate_tables(
     ids = defaultdict(set)
     for table_name, samples in tables.items():
         # Validate sample by sample using cerberus
+        logger.info("Normalizing and Validating Samples")
         samples = normalize_and_validate_samples(
             batch_number=batch_number,
             gcp_bucket=gcp_bucket_name,
@@ -72,12 +73,14 @@ def validate_tables(
             table_name=table_name,
         )
         # Validate Table Wide Issues which as of now is just unique checking
+        logger.info("Verifying Sample Field Uniqueness")
         check_uniqueness(samples, table_name, issues)
         if table_name in REFERENCE_SOURCE:
             ids[REFERENCE_SOURCE[table_name]].update(
                 sample[REFERENCE_SOURCE[table_name]] for sample in samples
             )
     # Cross Reference Checks
+    logger.info("Verifying Primary Table Foreign Key Existence")
     check_cross_references(ids, tables, issues)
 
 
@@ -89,6 +92,7 @@ def normalize_and_validate_samples(
     table_name: str,
 ):
     """Normalizes and validate samples"""
+    logger.info("Retreiving Schema")
     schema = get_schema(table_name)
     sample_validator = SampleValidator(
         schema=schema, batch_number=batch_number, gcp_bucket=gcp_bucket

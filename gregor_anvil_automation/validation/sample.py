@@ -6,14 +6,37 @@ from string import capwords
 from cerberus import Validator
 from dateutil.parser import parse
 
+from gregor_anvil_automation.utils.mappings import MULTI_FIELD_MAP, CAN_NOT_BE_NA
+
 
 class SampleValidator(Validator):
     """Sample Validator that extends Cerberus `Validator`"""
 
-    def __init__(self, batch_number, gcp_bucket, *args, **kwargs):
+    def __init__(self, batch_number, *args, **kwargs):
         super(Validator, self).__init__(*args, **kwargs)
         self.batch_number = batch_number
-        self.gcp_bucket = gcp_bucket
+
+    def _check_with_is_gcp_path(self, field: str, value: str):
+        """Checks that the given field is a google path path"""
+        if value.lower() == "na" and field not in CAN_NOT_BE_NA:
+            return
+        if "gs://" not in value:
+            self._error(field, "Does not contain a google path.")
+
+    def _check_with_field_with_multi(self, field: str, value: str):
+        """Checks that `additional_modifiers` has a valid one from
+        the given dict.
+        """
+        if value == "NA":
+            return
+        parts = value.split("|")
+        if not_valid := {
+            part.strip() for part in parts if part.strip() not in MULTI_FIELD_MAP[field]
+        }:
+            self._error(
+                field,
+                f"Values ({not_valid}) are not accepted",
+            )
 
     def _check_with_aligned_nanopore_id(self, field: str, value: str):
         """Checks that `aligned_nanopore_id` is valid.
@@ -83,29 +106,46 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - Starts with BCM_Subject_
-            - Ends in _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {batch_number}, inclusively
+            - Ends in _{a number}_A and then a number between 1 and {batch_number}, inclusively
+
+        This should be used whenever `analyte_id` is not povided along with the `participant_id`.
         """
-        if value.startswith("BCM_Subject_"):
-            if int(value.split("_A")[-1]):
-                value_number = int(value.split("_A")[-1])
-            else:
-                return
-        if (
-            not value.startswith("BCM_Subject_")
-            or not (1 <= value_number <= self.batch_number)
-            or not value.endswith(
-                (
-                    f"_1_A{value_number}",
-                    f"_2_A{value_number}",
-                    f"_3_A{value_number}",
-                    f"_4_A{value_number}",
-                )
-            )
-        ):
+        error_message = f"Value must start with BCM_Subject_ and ends with _`a number`_A and then a number between 1 and {self.batch_number}, inclusively"
+        if not value.startswith("BCM_Subject_"):
             self._error(
                 field,
-                f"Value must start with BCM_Subject_ and ends with _1_A, _2_A, _3_A, or _4_A and then a number between 1 and {self.batch_number}, inclusively",
+                error_message,
             )
+            return
+
+        parts = value.split("_")
+        if len(parts) != 5:
+            self._error(
+                field,
+                error_message,
+            )
+            return
+        if not parts[3].isnumeric():
+            self._error(
+                field,
+                error_message,
+            )
+            return
+        try:
+            given_batch_number = int(parts[-1][1:])
+            int(parts[-2])
+        except ValueError:
+            self._error(
+                field,
+                error_message,
+            )
+            return
+        if not 1 <= given_batch_number <= self.batch_number:
+            self._error(
+                field,
+                error_message,
+            )
+            return
 
     def _check_with_analyte_id_matches_participant_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:
@@ -147,17 +187,12 @@ class SampleValidator(Validator):
     def _check_with_experiment_sample_id(self, field: str, value: str):
         """Checks that the `experiment_sample_id` is valid.
         Valid if:
-            - experiment_sample_id == experiment_dna_short_read_id
-              (without the BCM part)
+            - experiment_sample_id is not empty
         """
-        experiment_dna_short_read_id = self.document.get("experiment_dna_short_read_id")
-        if not experiment_dna_short_read_id:
-            return
-        experiment_sample_id = experiment_dna_short_read_id.replace("BCM_", "")
-        if value != experiment_sample_id:
+        if not value:
             self._error(
                 field,
-                f"Value must match the format of {experiment_dna_short_read_id} minus BCM_",
+                "Value must not be empty",
             )
 
     def _check_with_is_na(self, field: str, value: str):
@@ -244,9 +279,8 @@ class SampleValidator(Validator):
         """Checks that twin id is valid.
         A valid twin id is:
             - the `participant_id` must be one of the twin ids
-            - the other id must end with either a _1 or _4
-            - both ids must start with BCM_Subject_
-            - both ids must contain the same subject_id
+            - the other id must end with a number
+            - both ids must start with BCM_Subject_{subject_id}
         Special Condition:
             - "NA" must be accepted as valid input
         """
@@ -256,16 +290,19 @@ class SampleValidator(Validator):
         if participant_id not in value:
             self._error(field, "Value does not contain `participant_id`")
             return
-        if len(value.split(" ")) != 2:
+        if len(value.split(" ")) != 2 and len(value.split("|")) != 2:
             self._error(field, "Value does not have exactly two ids")
             return
         subject_id = participant_id.split("_")[2]
-        matching = (
-            f"BCM_Subject_{subject_id}_{'4' if participant_id.endswith('_1') else '1'}"
-        )
-        twin_id = value.replace(participant_id, "").strip()
-        if twin_id != matching:
-            self._error(field, f"Twin id does not match expected format of: {matching}")
+        matching = f"BCM_Subject_{subject_id}_"
+        twin_id = value.replace(participant_id, "").strip("|")
+        twin_id = twin_id.strip()
+        end_string = value.split("_")[-1]
+        if not twin_id.startswith(matching) or not end_string.isnumeric():
+            self._error(
+                field,
+                f"Twin id does not match expected format of: {matching}`a number`",
+            )
 
     def _check_with_must_start_with_bcm(self, field: str, value: str):
         """Checks that field's value starts with `BCM_`"""
@@ -306,6 +343,10 @@ class SampleValidator(Validator):
                 field, "Value may only be NA if gene_known_for_phenotype is not Known"
             )
 
+    def _normalize_coerce_multi(self, value: str) -> str:
+        """Strips empty white spaces that can happen in muli-delimiter value"""
+        return "|".join({v.strip() for v in value.split("|")})
+
     def _normalize_coerce_initialcase(self, value: str) -> str:
         """Coerces value to initialcase"""
         if value.strip():
@@ -343,58 +384,4 @@ class SampleValidator(Validator):
             value = datetime.strftime(parse(value), "%Y-%m-%d")
         except ValueError:
             pass
-        return value
-
-    def _normalize_coerce_into_gcp_path_if_not_na(self, value: str) -> str:
-        """Coerce value into a gcp path if not NA.
-        Expected format: "NA" or `gs://{google_bucket}/{value}`
-        """
-        if value.strip().upper() != "NA":
-            value = f"gs://{self.gcp_bucket}/{value}"
-        return value
-
-    def _normalize_coerce_aligned_dna_short_read_file(self, value: str):
-        """Coerce `aligned_dna_short_read_file` to a GCP path.
-        Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram
-        Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
-        """
-        aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
-        if not aligned_dna_short_read_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram"
-        return value
-
-    def _normalize_coerce_aligned_dna_short_read_index_file(self, value: str):
-        """Coerce `aligned_dna_short_read_index_file` to a GCP path.
-        Expected format: gs://{bucket_name}/{aligned_dna_short_read_id}.hgv.cram.crai
-        Might get updated depending on https://github.com/BCM-HGSC/GREGoR_AnVIL_automation/issues/31
-        """
-        aligned_dna_short_read_id = self.document.get("aligned_dna_short_read_id")
-        if not aligned_dna_short_read_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_dna_short_read_id}.hgv.cram.crai"
-        return value
-
-    def _normalize_coerce_aligned_nanopore_file(self, value: str):
-        """Coerce `aligned_nanopore_file` to a GCP path that ends with .bam
-        Expected format: gs://{bucket_name}/{aligned_nanopore_id}.bam
-        """
-        aligned_nanopore_id = self.document.get("aligned_nanopore_id")
-        if not aligned_nanopore_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam"
-        return value
-
-    def _normalize_coerce_aligned_nanopore_index_file(self, value: str):
-        """Coerce `aligned_nanopore_index_file` to a GCP path that ends with .bam.bai
-        Expected format. gs://{bucket_name}/{aligned_nanopore_id}.bam.bai
-        """
-        aligned_nanopore_id = self.document.get("aligned_nanopore_id")
-        if not aligned_nanopore_id:
-            return value
-        if not value:
-            value = f"gs://{self.gcp_bucket}/{aligned_nanopore_id}.bam.bai"
         return value

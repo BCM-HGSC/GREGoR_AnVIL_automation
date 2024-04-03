@@ -23,6 +23,7 @@ seq_library_prep_kit_method:
     - Kit 14
     - Rapid
     - Rapid kit 14
+    - Unknown
 fragmentation_method:
   type: string
   required: False

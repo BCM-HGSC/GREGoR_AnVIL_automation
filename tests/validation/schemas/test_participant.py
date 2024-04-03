@@ -147,10 +147,34 @@ def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
     assert validator.errors == {"twin_id": ["Value does not contain `participant_id`"]}
 
 
-def test_twin_id_no_two_ids_invalid_sample(get_validator, participant_sample):
+def test_twin_id_no_two_ids_invalid_sample_one(get_validator, participant_sample):
     """Test that a sample with an invalid twin_id fails validation"""
     validator = get_validator
     participant_sample["twin_id"] = "BCM_Subject_TEST_1"
+    validator.validate(participant_sample)
+    assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
+
+
+def test_twin_id_no_two_ids_invalid_sample_three_spaces(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid twin_id fails validation"""
+    validator = get_validator
+    participant_sample[
+        "twin_id"
+    ] = "BCM_Subject_TEST_1 BCM_Subject_TEST_2 BCM_Subject_TEST_3"
+    validator.validate(participant_sample)
+    assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
+
+
+def test_twin_id_no_two_ids_invalid_sample_three_pipes(
+    get_validator, participant_sample
+):
+    """Test that a sample with an invalid twin_id fails validation"""
+    validator = get_validator
+    participant_sample[
+        "twin_id"
+    ] = "BCM_Subject_TEST_1|BCM_Subject_TEST_2|BCM_Subject_TEST_3"
     validator.validate(participant_sample)
     assert validator.errors == {"twin_id": ["Value does not have exactly two ids"]}
 
@@ -162,12 +186,10 @@ def test_twin_id_no_matching_invalid_sample(get_validator, participant_sample):
     participant_sample["participant_id"] = "BCM_Subject_TEST-TEST_1"
     participant_id = participant_sample["participant_id"]
     subject_id = participant_id.split("_")[2]
-    matching = (
-        f"BCM_Subject_{subject_id}_{'4' if participant_id.endswith('_1') else '1'}"
-    )
+    matching = f"BCM_Subject_{subject_id}_"
     validator.validate(participant_sample)
     assert validator.errors == {
-        "twin_id": [f"Twin id does not match expected format of: {matching}"]
+        "twin_id": [f"Twin id does not match expected format of: {matching}`a number`"]
     }
 
 

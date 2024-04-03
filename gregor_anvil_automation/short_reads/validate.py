@@ -122,9 +122,7 @@ def apply_metadata_map_file(
                     )
         if not algn_id_match:
             field = (
-                "aligned_dna_short_read_id"
-                if md_algn_dna_id != sample["aligned_dna_short_read_id"]
-                else "experiment_dna_short_read_id"
+                ["aligned_dna_short_read_id","experiment_dna_short_read_id"]
             )
             new_issue = Issue(
                 field,

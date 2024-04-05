@@ -75,92 +75,75 @@ def apply_metadata_map_file(
 
     base_gcp_path = f"gs://{gcp_bucket_name}"
 
+    table_formats = {
+        "aligned_dna_short_read": {
+            "aligned_dna_short_read_id": "aligned_dna_short_read_id",
+            "experiment_dna_short_read_id": "experiment_dna_short_read_id",
+            "aligned_dna_short_read_file": "cram_file_name",
+            "aligned_dna_short_read_file_index": "crai_file_name",
+            "md5sum": "md5sum",
+        },
+        "experiment_dna_short_read": {
+            "experiment_dna_short_read_id": "experiment_dna_short_read_id",
+            "experiment_sample_id": "sm_tag",
+        },
+    }
+
     for line in metadata:
-        md_algn_dna_id = line["aligned_dna_short_read_id"]
-        md_expr_dna_id = line["experiment_dna_short_read_id"]
-        algn_id_match = (
-            False  # Specifies if at least one aligned_dna_short_read_id match was made
-        )
-        for sample in tables["aligned_dna_short_read"]:
-            if (
-                md_algn_dna_id == sample["aligned_dna_short_read_id"]
-                and md_expr_dna_id == sample["experiment_dna_short_read_id"]
-            ):
-                algn_id_match = True
-                if sample["aligned_dna_short_read_file"] == "NA":
-                    cram_file_name = line["cram_file_name"]
-                    sample[
-                        "aligned_dna_short_read_file"
-                    ] = f"{base_gcp_path}/{cram_file_name}"
-                else:
-                    sample_index = tables["aligned_dna_short_read"].index(sample)
-                    logger.warning(
-                        "Metadata Map File: Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_file that already exists",
-                        md_algn_dna_id,
-                        sample_index,
+        for table_name, table_format in table_formats.items():
+            for sample_idx, sample in enumerate(tables[table_name]):
+                id_match = False
+                algn_match = True
+                for table_field, metadata_field in table_format.items():
+                    metadata_value = line[metadata_field]
+                    cram_file_name = (
+                        f"{base_gcp_path}/{metadata_value}.cram"
+                        if metadata_field == "cram_file_name"
+                        else None
                     )
-                if sample["aligned_dna_short_read_index_file"] == "NA":
-                    crai_file_name = line["crai_file_name"]
-                    sample[
-                        "aligned_dna_short_read_index_file"
-                    ] = f"{base_gcp_path}/{crai_file_name}"
-                else:
-                    sample_index = tables["aligned_dna_short_read"].index(sample)
-                    logger.warning(
-                        "Metadata Map File: Sample with aligned_dna_short_read_id %s at row %d has an aligned_dna_short_read_index_file that already exists",
-                        md_algn_dna_id,
-                        sample_index,
+                    crai_file_name = (
+                        f"{base_gcp_path}/{metadata_value}.cram.crai"
+                        if metadata_field == "crai_file_name"
+                        else None
                     )
-                if sample["md5sum"] == "NA":
-                    sample["md5sum"] = line["md5sum"]
-                else:
-                    sample_index = tables["aligned_dna_short_read"].index(sample)
-                    logger.warning(
-                        "Metadata Map File: Sample with aligned_dna_short_read_id %s at row %d has an md5sum that already exists",
-                        md_algn_dna_id,
-                        sample_index,
+                    if (
+                        sample[table_field] == "NA"
+                        and table_field != "experiment_dna_short_read_id"
+                        and table_field != "aligned_dna_short_read_id"
+                    ):
+                        if not cram_file_name and not crai_file_name:
+                            sample[table_field] = metadata_value
+                        else:
+                            sample[table_field] = (
+                                cram_file_name if cram_file_name else crai_file_name
+                            )
+                    elif sample[table_field] != metadata_value:
+                        if not cram_file_name and not crai_file_name:
+                            message = (
+                                f"Metadata Map File Population: In table {table_name} on row {sample_idx} value {table_field} exists and does not match the Metadata Map File.",
+                            )
+                        temp_sample_idx = sample_idx
+                        if not (
+                            algn_match := (table_field == "aligned_dna_short_read_id")
+                        ):
+                            if (
+                                sample_idx == len(tables[table_name]) - 1
+                                and not id_match
+                            ):
+                                message = f"Metadata Map File Population: In table {table_name} value {table_field} matches no {table_field} in the Metadata Map File."
+                                sample_idx = None
+                        new_issue = Issue(
+                            table_field,
+                            message,
+                            table_name,
+                            sample_idx,
+                        )
+                        issues.append(new_issue)
+                        logger.error(message, table_field)
+                        sample_idx = temp_sample_idx
+                    id_match = (
+                        table_field == "experiment_dna_short_read_id" and algn_match
                     )
-        if not algn_id_match:
-            field = (
-                ["aligned_dna_short_read_id","experiment_dna_short_read_id"]
-            )
-            new_issue = Issue(
-                field,
-                f"Value {field} does not exist",
-                "aligned_dna_short_read",
-                None,
-            )
-            issues.append(new_issue)
-            logger.error(
-                "Metadata Map File: Value %s does not exist in table aligned_dna_short_read",
-                field,
-            )
-        exp_id_match = False  # Specifies if at least one experiment_dna_short_read_id match was made
-        for sample in tables["experiment_dna_short_read"]:
-            if md_expr_dna_id == sample["experiment_dna_short_read_id"]:
-                exp_id_match = True
-                if sample["experiment_sample_id"] == "NA":
-                    sample["experiment_sample_id"] = line["sm_tag"]
-                else:
-                    sample_index = tables["experiment_dna_short_read"].index(sample)
-                    logger.warning(
-                        "Metadata Map File: Sample with experiment_dna_short_read_id %s at row %d has an experiment_sample_id that already exists",
-                        md_expr_dna_id,
-                        sample_index,
-                    )
-        if not exp_id_match:
-            field = "experiment_dna_short_read_id"
-            new_issue = Issue(
-                field,
-                f"Value {field} does not exist",
-                "experiment_dna_short_read",
-                None,
-            )
-            issues.append(new_issue)
-            logger.error(
-                "Metadata Map File: Value %s does not exist in table experiment_dna_short_read",
-                field,
-            )
 
 
 def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table]):

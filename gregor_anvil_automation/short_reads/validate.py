@@ -123,9 +123,8 @@ def apply_metadata_map_file(
                                 f"Metadata Map File Population: In table {table_name} on row {sample_idx} value {table_field} exists and does not match the Metadata Map File.",
                             )
                         temp_sample_idx = sample_idx
-                        if not (
-                            algn_match := (table_field == "aligned_dna_short_read_id")
-                        ):
+                        if table_field == "aligned_dna_short_read_id":
+                            algn_match = False
                             if (
                                 sample_idx == len(tables[table_name]) - 1
                                 and not id_match
@@ -141,9 +140,8 @@ def apply_metadata_map_file(
                         issues.append(new_issue)
                         logger.error(message, table_field)
                         sample_idx = temp_sample_idx
-                    id_match = (
-                        table_field == "experiment_dna_short_read_id" and algn_match
-                    )
+                        if table_field == "experiment_dna_short_read_id" and algn_match:
+                            id_match = False
 
 
 def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table]):

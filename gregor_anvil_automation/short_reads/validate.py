@@ -2,6 +2,7 @@ from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
 import logging
+import datetime
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -138,7 +139,13 @@ def apply_metadata_map_file(
                             sample_idx,
                         )
                         issues.append(new_issue)
-                        logger.error(message, table_field)
+                        logger.error(
+                            "%d - %s - %s - %s",
+                            datetime.datetime,
+                            __file__,
+                            logger.level,
+                            message,
+                        )
                         sample_idx = temp_sample_idx
                         if table_field == "experiment_dna_short_read_id" and algn_match:
                             id_match = False

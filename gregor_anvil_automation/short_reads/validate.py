@@ -81,7 +81,7 @@ def apply_metadata_map_file(
             "aligned_dna_short_read_id": "aligned_dna_short_read_id",
             "experiment_dna_short_read_id": "experiment_dna_short_read_id",
             "aligned_dna_short_read_file": "cram_file_name",
-            "aligned_dna_short_read_file_index": "crai_file_name",
+            "aligned_dna_short_read_index_file": "crai_file_name",
             "md5sum": "md5sum",
         },
         "experiment_dna_short_read": {
@@ -112,12 +112,12 @@ def apply_metadata_map_file(
                         and table_field != "experiment_dna_short_read_id"
                         and table_field != "aligned_dna_short_read_id"
                     ):
-                        if not cram_file_name and not crai_file_name:
-                            sample[table_field] = metadata_value
-                        else:
+                        if cram_file_name or crai_file_name:
                             sample[table_field] = (
                                 cram_file_name if cram_file_name else crai_file_name
                             )
+                        else:
+                            sample[table_field] = metadata_value
                     elif sample[table_field] != metadata_value:
                         if not cram_file_name and not crai_file_name:
                             message = (
@@ -139,13 +139,7 @@ def apply_metadata_map_file(
                             sample_idx,
                         )
                         issues.append(new_issue)
-                        logger.error(
-                            "%d - %s - %s - %s",
-                            datetime.datetime,
-                            __file__,
-                            logger.level,
-                            message,
-                        )
+                        logger.error(message)
                         sample_idx = temp_sample_idx
                         if table_field == "experiment_dna_short_read_id" and algn_match:
                             id_match = False

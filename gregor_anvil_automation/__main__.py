@@ -23,12 +23,9 @@ logger = getLogger(__name__)
 
 def main() -> int:
     """Main method of gregor workflow"""
-    logger.info("Loading Command Line Parser")
     args = command_line_parser()
-    logger.info("Loading Environment File")
     load_env_vars(args.env_file)
     basicConfig(level=INFO)
-    logger.info("Parsing Config File")
     config = parse_yaml(args.config_file)
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster

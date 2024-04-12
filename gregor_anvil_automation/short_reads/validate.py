@@ -2,7 +2,6 @@ from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
 import logging
-import datetime
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -102,46 +101,42 @@ def apply_metadata_map_file(
         for table_name, table_format in table_formats.items():
             idx_match = False
             for sample in tables[table_name]:
-                primary_key_field = "aligned_dna_short_read_id" if table_name == "aligned_dna_short_read" else 
-                # If the primary keys dont match, skip the line. We don't care about them.
-                if table_name == "aligned_dna_short_read":
-                    if (
-                        sample["aligned_dna_short_read_id"]
-                        != line["aligned_dna_short_read_id"]
-                    ):
-                        # Does not match, don't care
-                        continue
-                elif table_name == "experiment_dna_short_read":
-                    if (
-                        sample["experiment_dna_short_read_id"]
-                        != line["experiment_dna_short_read_id"]
-                    ):
-                        # Does not match, don't care
-                        continue
+                primary_key_field = "aligned_dna_short_read_id" if table_name == "aligned_dna_short_read" else "experiment_dna_short_read_id"
+                # If the primary keys don't match, skip the line. We don't care about them.
+                if (
+                    sample[primary_key_field]
+                    != line[primary_key_field]
+                ):
+                    # Does not match, don't care
+                    continue
                 idx_match = True
                 fields_with_issues = []
                 # Primary keys match, so we can proceed with population
                 for table_field, metadata_field in table_format.items():
-                    # Fix GCP paths so we can then check if match
+                    # Fix GCP paths so we can then check if they matched
                     if metadata_field == "cram_file_name":
                         line[metadata_field] = f"{base_gcp_path}/{line[metadata_field]}"
                     if metadata_field == "crai_file_name":
                         line[metadata_field] = f"{base_gcp_path}/{line[metadata_field]}"
+                    metadata_value = line[metadata_field]
+                    sample_value = sample[table_field]
                     # Check if populated
-                    if sample[table_field]:
-                        # Value already exist, check if same
-                        if sample[table_field] != line[metadata_field]:
+                    if sample_value:
+                        # Value already exists, check if same
+                        if sample_value != metadata_value:
                             message = (
-                                f"Metadata Map File Population: In table {table_name} on row {sample['row_number']} value {table_field} exists and does not match the Metadata Map File.",
+                                f"Metadata Map File Population: In table {table_name} on row {sample["row_number"]} value {table_field} exists and does not match the Metadata Map File.",
                             )
                             logger.error(message)
                             fields_with_issues.append(table_field)
                     else:
-                        # It is not populate it, so populate it.
-                        sample[table_field] = line[metadata_field]
-                # Create one issue for each sample that list fields that were populated but did not match
+                        # It is not populated, so populate it.
+                        sample[table_field] = metadata_value
+                # Create one issue for each sample that lists fields that were populated but did not match
                 if fields_with_issues:
-                    message = "Metadata Map File Population: Non matching values exists for given fields"
+                    message = (
+                        "Metadata Map File Population: Non matching values exists for given fields"
+                    )
                     new_issue = Issue(
                         fields_with_issues,
                         message,
@@ -152,7 +147,9 @@ def apply_metadata_map_file(
                     logger.error(message)
             # It means primary key never matched
             if not idx_match:
-                message = f"Metadata Map File Population: aligned_dna_short_read_id={line['aligned_dna_short_read_id']} experiment_dna_short_read_id={line['experiment_dna_short_read_id']} had no matches"
+                message = (
+                    f"Metadata Map File Population: aligned_dna_short_read_id={line["aligned_dna_short_read_id"]} experiment_dna_short_read_id={line["experiment_dna_short_read_id"]} had no matches"
+                )
                 logger.error(message)
                 new_issue = Issue(
                     "aligned_dna_short_read_id | experiment_dna_short_read_id",

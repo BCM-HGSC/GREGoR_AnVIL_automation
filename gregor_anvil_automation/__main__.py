@@ -8,6 +8,7 @@ from argparse import ArgumentParser, Namespace
 from logging import basicConfig, getLogger, INFO
 from pathlib import Path
 from os import environ
+from datetime import datetime
 
 import addict
 
@@ -24,8 +25,14 @@ def main() -> int:
     """Main method of gregor workflow"""
     args = command_line_parser()
     load_env_vars(args.env_file)
-    basicConfig(level=INFO)
     config = parse_yaml(args.config_file)
+    name = f"{config.log_dir}/gregor_automation_{datetime.now()}.log"
+    basicConfig(
+        filename=name,
+        format="%(asctime)s,%(msecs)d - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=INFO,
+    )
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster
     with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:

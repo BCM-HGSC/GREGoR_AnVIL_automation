@@ -9,5 +9,7 @@ destination:
   gcp:
     bucket_name: some-bucket
 
+log_dir:
+
 # Optional, leave blank if you want to use system tmp
 working_dir:

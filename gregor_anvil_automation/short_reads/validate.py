@@ -119,11 +119,11 @@ def apply_metadata_map_file(
                         else:
                             sample[table_field] = metadata_value
                     elif sample[table_field] != metadata_value:
+                        sample_idx = sample["row_number"]
                         if not cram_file_name and not crai_file_name:
                             message = (
                                 f"Metadata Map File Population: In table {table_name} on row {sample_idx} value {table_field} exists and does not match the Metadata Map File.",
                             )
-                        sample_idx = sample["row_number"]
                         if table_field == "aligned_dna_short_read_id":
                             algn_match = False
                             if (

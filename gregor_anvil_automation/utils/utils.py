@@ -1,5 +1,6 @@
 from pathlib import Path
 import csv
+from logging import getLogger
 
 import addict
 import yaml
@@ -10,13 +11,18 @@ from .exceptions import InputPathDoesNotExistError
 from .types import Sample
 
 
+logger = getLogger(__name__)
+
+
 def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:
     """Get tables from either an excel path or directory filled with TSVs"""
     if not input_path.exists():
         raise InputPathDoesNotExistError(input_path)
     if ".xlsx" in input_path.suffixes:
+        logger.info("Retrieving Tables Samples Via Excel")
         return get_table_samples_by_excel(input_path)
     if input_path.is_dir():
+        logger.info("Retrieving Table Samples Via Directory")
         return get_table_samples_by_directory(input_path)
     raise NotImplementedError
 

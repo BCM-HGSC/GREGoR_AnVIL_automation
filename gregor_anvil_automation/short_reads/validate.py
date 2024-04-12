@@ -1,6 +1,7 @@
 from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
+from logging import getLogger
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -16,11 +17,16 @@ from ..validation.checks import check_cross_references, check_uniqueness
 from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
 
 
+logger = getLogger(__name__)
+
+
 def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) -> int:
     """The short_reads entry point"""
+    logger.info("Retrieving Table Samples")
     tables = get_table_samples(input_path)
     issues = []
     # Validate files
+    logger.info("Validating Tables")
     validate_tables(
         batch_number=batch_number,
         issues=issues,
@@ -32,10 +38,13 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
     if issues:
         file_path = working_dir / "issues.csv"
         data_headers = ["field", "message", "table_name", "row"]
+        logger.info("Generating Issue Files")
         generate_file(file_path, data_headers, [asdict(issue) for issue in issues], ",")
+        logger.info("Sending Issues Email")
         send_email(config["email"], subject, ATTACHED_ISSUES_MSG_BODY, [file_path])
         return 1
     file_paths = []
+    logger.info("Generating Table Files")
     for table_name, table in tables.items():
         if table_name in HEADER_CASE_SENSITIVE_MAP:
             for sample in table:
@@ -50,6 +59,7 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         data_headers.remove("row_number")
         generate_file(file_path, data_headers, table, "\t")
         file_paths.append(file_path)
+    logger.info("Sending Table Files Email")
     send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 
@@ -59,6 +69,7 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
     ids = defaultdict(set)
     for table_name, samples in tables.items():
         # Validate sample by sample using cerberus
+        logger.info("Normalizing and Validating Samples for Table %s", table_name)
         samples = normalize_and_validate_samples(
             batch_number=batch_number,
             issues=issues,
@@ -73,6 +84,7 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
             )
         tables[table_name] = samples
     # Cross Reference Checks
+    logger.info("Verifying Primary Table Foreign Key Existence")
     check_cross_references(ids, tables, issues)
 
 
@@ -83,6 +95,7 @@ def normalize_and_validate_samples(
     table_name: str,
 ):
     """Normalizes and validate samples"""
+    logger.info("Retreiving Schema")
     schema = get_schema(table_name)
     sample_validator = SampleValidator(
         schema=schema,

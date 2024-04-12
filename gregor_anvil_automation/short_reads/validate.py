@@ -69,7 +69,7 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
     ids = defaultdict(set)
     for table_name, samples in tables.items():
         # Validate sample by sample using cerberus
-        logger.info("Normalizing and Validating Samples")
+        logger.info("Normalizing and Validating Samples for table %s", table_name)
         samples = normalize_and_validate_samples(
             batch_number=batch_number,
             issues=issues,
@@ -77,7 +77,6 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
             table_name=table_name,
         )
         # Validate Table Wide Issues which as of now is just unique checking
-        logger.info("Verifying Sample Field Uniqueness")
         check_uniqueness(samples, table_name, issues)
         if table_name in REFERENCE_SOURCE:
             ids[REFERENCE_SOURCE[table_name]].update(

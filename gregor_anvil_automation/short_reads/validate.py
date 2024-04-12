@@ -32,7 +32,9 @@ def run(
     logger.info("Retrieving Table Samples")
     tables = get_table_samples(input_path)
     issues = []
-    apply_metadata_map_file(metadata_map_file, tables, config.gcp_bucket_name, issues)
+    apply_metadata_map_file(
+        metadata_map_file, tables, config.destination.gcp.bucket_name, issues
+    )
     # Validate files
     logger.info("Validating Tables")
     validate_tables(
@@ -84,70 +86,82 @@ def apply_metadata_map_file(
 
     table_formats = {
         "aligned_dna_short_read": {
-            "aligned_dna_short_read_id": "aligned_dna_short_read_id",
+            # "aligned_dna_short_read_id": "aligned_dna_short_read_id",
             "experiment_dna_short_read_id": "experiment_dna_short_read_id",
             "aligned_dna_short_read_file": "cram_file_name",
             "aligned_dna_short_read_index_file": "crai_file_name",
             "md5sum": "md5sum",
         },
         "experiment_dna_short_read": {
-            "experiment_dna_short_read_id": "experiment_dna_short_read_id",
+            # "experiment_dna_short_read_id": "experiment_dna_short_read_id",
             "experiment_sample_id": "sm_tag",
         },
     }
 
     for line in metadata:
         for table_name, table_format in table_formats.items():
+            idx_match = False
             for sample in tables[table_name]:
-                id_match = False
-                algn_match = True
-                for table_field, metadata_field in table_format.items():
-                    metadata_value = line[metadata_field]
-                    cram_file_name = (
-                        f"{base_gcp_path}/{metadata_value}.cram"
-                        if metadata_field == "cram_file_name"
-                        else None
-                    )
-                    crai_file_name = (
-                        f"{base_gcp_path}/{metadata_value}.cram.crai"
-                        if metadata_field == "crai_file_name"
-                        else None
-                    )
+                primary_key_field = "aligned_dna_short_read_id" if table_name == "aligned_dna_short_read" else 
+                # If the primary keys dont match, skip the line. We don't care about them.
+                if table_name == "aligned_dna_short_read":
                     if (
-                        sample[table_field] == "NA"
-                        and table_field != "experiment_dna_short_read_id"
-                        and table_field != "aligned_dna_short_read_id"
+                        sample["aligned_dna_short_read_id"]
+                        != line["aligned_dna_short_read_id"]
                     ):
-                        if cram_file_name or crai_file_name:
-                            sample[table_field] = (
-                                cram_file_name if cram_file_name else crai_file_name
-                            )
-                        else:
-                            sample[table_field] = metadata_value
-                    elif sample[table_field] != metadata_value:
-                        sample_idx = sample["row_number"]
-                        if not cram_file_name and not crai_file_name:
+                        # Does not match, don't care
+                        continue
+                elif table_name == "experiment_dna_short_read":
+                    if (
+                        sample["experiment_dna_short_read_id"]
+                        != line["experiment_dna_short_read_id"]
+                    ):
+                        # Does not match, don't care
+                        continue
+                idx_match = True
+                fields_with_issues = []
+                # Primary keys match, so we can proceed with population
+                for table_field, metadata_field in table_format.items():
+                    # Fix GCP paths so we can then check if match
+                    if metadata_field == "cram_file_name":
+                        line[metadata_field] = f"{base_gcp_path}/{line[metadata_field]}"
+                    if metadata_field == "crai_file_name":
+                        line[metadata_field] = f"{base_gcp_path}/{line[metadata_field]}"
+                    # Check if populated
+                    if sample[table_field]:
+                        # Value already exist, check if same
+                        if sample[table_field] != line[metadata_field]:
                             message = (
-                                f"Metadata Map File Population: In table {table_name} on row {sample_idx} value {table_field} exists and does not match the Metadata Map File.",
+                                f"Metadata Map File Population: In table {table_name} on row {sample['row_number']} value {table_field} exists and does not match the Metadata Map File.",
                             )
-                        if table_field == "aligned_dna_short_read_id":
-                            algn_match = False
-                            if (
-                                sample_idx == len(tables[table_name]) - 1
-                                and not id_match
-                            ):
-                                message = f"Metadata Map File Population: In table {table_name} value {table_field} matches no {table_field} in the Metadata Map File."
-                                sample_idx = None
-                        new_issue = Issue(
-                            table_field,
-                            message,
-                            table_name,
-                            sample_idx,
-                        )
-                        issues.append(new_issue)
-                        logger.error(message)
-                        if table_field == "experiment_dna_short_read_id" and algn_match:
-                            id_match = False
+                            logger.error(message)
+                            fields_with_issues.append(table_field)
+                    else:
+                        # It is not populate it, so populate it.
+                        sample[table_field] = line[metadata_field]
+                # Create one issue for each sample that list fields that were populated but did not match
+                if fields_with_issues:
+                    message = "Metadata Map File Population: Non matching values exists for given fields"
+                    new_issue = Issue(
+                        fields_with_issues,
+                        message,
+                        table_name,
+                        sample["row_number"],
+                    )
+                    issues.append(new_issue)
+                    logger.error(message)
+            # It means primary key never matched
+            if not idx_match:
+                message = f"Metadata Map File Population: aligned_dna_short_read_id={line['aligned_dna_short_read_id']} experiment_dna_short_read_id={line['experiment_dna_short_read_id']} had no matches"
+                logger.error(message)
+                new_issue = Issue(
+                    "aligned_dna_short_read_id | experiment_dna_short_read_id",
+                    message,
+                    table_name,
+                    None,
+                )
+                issues.append(new_issue)
+                logger.error(message)
 
 
 def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table]):

@@ -69,7 +69,7 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
     ids = defaultdict(set)
     for table_name, samples in tables.items():
         # Validate sample by sample using cerberus
-        logger.info("Normalizing and Validating Samples for table %s", table_name)
+        logger.info("Normalizing and Validating Samples for Table %s", table_name)
         samples = normalize_and_validate_samples(
             batch_number=batch_number,
             issues=issues,

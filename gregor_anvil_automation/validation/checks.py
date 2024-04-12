@@ -16,7 +16,7 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
     if fields_to_check and samples:
         for field in fields_to_check:
             logger.info(
-                "Verifying uniqueness of field %s in table %s", field, table_name
+                "Verifying Uniqueness of Field %s in Table %s", field, table_name
             )
             unique_values = set()
             for sample in samples:

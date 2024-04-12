@@ -92,7 +92,7 @@ def apply_metadata_map_file(
 
     for line in metadata:
         for table_name, table_format in table_formats.items():
-            for sample_idx, sample in enumerate(tables[table_name]):
+            for sample in tables[table_name]:
                 id_match = False
                 algn_match = True
                 for table_field, metadata_field in table_format.items():
@@ -123,7 +123,7 @@ def apply_metadata_map_file(
                             message = (
                                 f"Metadata Map File Population: In table {table_name} on row {sample_idx} value {table_field} exists and does not match the Metadata Map File.",
                             )
-                        temp_sample_idx = sample_idx
+                        sample_idx = sample["row_number"]
                         if table_field == "aligned_dna_short_read_id":
                             algn_match = False
                             if (
@@ -140,7 +140,6 @@ def apply_metadata_map_file(
                         )
                         issues.append(new_issue)
                         logger.error(message)
-                        sample_idx = temp_sample_idx
                         if table_field == "experiment_dna_short_read_id" and algn_match:
                             id_match = False
 

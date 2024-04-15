@@ -1,6 +1,7 @@
 from pathlib import Path
 import csv
 from logging import getLogger
+import coloredlogs
 
 import addict
 import yaml
@@ -12,6 +13,8 @@ from .types import Sample
 
 
 logger = getLogger(__name__)
+
+coloredlogs.install(logger=logger)
 
 
 def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:

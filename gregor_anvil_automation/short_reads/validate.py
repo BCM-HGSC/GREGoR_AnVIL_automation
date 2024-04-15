@@ -2,6 +2,7 @@ from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
 from logging import getLogger
+import coloredlogs
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
@@ -18,6 +19,8 @@ from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
 
 
 logger = getLogger(__name__)
+
+coloredlogs.install(logger=logger)
 
 
 def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) -> int:

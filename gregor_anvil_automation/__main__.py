@@ -9,6 +9,7 @@ from logging import basicConfig, getLogger, INFO
 from pathlib import Path
 from os import environ
 from datetime import datetime
+import coloredlogs
 
 import addict
 
@@ -28,7 +29,8 @@ def main() -> int:
     load_env_vars(args.env_file)
     config = parse_yaml(args.config_file)
     name = f"{config.log_dir}/gregor_automation_{datetime.now()}.log"
-    basicConfig(
+    coloredlogs.install(
+        logger=logger,
         filename=name,
         format="%(asctime)s,%(msecs)d - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",

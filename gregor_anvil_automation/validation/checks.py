@@ -2,12 +2,15 @@
 
 from collections import defaultdict
 from logging import getLogger
+import coloredlogs
 
 from gregor_anvil_automation.utils.issue import Issue
 from ..utils.types import Sample, Table
 from ..utils.mappings import CROSS_REF_CHECK, UNIQUE_MAPPING
 
 logger = getLogger(__name__)
+
+coloredlogs.install(logger=logger)
 
 
 def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):

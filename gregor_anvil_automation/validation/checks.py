@@ -1,9 +1,13 @@
 """Custom checks that we can't do with cerberus"""
 
 from collections import defaultdict
+from logging import getLogger
+
 from gregor_anvil_automation.utils.issue import Issue
 from ..utils.types import Sample, Table
 from ..utils.mappings import CROSS_REF_CHECK, UNIQUE_MAPPING
+
+logger = getLogger(__name__)
 
 
 def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):
@@ -11,6 +15,9 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
     fields_to_check = UNIQUE_MAPPING.get(table_name)
     if fields_to_check and samples:
         for field in fields_to_check:
+            logger.info(
+                "Verifying Uniqueness of Field %s in Table %s", field, table_name
+            )
             unique_values = set()
             for sample in samples:
                 if field in sample:

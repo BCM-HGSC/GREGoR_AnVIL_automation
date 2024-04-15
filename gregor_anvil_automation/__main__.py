@@ -18,6 +18,7 @@ from . import __version__
 from .short_reads import validate
 from .utils.utils import parse_yaml
 
+
 logger = getLogger(__name__)
 
 
@@ -36,6 +37,7 @@ def main() -> int:
     # Working Dir
     parent = environ.get("TMPDIR", None)  # From user or cluster
     with get_working_dir(config.get("working_dir"), parent=parent) as working_dir:
+        logger.info("Running User Commands")
         result = run_command(config, args, working_dir)
     return result
 
@@ -45,6 +47,7 @@ def run_command(config: addict.Dict, args, working_dir: Path) -> int:
     # TODO: This will be updated once we have validation/upload workflows established
     return_code = 0
     if args.command == "short_reads":
+        logger.info("Running Short Read Validation")
         return_code = validate.run(
             config,
             args.input_path,

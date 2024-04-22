@@ -14,8 +14,6 @@ from .types import Sample
 
 logger = getLogger(__name__)
 
-coloredlogs.install(logger=logger)
-
 
 def get_table_samples(input_path: Path) -> dict[str, list[Sample]]:
     """Get tables from either an excel path or directory filled with TSVs"""

@@ -20,8 +20,6 @@ from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
 
 logger = getLogger(__name__)
 
-coloredlogs.install(logger=logger)
-
 
 def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) -> int:
     """The short_reads entry point"""

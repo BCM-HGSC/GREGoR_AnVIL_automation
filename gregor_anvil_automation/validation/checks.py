@@ -10,8 +10,6 @@ from ..utils.mappings import CROSS_REF_CHECK, UNIQUE_MAPPING
 
 logger = getLogger(__name__)
 
-coloredlogs.install(logger=logger)
-
 
 def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]):
     """Checks if the given list of values is unique"""

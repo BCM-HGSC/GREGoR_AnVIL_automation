@@ -12,8 +12,6 @@ from dotenv import load_dotenv, find_dotenv
 
 logger = logging.getLogger(__name__)
 
-coloredlogs.install(logger=logger)
-
 
 def load_env_vars(custom_env_path: Optional[Path] = None) -> None:
     """Loads the .env file to ENV variables (without actually overriding them)"""

@@ -30,7 +30,6 @@ def main() -> int:
     config = parse_yaml(args.config_file)
     name = f"{config.log_dir}/gregor_automation_{datetime.now()}.log"
     coloredlogs.install(
-        logger=logger,
         filename=name,
         format="%(asctime)s,%(msecs)d - %(name)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",

@@ -1,7 +1,6 @@
 from pathlib import Path
 import csv
 from logging import getLogger
-import coloredlogs
 
 import addict
 import yaml

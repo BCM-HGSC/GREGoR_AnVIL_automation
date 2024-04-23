@@ -5,7 +5,7 @@ a script by running:
 """
 
 from argparse import ArgumentParser, Namespace
-from logging import basicConfig, getLogger, INFO
+from logging import getLogger, INFO
 from pathlib import Path
 from os import environ
 from datetime import datetime

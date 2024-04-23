@@ -6,7 +6,6 @@ import logging
 import getpass
 from pathlib import Path
 from typing import Optional
-import coloredlogs
 
 from dotenv import load_dotenv, find_dotenv
 

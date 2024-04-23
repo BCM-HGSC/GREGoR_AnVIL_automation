@@ -2,7 +2,6 @@
 
 from collections import defaultdict
 from logging import getLogger
-import coloredlogs
 
 from gregor_anvil_automation.utils.issue import Issue
 from ..utils.types import Sample, Table

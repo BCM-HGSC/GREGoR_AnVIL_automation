@@ -2,7 +2,6 @@ from collections import defaultdict
 from pathlib import Path
 from dataclasses import asdict
 from logging import getLogger
-import coloredlogs
 
 from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE

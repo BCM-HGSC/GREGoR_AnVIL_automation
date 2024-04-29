@@ -117,12 +117,14 @@ def apply_metadata_map_file(
                     # Fix GCP paths so we can then check if they matched
                     if metadata_field == "cram_file_name":
                         line[metadata_field] = f"{base_gcp_path}/{line[metadata_field]}"
+                        print("cram_file_name: ",line[metadata_field])
                     if metadata_field == "crai_file_name":
                         line[metadata_field] = f"{base_gcp_path}/{line[metadata_field]}"
+                        print("crai_file_name: ",line[metadata_field])
                     metadata_value = line[metadata_field]
                     sample_value = sample[table_field]
                     # Check if populated
-                    if sample_value:
+                    if sample_value and sample_value != "NA":
                         # Value already exists, check if same
                         if sample_value != metadata_value:
                             message = (

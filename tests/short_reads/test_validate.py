@@ -17,6 +17,7 @@ def fixture_one_sample_tables():
             {
                 "experiment_dna_short_read_id": "BCM_TEST-001",
                 "experiment_sample_id": "NA",
+                "row_number": 1,
             },
         ],
         "aligned_dna_short_read": [
@@ -26,6 +27,7 @@ def fixture_one_sample_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 1,
             }
         ],
     }
@@ -38,42 +40,52 @@ def fixture_many_samples_tables():
             {
                 "experiment_dna_short_read_id": "BCM_TEST-001",
                 "experiment_sample_id": "NA",
+                "row_number": 1,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-002",
                 "experiment_sample_id": "NA",
+                "row_number": 2,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-003",
                 "experiment_sample_id": "NA",
+                "row_number": 3,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-004",
                 "experiment_sample_id": "NA",
+                "row_number": 4,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-005",
                 "experiment_sample_id": "NA",
+                "row_number": 5,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-006",
                 "experiment_sample_id": "NA",
+                "row_number": 6,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-007",
                 "experiment_sample_id": "NA",
+                "row_number": 7,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-008",
                 "experiment_sample_id": "NA",
+                "row_number": 8,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-009",
                 "experiment_sample_id": "NA",
+                "row_number": 9,
             },
             {
                 "experiment_dna_short_read_id": "BCM_TEST-010",
                 "experiment_sample_id": "NA",
+                "row_number": 10,
             },
         ],
         "aligned_dna_short_read": [
@@ -83,6 +95,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 1,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-002",
@@ -90,6 +103,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 2,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-003",
@@ -97,6 +111,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 3,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-004",
@@ -104,6 +119,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 4,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-005",
@@ -111,6 +127,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 5,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-006",
@@ -118,6 +135,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 6,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-007",
@@ -125,6 +143,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 7,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-008",
@@ -132,6 +151,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 8,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-009",
@@ -139,6 +159,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 9,
             },
             {
                 "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-010",
@@ -146,6 +167,7 @@ def fixture_many_samples_tables():
                 "aligned_dna_short_read_file": "NA",
                 "aligned_dna_short_read_index_file": "NA",
                 "md5sum": "NA",
+                "row_number": 10,
             },
         ],
     }
@@ -192,6 +214,7 @@ def test_apply_metadata_map_file_one_sample_pass(
     assert experiment_dna_short_read_sample == {
         "experiment_dna_short_read_id": "BCM_TEST-001",
         "experiment_sample_id": "BH-####1",
+        "row_number": 1,
     }
     # Check aligned data
     aligned_dna_short_read_sample = one_sample_tables["aligned_dna_short_read"][0]
@@ -201,6 +224,7 @@ def test_apply_metadata_map_file_one_sample_pass(
         "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_001.hgv.cram",
         "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_001.hgv.cram.crai",
         "md5sum": "FAKESUM-001",
+        "row_number": 1,
     }
 
 
@@ -241,42 +265,52 @@ def test_apply_metadata_map_file_many_samples_pass(
         {
             "experiment_dna_short_read_id": "BCM_TEST-001",
             "experiment_sample_id": "BH-####1",
+            "row_number": 1,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-002",
             "experiment_sample_id": "BH-####2",
+            "row_number": 2,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-003",
             "experiment_sample_id": "BH-####3",
+            "row_number": 3,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-004",
             "experiment_sample_id": "BH-####4",
+            "row_number": 4,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-005",
             "experiment_sample_id": "BH-####5",
+            "row_number": 5,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-006",
             "experiment_sample_id": "BH-####6",
+            "row_number": 6,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-007",
             "experiment_sample_id": "BH-####7",
+            "row_number": 7,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-008",
             "experiment_sample_id": "BH-####8",
+            "row_number": 8,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-009",
             "experiment_sample_id": "BH-####9",
+            "row_number": 9,
         },
         {
             "experiment_dna_short_read_id": "BCM_TEST-010",
             "experiment_sample_id": "BH-###10",
+            "row_number": 10,
         },
     ]
     # Check aligned data
@@ -288,6 +322,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_001.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_001.hgv.cram.crai",
             "md5sum": "FAKESUM-001",
+            "row_number": 1,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-002",
@@ -295,6 +330,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_002.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_002.hgv.cram.crai",
             "md5sum": "FAKESUM-002",
+            "row_number": 2,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-003",
@@ -302,6 +338,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_003.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_003.hgv.cram.crai",
             "md5sum": "FAKESUM-003",
+            "row_number": 3,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-004",
@@ -309,6 +346,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_004.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_004.hgv.cram.crai",
             "md5sum": "FAKESUM-004",
+            "row_number": 4,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-005",
@@ -316,6 +354,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_005.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_005.hgv.cram.crai",
             "md5sum": "FAKESUM-005",
+            "row_number": 5,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-006",
@@ -323,6 +362,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_006.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_006.hgv.cram.crai",
             "md5sum": "FAKESUM-006",
+            "row_number": 6,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-007",
@@ -330,6 +370,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_007.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_007.hgv.cram.crai",
             "md5sum": "FAKESUM-007",
+            "row_number": 7,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-008",
@@ -337,6 +378,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_008.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_008.hgv.cram.crai",
             "md5sum": "FAKESUM-008",
+            "row_number": 8,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-009",
@@ -344,6 +386,7 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_009.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_009.hgv.cram.crai",
             "md5sum": "FAKESUM-009",
+            "row_number": 9,
         },
         {
             "aligned_dna_short_read_id": "BCM_aligned_dna_short_read_id-010",
@@ -351,5 +394,6 @@ def test_apply_metadata_map_file_many_samples_pass(
             "aligned_dna_short_read_file": f"gs://{gcp_bucket}/some_name_010.hgv.cram",
             "aligned_dna_short_read_index_file": f"gs://{gcp_bucket}/some_name_010.hgv.cram.crai",
             "md5sum": "FAKESUM-010",
+            "row_number": 10,
         },
     ]

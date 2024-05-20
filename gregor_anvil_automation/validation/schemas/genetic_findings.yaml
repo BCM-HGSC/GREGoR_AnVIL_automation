@@ -122,7 +122,7 @@ gene_of_interest:
   type: string
   required: True
   check_with: variant_type_is_snv_indel_or_re_with_additions
-  coerce: multi
+  coerce: multi_with_additions
 transcript:
   type: string
   required: False
@@ -254,6 +254,23 @@ additional_family_members_with_variant:
 method_of_discovery:
   type: string
   required: False
+  allowed:
+    - SR-ES
+    - SR-GS
+    - LR-GS
+    - SNP array
+    - Optical mapping
+    - Karyotype
+    - SR RNA-seq
+    - LR RNA-seq
+    - SR-ES-reanalysis
+    - SR-GS-reanalysis
+    - LR-GS-reanalysis
+    - SNP array-reanalysis
+    - Optical mapping-reanalysis
+    - Karyotype-reanalysis
+    - SR RNA-seq-reanalysis
+    - LR RNA-seq-reanalysis
   check_with: field_with_multi
   coerce: multi
 notes:

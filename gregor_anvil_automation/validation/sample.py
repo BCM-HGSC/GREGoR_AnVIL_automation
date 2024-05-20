@@ -343,6 +343,35 @@ class SampleValidator(Validator):
                 field, "Value may only be NA if gene_known_for_phenotype is not Known"
             )
 
+    def _check_with_variant_type_is_snv_indel_or_re(self, field: str, value: str):
+        """Checks that field's value is:
+        - An allowed value if variant_type is SNV/INDEL or RE
+        - An empty string otherwise
+        """
+        variant_type = self.document.get("variant_type")
+        if variant_type != "SNV/INDEL" and variant_type != "RE" and (
+            value != ""
+        ):
+            self._error(
+                field, "Value may only exist if variant_type is SNV/INDEL or RE"
+            )
+
+    def _check_with_variant_type_is_snv_indel_or_re_with_additions(self, field: str, value: str):
+        # TODO: Clarify meaning of specifications
+        """Checks that field's value is:
+        - An allowed value if variant_type is SNV/INDEL or RE
+        - If the SNV/INDEL or RE is intergenic with no clear gene of interest, use 'intergenic'
+        - If the SV has multiple genes of interest, use a multi-value delimiter
+        - If the SV has no specific gene of interest, leave blank
+        """
+        variant_type = self.document.get("variant_type")
+        if variant_type != "SNV/INDEL" and variant_type != "RE" and (
+            value != ""
+        ):
+            self._error(
+                field, "Value may only exist if variant_type is SNV/INDEL or RE"
+            )
+
     def _normalize_coerce_multi(self, value: str) -> str:
         """Strips empty white spaces that can happen in muli-delimiter value"""
         return "|".join({v.strip() for v in value.split("|")})

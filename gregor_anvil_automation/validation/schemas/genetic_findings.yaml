@@ -20,6 +20,9 @@ variant_type:
     - RE
     - MEI
   coerce: uppercase
+sv_type:
+  type: string
+  required: False
 variant_reference_assembly:
   type: string
   required: True
@@ -28,7 +31,39 @@ variant_reference_assembly:
     - CHM13
 chrom:
   type: string
-  required: True
+  required: False
+  dependencies: variant_type
+  allowed:
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
+    - "10"
+    - "11"
+    - "12"
+    - "13"
+    - "14"
+    - "15"
+    - "16"
+    - "17"
+    - "18"
+    - "19"
+    - "20"
+    - "21"
+    - "22"
+    - "X"
+    - "Y"
+    - "MT"
+  coerce: uppercase
+  check_with: variant_type_is_snv_indel_or_re
+chrom_end:
+  type: string
+  required: False
   allowed:
     - "1"
     - "2"
@@ -58,28 +93,48 @@ chrom:
   coerce: uppercase
 pos:
   type: string
-  required: True
+  required: False
+  dependencies: variant_type
+  check_with:
+    - is_int
+    - variant_type_is_snv_indel_or_re
+pos_end:
+  type: string
+  required: False
   check_with: is_int
 ref:
   type: string
   required: True
   coerce: uppercase
+  check_with: variant_type_is_snv_indel_or_re
 alt:
   type: string
   required: True
   coerce: uppercase
+  check_with: variant_type_is_snv_indel_or_re
+copy_number:
+  type: string
+  required: False
 clingen_allele_id:
   type: string
   required: False
-gene:
+gene_of_interest:
   type: string
   required: True
+  check_with: variant_type_is_snv_indel_or_re_with_additions
+  coerce: multi
 transcript:
   type: string
+  required: False
 hgvsc:
   type: string
+  required: False
 hgvsp:
   type: string
+  required: False
+hgvs:
+  type: string
+  required: False
 zygosity:
   type: string
   required: True
@@ -90,6 +145,7 @@ zygosity:
     - Heteroplasmy
     - Homoplasmy
     - Mosaic
+    - Unknown
   coerce: initialcase
 allele_balance_or_heteroplasmy_percentage:
   type: string
@@ -144,7 +200,7 @@ condition_inheritance:
   coerce: multi
 gregor_variant_classification:
   type: string
-  required: False
+  required: False # "Currently optional, to consider whether required if known disease gene."
   dependencies: gene_known_for_phenotype
   check_with: gene_known_for_phenotype_is_known
   allowed:
@@ -162,6 +218,19 @@ gregor_variant_classification:
 gregor_clinvar_scv:
   type: string
   required: False # "currently optional, to consider whether required if already submitted"
+gene_disease_validity:
+  type: string
+  required: False # "Currently optional, can change to required if gene_known_for_phenotype = known"
+  dependencies: gene_known_for_phenotype
+  check_with: gene_known_for_phenotype_is_known
+  allowed:
+    - Definitive
+    - Strong
+    - Moderate
+    - Limited
+    - Disputed
+    - Animal Model Only
+    - Refuted
 public_database_other:
   type: string
   required: False

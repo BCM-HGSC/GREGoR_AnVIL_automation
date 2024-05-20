@@ -23,6 +23,21 @@ variant_type:
 sv_type:
   type: string
   required: False
+  allowed:
+    - BND
+    - CNV
+    - CPX
+    - CTX
+    - DEL
+    - DUP
+    - INS
+    - INS:ME
+    - INS:ME:ALU
+    - INS:ME:LINE1
+    - INS:ME:SVA
+    - INS:UNK
+    - INV
+  coerce: uppercase
 variant_reference_assembly:
   type: string
   required: True
@@ -121,8 +136,8 @@ clingen_allele_id:
 gene_of_interest:
   type: string
   required: True
-  check_with: variant_type_is_snv_indel_or_re_with_additions
-  coerce: multi_with_additions
+  check_with: variant_type_is_snv_indel_or_re_with_additional_rules
+  coerce: multi_with_additional_rules
 transcript:
   type: string
   required: False
@@ -222,7 +237,7 @@ gene_disease_validity:
   type: string
   required: False # "Currently optional, can change to required if gene_known_for_phenotype = known"
   dependencies: gene_known_for_phenotype
-  check_with: gene_known_for_phenotype_is_known
+  check_with: gene_known_for_phenotype_is_known_not_na
   allowed:
     - Definitive
     - Strong
@@ -254,23 +269,6 @@ additional_family_members_with_variant:
 method_of_discovery:
   type: string
   required: False
-  allowed:
-    - SR-ES
-    - SR-GS
-    - LR-GS
-    - SNP array
-    - Optical mapping
-    - Karyotype
-    - SR RNA-seq
-    - LR RNA-seq
-    - SR-ES-reanalysis
-    - SR-GS-reanalysis
-    - LR-GS-reanalysis
-    - SNP array-reanalysis
-    - Optical mapping-reanalysis
-    - Karyotype-reanalysis
-    - SR RNA-seq-reanalysis
-    - LR RNA-seq-reanalysis
   check_with: field_with_multi
   coerce: multi
 notes:

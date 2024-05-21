@@ -110,9 +110,7 @@ pos:
   type: string
   required: False
   dependencies: variant_type
-  check_with:
-    - is_int
-    - variant_type_is_snv_indel_or_re
+  check_with: variant_type_is_snv_indel_or_re_and_is_int
 pos_end:
   type: string
   required: False

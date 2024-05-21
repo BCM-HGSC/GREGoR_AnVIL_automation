@@ -97,6 +97,7 @@ allele_balance_or_heteroplasmy_percentage:
 variant_inheritance:
   type: string
   required: False
+  empty: True
   allowed:
     - de novo
     - maternal
@@ -112,6 +113,7 @@ linked_variant:
 linked_variant_phase:
   type: string
   required: False
+  empty: True
   allowed:
     - in trans
     - in cis
@@ -145,6 +147,7 @@ condition_inheritance:
 gregor_variant_classification:
   type: string
   required: False
+  empty: True
   dependencies: gene_known_for_phenotype
   check_with: gene_known_for_phenotype_is_known
   allowed:
@@ -171,6 +174,7 @@ public_database_id_other:
 phenotype_contribution:
   type: string
   required: False
+  empty: True
   allowed:
     - Partial
     - Full

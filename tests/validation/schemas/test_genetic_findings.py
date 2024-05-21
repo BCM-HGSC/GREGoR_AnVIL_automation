@@ -98,7 +98,11 @@ def test_chrom_valid_sample_re(get_validator, genetic_findings_sample):
 def test_chrom_invalid_sample(get_validator, genetic_findings_sample):
     """Test that a sample with an invalid chrom fails validation"""
     validator = get_validator
-    genetic_findings_sample["chrom"] = "TEST-TEST"
+    genetic_findings_sample["chrom"] = "1"
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["pos"] = ""
+    genetic_findings_sample["ref"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
@@ -130,9 +134,16 @@ def test_pos_invalid_sample_is_int_wrong_variant_type(get_validator, genetic_fin
     """Test that a sample with an invalid pos fails validation"""
     validator = get_validator
     genetic_findings_sample["pos"] = "1"
+    genetic_findings_sample["chrom"] = ""
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["ref"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "unallowed value ",
+        ],
         "pos": [
             "Value may only exist if variant_type is SNV/INDEL or RE",
         ],
@@ -142,9 +153,16 @@ def test_pos_invalid_sample_not_int_right_variant_type(get_validator, genetic_fi
     """Test that a sample with an invalid pos fails validation"""
     validator = get_validator
     genetic_findings_sample["pos"] = "TEST-TEST"
+    genetic_findings_sample["chrom"] = ""
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["ref"] = ""
     genetic_findings_sample["variant_type"] = "SNV/INDEL"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "unallowed value ",
+        ],
         "pos": [
             "Value requires an int",
         ],
@@ -155,11 +173,17 @@ def test_pos_invalid_sample_not_int_wrong_variant_type(get_validator, genetic_fi
     """Test that a sample with an invalid pos fails validation"""
     validator = get_validator
     genetic_findings_sample["pos"] = "TEST-TEST"
+    genetic_findings_sample["chrom"] = ""
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["ref"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "unallowed value ",
+        ],
         "pos": [
-            "Value requires an int",
             "Value may only exist if variant_type is SNV/INDEL or RE",
         ],
     }
@@ -189,9 +213,17 @@ def test_ref_valid_sample_snv_indel(get_validator, genetic_findings_sample):
     """Test that a sample with a valid ref passes validation"""
     validator = get_validator
     genetic_findings_sample["ref"] = "TEST-TEST"
+    genetic_findings_sample["pos"] = ""
+    genetic_findings_sample["chrom"] = ""
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
     genetic_findings_sample["variant_type"] = "SNV/INDEL"
     validator.validate(genetic_findings_sample)
-    assert validator.errors == {}
+    assert validator.errors == {
+        "chrom": [
+            "unallowed value ",
+        ],
+    }
 
 
 def test_ref_valid_sample_re(get_validator, genetic_findings_sample):
@@ -207,6 +239,10 @@ def test_ref_invalid_sample(get_validator, genetic_findings_sample):
     """Test that a sample with an invalid ref fails validation"""
     validator = get_validator
     genetic_findings_sample["ref"] = "TEST-TEST"
+    genetic_findings_sample["chrom"] = ""
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {

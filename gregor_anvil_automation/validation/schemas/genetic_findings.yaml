@@ -71,7 +71,7 @@ alt:
 clingen_allele_id:
   type: string
   required: False
-gene:
+gene_of_interest:
   type: string
   required: True
 transcript:

@@ -23,7 +23,6 @@ consent_code:
 recontactable:
   type: string
   required: False
-  empty: True
   coerce: initialcase
   allowed:
     - "Yes"
@@ -99,7 +98,6 @@ reported_race:
 reported_ethnicity:
   type: string
   required: False
-  empty: True
   allowed:
     - Hispanic or Latino
     - Not Hispanic or Latino

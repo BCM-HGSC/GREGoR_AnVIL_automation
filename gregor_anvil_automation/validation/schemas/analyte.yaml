@@ -56,7 +56,6 @@ primary_biosample_details:
 tissue_affected_status:
   type: string
   required: False
-  empty: True
   allowed:
     - "Yes"
     - "No"

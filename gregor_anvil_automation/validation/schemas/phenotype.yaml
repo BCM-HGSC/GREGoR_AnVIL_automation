@@ -36,7 +36,6 @@ additional_details:
 onset_age_range:
   type: string
   required: False
-  empty: True
   allowed:
     - HP:0003581
     - HP:0030674
@@ -66,7 +65,6 @@ additional_modifiers:
 syndromic:
   type: string
   required: False
-  empty: True
   allowed:
     - syndromic
     - non-syndromic

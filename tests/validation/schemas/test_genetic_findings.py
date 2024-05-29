@@ -134,7 +134,6 @@ def test_pos_invalid_sample_is_int_wrong_variant_type(get_validator, genetic_fin
     """Test that a sample with an invalid pos fails validation"""
     validator = get_validator
     genetic_findings_sample["pos"] = "1"
-    genetic_findings_sample["chrom"] = ""
     genetic_findings_sample["alt"] = ""
     genetic_findings_sample["gene_of_interest"] = ""
     genetic_findings_sample["ref"] = ""
@@ -142,7 +141,7 @@ def test_pos_invalid_sample_is_int_wrong_variant_type(get_validator, genetic_fin
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "chrom": [
-            "unallowed value ",
+            "Value may only exist if variant_type is SNV/INDEL or RE",
         ],
         "pos": [
             "Value may only exist if variant_type is SNV/INDEL or RE",
@@ -153,16 +152,9 @@ def test_pos_invalid_sample_not_int_right_variant_type(get_validator, genetic_fi
     """Test that a sample with an invalid pos fails validation"""
     validator = get_validator
     genetic_findings_sample["pos"] = "TEST-TEST"
-    genetic_findings_sample["chrom"] = ""
-    genetic_findings_sample["alt"] = ""
-    genetic_findings_sample["gene_of_interest"] = ""
-    genetic_findings_sample["ref"] = ""
     genetic_findings_sample["variant_type"] = "SNV/INDEL"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
-        "chrom": [
-            "unallowed value ",
-        ],
         "pos": [
             "Value requires an int",
         ],
@@ -173,7 +165,6 @@ def test_pos_invalid_sample_not_int_wrong_variant_type(get_validator, genetic_fi
     """Test that a sample with an invalid pos fails validation"""
     validator = get_validator
     genetic_findings_sample["pos"] = "TEST-TEST"
-    genetic_findings_sample["chrom"] = ""
     genetic_findings_sample["alt"] = ""
     genetic_findings_sample["gene_of_interest"] = ""
     genetic_findings_sample["ref"] = ""
@@ -181,7 +172,7 @@ def test_pos_invalid_sample_not_int_wrong_variant_type(get_validator, genetic_fi
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "chrom": [
-            "unallowed value ",
+            "Value may only exist if variant_type is SNV/INDEL or RE",
         ],
         "pos": [
             "Value may only exist if variant_type is SNV/INDEL or RE",
@@ -213,17 +204,9 @@ def test_ref_valid_sample_snv_indel(get_validator, genetic_findings_sample):
     """Test that a sample with a valid ref passes validation"""
     validator = get_validator
     genetic_findings_sample["ref"] = "TEST-TEST"
-    genetic_findings_sample["pos"] = ""
-    genetic_findings_sample["chrom"] = ""
-    genetic_findings_sample["alt"] = ""
-    genetic_findings_sample["gene_of_interest"] = ""
     genetic_findings_sample["variant_type"] = "SNV/INDEL"
     validator.validate(genetic_findings_sample)
-    assert validator.errors == {
-        "chrom": [
-            "unallowed value ",
-        ],
-    }
+    assert validator.errors == {}
 
 
 def test_ref_valid_sample_re(get_validator, genetic_findings_sample):
@@ -239,13 +222,15 @@ def test_ref_invalid_sample(get_validator, genetic_findings_sample):
     """Test that a sample with an invalid ref fails validation"""
     validator = get_validator
     genetic_findings_sample["ref"] = "TEST-TEST"
-    genetic_findings_sample["chrom"] = ""
     genetic_findings_sample["alt"] = ""
     genetic_findings_sample["gene_of_interest"] = ""
     genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "Value may only exist if variant_type is SNV/INDEL or RE",
+        ],
         "ref": [
             "Value may only exist if variant_type is SNV/INDEL or RE",
         ],
@@ -274,9 +259,15 @@ def test_alt_invalid_sample(get_validator, genetic_findings_sample):
     """Test that a sample with an invalid alt fails validation"""
     validator = get_validator
     genetic_findings_sample["alt"] = "TEST-TEST"
+    genetic_findings_sample["ref"] = ""
+    genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "Value may only exist if variant_type is SNV/INDEL or RE",
+        ],
         "alt": [
             "Value may only exist if variant_type is SNV/INDEL or RE",
         ],
@@ -306,9 +297,16 @@ def test_gene_of_interest_valid_sample_empty(get_validator, genetic_findings_sam
     """Test that a sample with a valid gene_of_interest passes validation"""
     validator = get_validator
     genetic_findings_sample["gene_of_interest"] = ""
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["ref"] = ""
+    genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
-    assert validator.errors == {}
+    assert validator.errors == {
+        "chrom": [
+            "Value may only exist if variant_type is SNV/INDEL or RE",
+        ],
+    }
 
 
 def test_gene_of_interest_invalid_sample_not_intergenic_snv_indel(get_validator, genetic_findings_sample):
@@ -341,9 +339,15 @@ def test_gene_of_interest_invalid_sample_intergenic_wrong_variant_type(get_valid
     """Test that a sample with an invalid gene_of_interest fails validation"""
     validator = get_validator
     genetic_findings_sample["gene_of_interest"] = "intergenic"
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["ref"] = ""
+    genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "Value may only exist if variant_type is SNV/INDEL or RE",
+        ],
         "gene_of_interest": [
             "Value may only be 'intergenic' if variant_type is SNV/INDEL or RE",
         ],
@@ -354,9 +358,15 @@ def test_gene_of_interest_invalid_sample_not_empty(get_validator, genetic_findin
     """Test that a sample with an invalid gene_of_interest fails validation"""
     validator = get_validator
     genetic_findings_sample["gene_of_interest"] = "TEST-TEST"
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["ref"] = ""
+    genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
+        "chrom": [
+            "Value may only exist if variant_type is SNV/INDEL or RE",
+        ],
         "gene_of_interest": [
             "Value must be empty if SV has no specific gene of interest",
         ],
@@ -442,7 +452,7 @@ def test_condition_inheritance_invalid_sample_na_and_known(get_validator, geneti
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "condition_inheritance": [
-            "Value is required if gene_known_for_phenotype is Known"
+            "Value may only be NA if gene_known_for_phenotype is not Known"
         ],
     }
 
@@ -455,7 +465,7 @@ def test_condition_inheritance_invalid_sample_invalid_value_and_known(get_valida
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "condition_inheritance": [
-            f"Values ({genetic_findings_sample["gene_known_for_phenotype"]}) are not accepted"
+            "Values ({'TEST-TEST'}) are not accepted"
         ],
     }
 
@@ -508,7 +518,11 @@ def test_gene_disease_validity_valid_sample_not_known_and_empty(get_validator, g
     genetic_findings_sample["gene_known_for_phenotype"] = "Candidate"
     genetic_findings_sample["gene_disease_validity"] = ""
     validator.validate(genetic_findings_sample)
-    assert validator.errors == {}
+    assert validator.errors == {
+        "gene_disease_validity": [
+            "unallowed value ",
+        ],
+    }
 
 
 def test_gene_disease_validity_invalid_sample_known_and_empty(
@@ -521,7 +535,8 @@ def test_gene_disease_validity_invalid_sample_known_and_empty(
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "gene_disease_validity": [
-            "Value is required if gene_known_for_phenotype is Known"
+            "Value is required if gene_known_for_phenotype is Known",
+            "unallowed value ",
         ],
     }
 
@@ -545,7 +560,7 @@ def test_method_of_discovery_invalid_sample(
     validator.validate(genetic_findings_sample)
     assert validator.errors == {
         "method_of_discovery": [
-            f"Values ({genetic_findings_sample["method_of_discovery"]}) are not accepted"
+            "Values ({'SR-ES-SR-GS-LR-GS'}) are not accepted"
         ],
     }
 
@@ -565,7 +580,7 @@ def test_sv_type_normalization(get_validator, genetic_findings_sample):
     genetic_findings_sample["sv_type"] = "bnd"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {}
-    assert validator.document["sv_type"] == "SNV/INDEL"
+    assert validator.document["sv_type"] == "BND"
 
 
 def test_chrom_normalization(get_validator, genetic_findings_sample):
@@ -608,9 +623,19 @@ def test_gene_of_interest_normalization(get_validator, genetic_findings_sample):
     """Test that a sample's gene_of_interest properly normalizes with coerce: multi_with_additional_rules"""
     validator = get_validator
     genetic_findings_sample["gene_of_interest"] = "   TEST  | TEST  "
+    genetic_findings_sample["alt"] = ""
+    genetic_findings_sample["ref"] = ""
+    genetic_findings_sample["pos"] = ""
     genetic_findings_sample["variant_type"] = "CNV"
     validator.validate(genetic_findings_sample)
-    assert validator.errors == {}
+    assert validator.errors == {
+        "chrom": [
+            "Value may only exist if variant_type is SNV/INDEL or RE",
+        ],
+        "gene_of_interest": [
+            "Value must be empty if SV has no specific gene of interest",
+        ],
+    }
     assert validator.document["gene_of_interest"] == "TEST|TEST"
 
 
@@ -651,12 +676,12 @@ def test_gene_known_for_phenotype_normalization(get_validator, genetic_findings_
 
 
 def test_condition_inheritance_normalization(get_validator, genetic_findings_sample):
-    """Test that a sample's condition_inheritance properly normalizes with coerce: initialcase"""
+    """Test that a sample's condition_inheritance properly normalizes with coerce: multi"""
     validator = get_validator
-    genetic_findings_sample["condition_inheritance"] = "autosomal recessive"
+    genetic_findings_sample["condition_inheritance"] = "  Autosomal recessive    | Autosomal dominant  |      X-linked"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {}
-    assert validator.document["condition_inheritance"] == "Autosomal recessive"
+    assert validator.document["condition_inheritance"] == "Autosomal recessive|Autosomal dominant|X-linked"
 
 
 def test_phenotype_contribution_normalization(get_validator, genetic_findings_sample):
@@ -671,7 +696,7 @@ def test_phenotype_contribution_normalization(get_validator, genetic_findings_sa
 def test_method_of_discovery_normalization(get_validator, genetic_findings_sample):
     """Test that a sample's method_of_discovery properly normalizes with coerce: multi"""
     validator = get_validator
-    genetic_findings_sample["method_of_discovery"] = "   SR-ES  | SR_GS  |    LR-GS"
+    genetic_findings_sample["method_of_discovery"] = "   SR-ES  | SR-GS  |    LR-GS"
     validator.validate(genetic_findings_sample)
     assert validator.errors == {}
     assert validator.document["method_of_discovery"] == "SR-ES|SR-GS|LR-GS"

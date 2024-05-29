@@ -412,7 +412,7 @@ class SampleValidator(Validator):
 
     def _normalize_coerce_multi(self, value: str) -> str:
         """Strips empty white spaces that can happen in muli-delimiter value"""
-        return "|".join({v.strip() for v in value.split("|")})
+        return "|".join([v.strip() for v in value.split("|")])
 
     def _normalize_coerce_multi_with_additional_rules(self, value: str) -> str:
         # TODO: Clarify meaning of specifications
@@ -424,7 +424,7 @@ class SampleValidator(Validator):
         """
         variant_type = self.document.get("variant_type")
         if variant_type != "SNV/INDEL" or variant_type != "RE":
-            return "|".join({v.strip() for v in value.split("|")})
+            return "|".join([v.strip() for v in value.split("|")])
         else:
             return value
 

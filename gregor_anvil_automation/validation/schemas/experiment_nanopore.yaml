@@ -47,6 +47,7 @@ date_data_generation:
 sequencing_platform:
   type: string
   required: False
+  empty: True
   allowed:
     - Oxford Nanopore PromethION 48
     - Oxford Nanopore PromethION 24

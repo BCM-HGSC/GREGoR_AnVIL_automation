@@ -357,25 +357,9 @@ class SampleValidator(Validator):
         - An empty string otherwise
         """
         variant_type = self.document.get("variant_type")
-        if variant_type != "SNV/INDEL" and variant_type != "RE" and value != "":
+        if not variant_type or variant_type not in {"SNV/INDEL", "RE"}:
             self._error(
                 field, "Value may only exist if variant_type is SNV/INDEL or RE"
-            )
-
-    def _check_with_variant_type_is_snv_indel_or_re_and_is_int(self, field: str, value: str):
-        """Checks that field's value is:
-        - An allowed value if variant_type is SNV/INDEL or RE and value is an integer
-        - An empty string otherwise
-        """
-        variant_type = self.document.get("variant_type")
-        if variant_type != "SNV/INDEL" and variant_type != "RE":
-            if value != "":
-                self._error(
-                    field, "Value may only exist if variant_type is SNV/INDEL or RE"
-                )
-        elif not value.isdigit():
-            self._error(
-                field, "Value requires an int"
             )
 
     def _check_with_variant_type_is_snv_indel_or_re_with_additional_rules(self, field: str, value: str):

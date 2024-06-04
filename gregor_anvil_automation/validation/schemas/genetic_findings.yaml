@@ -23,6 +23,7 @@ variant_type:
 sv_type:
   type: string
   required: False
+  empty: True
   allowed:
     - BND
     - CNV
@@ -47,6 +48,7 @@ variant_reference_assembly:
 chrom:
   type: string
   required: False
+  empty: True
   dependencies: variant_type
   allowed:
     - "1"
@@ -110,7 +112,9 @@ pos:
   type: string
   required: False
   dependencies: variant_type
-  check_with: variant_type_is_snv_indel_or_re_and_is_int
+  check_with:
+    - variant_type_is_snv_indel_or_re_
+    - is_int
 pos_end:
   type: string
   required: False
@@ -128,6 +132,7 @@ alt:
 copy_number:
   type: string
   required: False
+  check_with: is_int
 clingen_allele_id:
   type: string
   required: False

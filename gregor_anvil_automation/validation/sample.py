@@ -329,9 +329,74 @@ class SampleValidator(Validator):
                 field, "Value may only be NA if gene_known_for_phenotype is not Known"
             )
 
+    def _check_with_gene_known_for_phenotype_is_known_not_na(self, field: str, value: str):
+        """Checks that field's value is not empty if gene_known_for_phenotype is Known"""
+        gene_known_for_phenotype = self.document.get("gene_known_for_phenotype")
+        if gene_known_for_phenotype == "Known" and value == "":
+            self._error(
+                field, "Value is required if gene_known_for_phenotype is Known"
+            )
+
+    def _check_with_variant_type_is_snv_indel_or_re(self, field: str, value: str):
+        """Checks that field's value is:
+        - An allowed value if variant_type is SNV/INDEL or RE
+        - An empty string otherwise
+        """
+        variant_type = self.document.get("variant_type")
+        if not variant_type or variant_type not in {"SNV/INDEL", "RE"}:
+            self._error(
+                field, "Value may only exist if variant_type is SNV/INDEL or RE"
+            )
+
+    def _check_with_variant_type_is_snv_indel_or_re_with_additional_rules(self, field: str, value: str):
+        # TODO: Clarify meaning of specifications
+        """Checks that field's value is:
+        - An allowed value if variant_type is SNV/INDEL or RE
+        - If the SNV/INDEL or RE is intergenic with no clear gene of interest, use 'intergenic'
+        - If the SV has multiple genes of interest, use a multi-value delimiter (according to sheet, using |)
+        - If the SV has no specific gene of interest, leave blank
+
+        - Current implementation (incorrect): # Acts as a standin for different cases
+            - requires intergenic if variant_type is SNV/INDEL or RE
+            - doesn't catch the multiple genes of interest case
+            - requires an empty value if variant_type is not SNV/INDEL or RE
+
+        If none of this is actually something that needs to be tested then essentially this value will accept anything
+        """
+        variant_type = self.document.get("variant_type")
+        if variant_type == "SNV/INDEL" or variant_type == "RE":
+            if value != "intergenic":
+                self._error(
+                    field, "Value must be 'intergenic' if variant_type is SNV/INDEL or RE is intergenic with no clear gene of interest"
+                )
+        else:
+            # Need case where SV has multiple genes of interest
+            if value == "intergenic":
+                self._error(
+                    field, "Value may only be 'intergenic' if variant_type is SNV/INDEL or RE"
+                )
+            elif value != "":
+                self._error(
+                    field, "Value must be empty if SV has no specific gene of interest"
+                )
+
     def _normalize_coerce_multi(self, value: str) -> str:
         """Strips empty white spaces that can happen in muli-delimiter value"""
-        return "|".join({v.strip() for v in value.split("|")})
+        return "|".join([v.strip() for v in value.split("|")])
+
+    def _normalize_coerce_multi_with_additional_rules(self, value: str) -> str:
+        # TODO: Clarify meaning of specifications
+        """Coerces value using the following rules:
+        - If variant_type is not SNV/INDEL or RE and has multiple genes of interest:
+            - Strips empty white spaces that can happen in muli-delimiter value
+        - If variant_type is not SNV/INDEL or RE and has no specific gene of interest:
+            - Returns the value as it was
+        """
+        variant_type = self.document.get("variant_type")
+        if variant_type != "SNV/INDEL" or variant_type != "RE":
+            return "|".join([v.strip() for v in value.split("|")])
+        else:
+            return value
 
     def _normalize_coerce_initialcase(self, value: str) -> str:
         """Coerces value to initialcase"""

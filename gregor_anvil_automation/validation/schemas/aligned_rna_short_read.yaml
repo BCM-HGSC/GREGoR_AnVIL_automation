@@ -7,10 +7,12 @@ experiment_rna_short_read_id:
   check_with: must_start_with_bcm
 aligned_rna_short_read_file:
   type: string
-  required: is_gcp_path
+  required: True
+  check_with: gi
 aligned_rna_short_read_index_file:
   type: string
-  required: is_gcp_path
+  required: True
+  check_with: is_gcp_path
 md5sum:
   type: string
   required: True

@@ -1,0 +1,72 @@
+aligned_rna_short_read_id:
+  type: string
+  required: True
+experiment_rna_short_read_id:
+  type: string
+  required: True
+  check_with: must_start_with_bcm
+aligned_rna_short_read_file:
+  type: string
+  required: is_gcp_path
+aligned_rna_short_read_index_file:
+  type: string
+  required: is_gcp_path
+md5sum:
+  type: string
+  required: True
+reference_assembly:
+  type: string
+  required: True
+  allowed:
+    - GRCh38
+    - GRCh37
+    - NCBI36
+    - NCBI35
+    - NCBI34
+reference_assembly_uri:
+  type: string
+  required: False
+reference_assembly_details:
+  type: string
+  required: False
+gene_annotation:
+  type: string
+  required: True
+gene_annotation_details:
+  type: string
+  required: False
+  allowed:
+    - gencode_comprehensive_chr
+    - gencode_comprehensive_all
+    - gencode_comprehensive_pri
+    - gencode_basic_chr
+    - gencode_basic_all
+    - gencode_basic_pri
+    - lncRNA_annotation
+    - polyA_feature_annotation
+    - consensus_pseudogenes
+    - predicted_tRNA_genes
+alignment_software:
+  type: string
+  required: True
+alignment_log_file:
+  type: string
+  required: False
+alignment_postprocessing:
+  type: string
+  required: False
+mean_coverage:
+  type: string
+  required: False
+percent_uniquely_aligned:
+  type: string
+  required: False
+percent_multimapped:
+  type: string
+  required: False
+percent_unaligned:
+  type: string
+  required: False
+quality_issues:
+  type: string
+  required: False

@@ -348,9 +348,15 @@ CROSS_REF_CHECK = [
         "experiment_dna_short_read_id",
         "experiment_dna_short_read_id",
     ),
+    (
+        "aligned_rna_short_read",
+        "experiment_rna_short_read_id",
+        "experiment_rna_short_read_id",
+    ),
     ("aligned_nanopore", "experiment_nanopore_id", "experiment_nanopore_id"),
     ("analyte", "participant_id", "participant_id"),
     ("experiment_dna_short_read", "analyte_id", "analyte_id"),
+    ("experiment_rna_short_read_id", "analyte_id", "analyte_id"),
     ("experiment_nanopore", "analyte_id", "analyte_id"),
     ("genetic_findings", "participant_id", "participant_id"),
     (

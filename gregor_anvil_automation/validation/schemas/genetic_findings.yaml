@@ -113,7 +113,7 @@ pos:
   required: False
   dependencies: variant_type
   check_with:
-    - variant_type_is_snv_indel_or_re_
+    - variant_type_is_snv_indel_or_re
     - is_int
 pos_end:
   type: string

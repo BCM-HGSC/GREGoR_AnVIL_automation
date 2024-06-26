@@ -21,11 +21,8 @@ library_prep_type:
 experiment_type:
   type: string
   required: True
-  allowed:
-    - single-end
-    - paired-end
-    - targeted
-    - untargeted
+  coerce: multi
+  check_with: field_with_multi
 read_length:
   type: string
   required: True

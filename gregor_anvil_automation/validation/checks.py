@@ -25,7 +25,7 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
                     if value in unique_values:
                         new_issue = Issue(
                             field,
-                            f"Value {field} already exists in the table {table_name} in row {sample['row_number']}",
+                            f"The value of {field} has a duplicate in the table {table_name}",
                             table_name,
                             sample["row_number"],
                         )

@@ -296,12 +296,27 @@ phenotype_additional_modifiers = {
     "MONDO:0024496",
 }
 
+experiment_rna_short_read_experiment_type = {
+    "single-end",
+    "paired-end",
+    "targeted",
+    "untargeted",
+}
+
+experiment_rna_short_read_library_prep_type = {
+    "stranded poly-A pulldown",
+    "stranded total RNA",
+    "rRNA depletion",
+    "globin depletion",
+}
 
 MULTI_FIELD_MAP = {
     "condition_inheritance": genetic_findings_condition_inheritance,
     "reported_race": participant_reported_race,
     "additional_modifiers": phenotype_additional_modifiers,
     "method_of_discovery": genetic_findings_method_of_discovery,
+    "experiment_type": experiment_rna_short_read_experiment_type,
+    "library_prep_type": experiment_rna_short_read_library_prep_type,
 }
 
 

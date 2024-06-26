@@ -13,11 +13,8 @@ seq_library_prep_kit_method:
 library_prep_type:
   type: string
   required: False
-  allowed:
-    - stranded poly-A pulldown
-    - stranded total RNA
-    - rRNA depletion
-    - globin depletion
+  coerce: multi
+  check_with: field_with_multi
 experiment_type:
   type: string
   required: True

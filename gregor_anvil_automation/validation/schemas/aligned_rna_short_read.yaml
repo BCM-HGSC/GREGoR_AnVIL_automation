@@ -8,7 +8,7 @@ experiment_rna_short_read_id:
 aligned_rna_short_read_file:
   type: string
   required: True
-  check_with: is_gcp_pathg
+  check_with: is_gcp_path
 aligned_rna_short_read_index_file:
   type: string
   required: True

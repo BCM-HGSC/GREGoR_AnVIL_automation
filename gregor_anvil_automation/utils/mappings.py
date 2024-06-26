@@ -362,6 +362,7 @@ REFERENCE_SOURCE = {
     # source table : primary_key
     "analyte": "analyte_id",
     "experiment_dna_short_read": "experiment_dna_short_read_id",
+    "experiment_rna_short_read": "experiment_rna_short_read_id",
     "experiment_nanopore": "experiment_nanopore_id",
     "family": "family_id",
     "participant": "participant_id",

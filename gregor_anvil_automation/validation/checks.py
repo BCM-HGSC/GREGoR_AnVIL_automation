@@ -29,6 +29,7 @@ def check_uniqueness(samples: list[Sample], table_name: str, issues: list[Issue]
                             table_name,
                             sample["row_number"],
                         )
+                        logger.error(new_issue)
                         issues.append(new_issue)
                     else:
                         unique_values.add(value)

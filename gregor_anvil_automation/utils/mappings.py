@@ -21,6 +21,19 @@ CAN_NOT_BE_NA = {
     "aligned_nanopore_file",
 }
 
+################################
+# CONDITIONALLY REQUIRED FIELD #
+################################
+
+# Field that is conditionally required: (Field depended on required, value001, ...)
+CONDITIONALLY_REQ_MAPPING = {
+    "chrom": ("variant_type", "SNV/INDEL", "RE"),
+    "pos": ("variant_type", "SNV/INDEL", "RE"),
+    "ref": ("variant_type", "SNV/INDEL", "RE"),
+    "alt": ("variant_type", "SNV/INDEL", "RE"),
+    "gene_of_interest": ("variant_type", "SNV/INDEL", "RE"),
+}
+
 #########################
 # HEADER VALUE MAPPINGS #
 #########################

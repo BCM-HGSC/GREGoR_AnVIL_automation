@@ -1,9 +1,9 @@
 analyte_id:
   type: string
   required: True
+  empty: False
   dependencies: participant_id
   check_with:
-    - analyte_id
     - analyte_id_matches_participant_id
 participant_id:
   type: string

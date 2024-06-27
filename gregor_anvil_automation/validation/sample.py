@@ -110,7 +110,7 @@ class SampleValidator(Validator):
         """Checks that the analyte_id is valid:
         Valid if:
             - Starts with BCM_Subject_
-            - Ends in _{a number}_A and then a number between 1 and {batch_number}, inclusively
+            - Ends in _#_A{1<=} and then a number between 1 and {batch_number}, inclusively
 
         This should be used whenever `analyte_id` is not povided along with the `participant_id`.
         """
@@ -154,23 +154,26 @@ class SampleValidator(Validator):
     def _check_with_analyte_id_matches_participant_id(self, field: str, value: str):
         """Checks that the analyte_id is valid:
         Valid if:
-            - Starts with {participant_id}_A
+            - Starts with {participant_id}
             - Ends with a number between 1 and {batch_number}, inclusively
         """
-        participant_id = self.document.get("participant_id")
-        if not participant_id:
+        participant_id = self.document.get("participant_id").strip()
+        analyte_type = self.document.get("analyte_type").strip()
+        if not participant_id or not analyte_type:
             return
-        try:
-            value_number = int(value.split(f"{participant_id}_A")[-1])
-            if not value.startswith(f"{participant_id}_A") or not (
-                1 <= value_number <= self.batch_number
-            ):
-                raise ValueError
-        except ValueError:
+        if participant_id not in value:
+            self._error(field, "Value must contain the participant_id.")
+        batch_id = value.split(f"{participant_id}_")[-1]
+        batch_type, batch_number = batch_id[0], int(batch_id[1:])
+        if (analyte_type == "RNA" and batch_type != "R") or (
+            analyte_type == "DNA" and batch_type != "A"
+        ):
             self._error(
                 field,
-                f"Value must start with {participant_id}_A and end with a number between 1 and {self.batch_number}, inclusively",
+                "Value is using incorrect batch type identifier. Ex: Using `R` for DNA",
             )
+        if not 1 <= batch_number <= self.batch_number:
+            self._error(field, "Batch number should be >=1 and <= {self.batch_number}")
 
     def _check_with_experiment_dna_short_read_id(self, field: str, value: str):
         """Checks that the `experiment_dna_short_read_id` is valid.

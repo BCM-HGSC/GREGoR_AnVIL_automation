@@ -14,11 +14,13 @@ variant_type:
   type: string
   required: True
   allowed:
-    - SNV/INDEL
+    - SNV
+    - INDEL
     - SV
     - CNV
     - RE
     - MEI
+    - STR
   coerce: uppercase
 sv_type:
   type: string
@@ -198,25 +200,22 @@ known_condition_name:
   type: string
   required: False
   dependencies: gene_known_for_phenotype
-  check_with: gene_known_for_phenotype_is_known
+  check_with: conditional_required
 condition_id:
   type: string
   required: False
   dependencies: gene_known_for_phenotype
-  check_with: gene_known_for_phenotype_is_known
+  check_with: conditional_required
 condition_inheritance:
   type: string
   required: False
-  dependencies: gene_known_for_phenotype
   check_with:
-    - gene_known_for_phenotype_is_known
+    - conditional_required
     - field_with_multi
   coerce: multi
 gregor_variant_classification:
   type: string
-  required: False # "Currently optional, to consider whether required if known disease gene."
-  dependencies: gene_known_for_phenotype
-  check_with: gene_known_for_phenotype_is_known
+  required: False
   allowed:
     - Benign
     - Likely benign
@@ -229,6 +228,7 @@ gregor_variant_classification:
     - Curation in progress
     - Well-established P/LP
     - NA
+  check_with: conditional_required
 gregor_clinvar_scv:
   type: string
   required: False # "currently optional, to consider whether required if already submitted"
@@ -236,7 +236,6 @@ gene_disease_validity:
   type: string
   required: False # "Currently optional, can change to required if gene_known_for_phenotype = known"
   dependencies: gene_known_for_phenotype
-  check_with: gene_known_for_phenotype_is_known_not_na
   allowed:
     - Definitive
     - Strong
@@ -245,6 +244,10 @@ gene_disease_validity:
     - Disputed
     - Animal Model Only
     - Refuted
+  check_with: conditional_required
+gene_disease_validity_notes:
+  type: string
+  required: False
 public_database_other:
   type: string
   required: False
@@ -271,5 +274,8 @@ method_of_discovery:
   check_with: field_with_multi
   coerce: multi
 notes:
+  type: string
+  required: False
+vrs_id:
   type: string
   required: False

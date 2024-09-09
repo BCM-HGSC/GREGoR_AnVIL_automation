@@ -32,6 +32,12 @@ CONDITIONALLY_REQ_MAPPING = {
     "ref": ("variant_type", "SNV", "INDEL", "RE"),
     "alt": ("variant_type", "SNV", "INDEL", "RE"),
     "gene_of_interest": ("variant_type", "SNV", "INDEL", "RE"),
+    "known_condition_name": ("gene_known_for_phenotype", "Known"),
+    "condition_id": ("gene_known_for_phenotype", "Known"),
+    "condition_inheritance": ("gene_known_for_phenotype", "Known"),
+    "gregor_variant_classification": ("gene_known_for_phenotype", "Known"),
+    "gene_disease_validity": ("gene_known_for_phenotype", "Known"),
+    "partial_contribution_explained": ("phenotype_contribution", "Partial"),
 }
 
 #########################

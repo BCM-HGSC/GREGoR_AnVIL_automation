@@ -15,6 +15,10 @@ library_prep_type:
   required: False
   coerce: multi
   check_with: field_with_multi
+depletion_targets:
+  type: string
+  required: False
+  coerce: multi
 experiment_type:
   type: string
   required: True

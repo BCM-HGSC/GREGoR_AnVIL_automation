@@ -354,7 +354,7 @@ UNIQUE_MAPPING = {
     "participant": ["participant_id"],
     "family": ["family_id"],
     "analyte": ["analyte_id"],
-    "experiment_dna_short_read": ["analyte_id", "experiment_dna_short_read_id"],
+    "experiment_dna_short_read": ["experiment_dna_short_read_id"],
     "aligned_dna_short_read": [
         "aligned_dna_short_read_id",
         "experiment_dna_short_read_id",

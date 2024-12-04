@@ -1,0 +1,79 @@
+experiment_rna_short_read_id:
+  type: string
+  required: True
+analyte_id:
+  type: string
+  required: True
+experiment_sample_id:
+  type: string
+  required: False
+seq_library_prep_kit_method:
+  type: string
+  required: False
+library_prep_type:
+  type: string
+  required: False
+  coerce: multi
+  check_with: field_with_multi
+depletion_targets:
+  type: string
+  required: False
+  coerce: multi
+experiment_type:
+  type: string
+  required: True
+  coerce: multi
+  check_with: field_with_multi
+read_length:
+  type: string
+  required: True
+  check_with: is_int
+single_or_paired_ends:
+  type: string
+  required: True
+  allowed:
+    - single-end
+    - paired-end
+date_data_generation:
+  type: string
+  required: False
+  coerce: year_month_date
+sequencing_platform:
+  type: string
+  required: True
+within_site_batch_name:
+  type: string
+  required: True
+RIN:
+  type: string
+  required: False
+estimated_library_size:
+  type: string
+  required: False
+total_reads:
+  type: string
+  required: False
+percent_rRNA:
+  type: string
+  required: False
+percent_mRNA:
+  type: string
+  required: False
+percent_mtRNA:
+  type: string
+  required: False
+percent_Globin:
+  type: string
+  required: False
+percent_UMI:
+  type: string
+  required: False
+5prime3prime_bias:
+  type: string
+  required: False
+percent_GC:
+  type: string
+  required: False
+percent_chrX_Y:
+  type: string
+  required: False

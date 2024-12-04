@@ -1,48 +1,49 @@
 experiment_dna_short_read_id:
-  type: string 
+  type: string
   required: True
-  allowed: [] # BCM_HY7HVDSX5-2-IDUDI0088 
-
+  check_with: must_start_with_bcm
 analyte_id:
   type: string
   required: True
-  allowed: [] # references analyte.analyte_id
-  depends_on: analyte.analyte_id # TODO
-
-date_data_generation:
-  type: string
-  required: False # not needed but issue with date. change to YYYY-MM-DD
-  
+  empty: False
+  check_with: analyte_id
 experiment_sample_id:
   type: string
-  required: False
-
-experiment_type:
-  type: string
   required: True
-  allowed: [targeted, genome, exome]
-
-read_length:
-  type: string
-  required: False
-
-
+  check_with: experiment_sample_id
 seq_library_prep_kit_method:
   type: string
   required: False
-
-sequencing_platform:
-  type: string
-  required: False 
-
-target_insert_size:
+read_length:
   type: string
   required: False
-
+  check_with: is_int
+experiment_type:
+  type: string
+  required: True
+  allowed:
+    - targeted
+    - genome
+    - exome
+  coerce: lowercase
+targeted_regions_method:
+  type: string
+  required: False
 targeted_region_bed_file:
   type: string
   required: False
-
-targeted_regions_method:
+  check_with: is_gcp_path
+date_data_generation:
+  type: string
+  required: False
+  coerce: year_month_date
+target_insert_size:
+  type: string
+  required: False
+  check_with: is_int
+sequencing_platform:
+  type: string
+  required: False
+sequencing_event_details:
   type: string
   required: False

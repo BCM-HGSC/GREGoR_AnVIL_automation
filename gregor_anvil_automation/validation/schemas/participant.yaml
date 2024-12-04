@@ -1,89 +1,149 @@
 participant_id:
   type: string
   required: True
+  empty: False
+  check_with: participant_id
 internal_project_id:
   type: string
   required: False
 gregor_center:
   type: string
   required: True
-  allowed: [BCM]  # need to convert uppercase
+  empty: False
+  coerce: uppercase
+  allowed:
+    - BCM
 consent_code:
   type: string
   required: True
-  allowed: [GRU, HMB] # need to convert uppercase
+  empty: False
+  allowed:
+    - GRU
+    - HMB
 recontactable:
   type: string
   required: False
-  allowed: [Yes, No] # Possibly Camelcase YES, NO
+  empty: True
+  coerce: initialcase
+  allowed:
+    - "Yes"
+    - "No"
 prior_testing:
   type: string
   required: False
-  allowed: [NA] # Check to accept strings in general
 pmid_id:
   type: string
   required: False
-  allowed: [NA] # Check to accept strings in general
 family_id:
   type: string
-  required: True # Additional rules, needed BCM_FAM_####
+  required: True
+  check_with: must_start_with_bcm_fam
 paternal_id:
   type: string
-  required: True # Rule: BCM_Subject_BH####
+  required: True
+  check_with: paternal_id_is_valid
 maternal_id:
   type: string
-  required: True # BCM_Subject_BH#### - RULES DEPENDENT
-  depends_on: family_id
+  required: True
+  check_with: maternal_id_is_valid
 twin_id:
   type: string
   required: False
-  depends_on: # Ref CSV
+  check_with: twin_id_is_valid
+  coerce: multi
 proband_relationship:
   type: string
   required: True
-  allowed: [Self, Mother, Child, Father, Sibling] # Check cammelcase
+  allowed:
+    - Self
+    - Mother
+    - Father
+    - Sibling
+    - Child
+    - Maternal Half Sibling
+    - Paternal Half Sibling
+    - Maternal Grandmother
+    - Maternal Grandfather
+    - Paternal Grandmother
+    - Paternal Grandfather
+    - Maternal Aunt
+    - Maternal Uncle
+    - Paternal Aunt
+    - Paternal Uncle
+    - Niece
+    - Nephew
+    - Maternal 1st Cousin
+    - Paternal 1st Cousin
+    - Other
+    - Unknown
+  coerce: titlecase
 proband_relationship_detail:
   type: string
   required: False
 sex:
   type: string
   required: True
-  allowed: [Female, Male, Unknown] # Camelcase
+  allowed:
+    - Female
+    - Male
+    - Unknown
+  coerce: initialcase
 sex_detail:
   type: string
   required: False
 reported_race:
   type: string
   required: False
-  allowed: [American Indian or Alaska Native, Asian, Black or African American, Native Hawaiian, Other Pacific Islander, Middle Eastern or North African, White]
+  check_with: field_with_multi
+  coerce: multi
 reported_ethnicity:
   type: string
   required: False
-  allowed: [Hispanic or Latino, Not Hispanic or Latino]
+  empty: True
+  allowed:
+    - Hispanic or Latino
+    - Not Hispanic or Latino
+    - NA
 ancestry_detail:
   type: string
   required: False
 age_at_last_observation:
   type: string
-  required: False # Rule: Make sure its a number
+  required: False
+  check_with: is_float_or_na
 affected_status:
   type: string
   required: True
-  allowed: [Affected, Unaffected, Possibly affected, Unknown]
+  allowed:
+    - Affected
+    - Unaffected
+    - Possibly affected
+    - Unknown
 phenotype_description:
   type: string
   required: False
 age_at_enrollment:
   type: string
-  required: False # Check if number
+  required: False
+  check_with: is_int_or_na
 solve_status:
   type: string
   required: True
-  allowed: [Yes, Likely, No, Partial]
+  allowed:
+    - Solved
+    - Partially solved
+    - Probably solved
+    - Unsolved
+    - Unaffected
+  coerce: initialcase
 missing_variant_case:
   type: string
   required: True
-  allowed: [Yes, No, Unknown]
+  allowed:
+    - "Yes"
+    - "No"
+    - Unknown
+  coerce: initialcase
 missing_variant_details:
   type: string
   required: False

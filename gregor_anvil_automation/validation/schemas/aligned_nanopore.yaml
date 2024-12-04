@@ -1,0 +1,101 @@
+aligned_nanopore_id:
+  type: string
+  required: True
+  dependencies: experiment_nanopore_id
+  check_with: aligned_nanopore_id
+experiment_nanopore_id:
+  type: string
+  required: True
+  check_with:
+    - experiment_nanopore_id_start
+    - experiment_nanopore_id_end
+aligned_nanopore_file:
+  type: string
+  required: True
+  check_with: is_gcp_path
+aligned_nanopore_index_file:
+  type: string
+  required: True
+  check_with: is_gcp_path
+md5sum:
+  type: string
+  required: True
+  empty: False
+reference_assembly:
+  type: string
+  required: True
+  allowed:
+    - chm13
+    - GRCh38_noalt
+    - GRCh38
+    - GRCh37
+    - NCBI36
+    - NCBI35
+    - NCBI34
+alignment_software:
+  type: string
+  required: True
+analysis_details:
+  type: string
+  required: False
+mean_coverage:
+  type: string
+  required: False
+  check_with: is_int_or_na
+genome_coverage:
+  type: string
+  required: False
+  check_with: is_int_or_na
+contamination:
+  type: string
+  required: False
+  check_with: is_int_or_na
+sex_concordance:
+  type: string
+  required: False
+  allowed:
+    - "TRUE"
+    - "FALSE"
+    - NA
+  coerce: uppercase
+num_reads:
+  type: string
+  required: False
+  check_with: is_int_or_na
+num_bases:
+  type: string
+  required: False
+read_length_mean:
+  type: string
+  required: False
+  check_with: is_int_or_na
+num_aligned_reads:
+  type: string
+  required: False
+  check_with: is_int_or_na
+num_aligned_bases:
+  type: string
+  required: False
+  check_with: is_int_or_na
+aligned_read_length_mean:
+  type: string
+  required: False
+  check_with: is_int_or_na
+read_error_rate:
+  type: string
+  required: False
+  check_with: is_int_or_na
+mapped_reads_pct:
+  type: string
+  required: False
+  check_with: is_int_or_na
+methylation_called:
+  type: string
+  required: True
+  allowed:
+    - "TRUE"
+    - "FALSE"
+  coerce: uppercase
+quality_issues:
+  type: string
+  required: False

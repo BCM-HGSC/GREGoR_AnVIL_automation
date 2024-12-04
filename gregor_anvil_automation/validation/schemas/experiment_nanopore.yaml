@@ -1,0 +1,75 @@
+experiment_nanopore_id:
+  type: string
+  required: True
+  check_with:
+    - experiment_nanopore_id_start
+    - experiment_nanopore_id_end
+analyte_id:
+  type: string
+  required: True
+  empty: False
+  check_with: analyte_id
+experiment_sample_id:
+  type: string
+  required: False
+  empty: False
+seq_library_prep_kit_method:
+  type: string
+  required: True
+  allowed:
+    - LSK109
+    - LSK110
+    - LSK111
+    - Kit 14
+    - Rapid
+    - Rapid kit 14
+    - Unknown
+fragmentation_method:
+  type: string
+  required: False
+experiment_type:
+  type: string
+  required: True
+  allowed:
+    - targeted
+    - genome
+  coerce: lowercase
+targeted_regions_method:
+  type: string
+  required: False
+targeted_region_bed_file:
+  type: string
+  required: False
+date_data_generation:
+  type: string
+  required: False
+  coerce: year_month_date
+sequencing_platform:
+  type: string
+  required: False
+  empty: True
+  allowed:
+    - Oxford Nanopore PromethION 48
+    - Oxford Nanopore PromethION 24
+    - Oxford Nanopore PromethION P2
+    - Oxford Nanopore PromethION P2 Solo
+    - Oxford Nanopore MinION Mk1C
+    - Oxford Nanopore MinION Mk1B
+    - Oxford Nanopore Flongle
+    - NA
+chemistry_type:
+  type: string
+  required: False
+  allowed:
+    - R9.4.1
+    - R10.4.1
+was_barcoded:
+  type: string
+  required: True
+  coerce: uppercase
+  allowed:
+    - "TRUE"
+    - "FALSE"
+barcode_kit:
+  type: string
+  required: False

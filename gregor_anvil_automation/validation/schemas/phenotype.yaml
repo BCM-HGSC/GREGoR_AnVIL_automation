@@ -1,38 +1,75 @@
 phenotype_id:
   type: string
-  required: False 
-  allowed: #will be generated so this needs to be empty unless generated from a previous share
-
-additional_details:
-  type: string
   required: False
-
-additional_modifiers:
-  type: string
-  required: False
-  allowed: [] # follows pattern "HP:#######"
-
-onset_age_range:
-  type: string
-  required: False
-  allowed: [] # follows pattern "HP:#######"
-
-ontology:
-  type: string
-  required: True
-  allowed: ["HPO","MONDO", "OMIM", "ORPHANET", "SNOMED", "ICD10"]
-
+  empty: True
 participant_id:
   type: string
   required: True
-  allowed: [] # references participant.participant_id
-
-presence:
-  type: string
-  required: True
-  allowed: ["Present","Absent","Unknown"]
-
+  empty: False
+  check_with: participant_id
 term_id:
   type: string
   required: True
-  allowed: [] # Follows pattern: HP:#######
+  check_with: must_start_with_ontology
+presence:
+  type: string
+  required: True
+  allowed:
+    - Present
+    - Absent
+    - Unknown
+  coerce: initialcase
+ontology:
+  type: string
+  required: True
+  allowed:
+    - HPO
+    - MONDO
+    - OMIM
+    - ORPHANET
+    - SNOMED
+    - ICD10
+  coerce: uppercase
+additional_details:
+  type: string
+  required: False
+onset_age_range:
+  type: string
+  required: False
+  empty: True
+  allowed:
+    - HP:0003581
+    - HP:0030674
+    - HP:0011463
+    - HP:0003577
+    - HP:0025708
+    - HP:0011460
+    - HP:0011461
+    - HP:0003593
+    - HP:0025709
+    - HP:0003621
+    - HP:0034199
+    - HP:0003584
+    - HP:0025710
+    - HP:0003596
+    - HP:0003623
+    - HP:0410280
+    - HP:4000040
+    - HP:0034198
+    - HP:0034197
+    - HP:0011462
+    - NA
+additional_modifiers:
+  type: string
+  required: False
+  empty: False
+  check_with: field_with_multi
+syndromic:
+  type: string
+  required: False
+  empty: True
+  allowed:
+    - syndromic
+    - non-syndromic
+    - na
+  coerce: lowercase

@@ -14,8 +14,7 @@ variant_type:
   type: string
   required: True
   allowed:
-    - SNV
-    - INDEL
+    - SNV/INDEL
     - SV
     - CNV
     - RE

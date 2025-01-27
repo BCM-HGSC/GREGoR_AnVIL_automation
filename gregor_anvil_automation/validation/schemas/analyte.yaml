@@ -21,6 +21,7 @@ analyte_type:
     - frozen whole blood
     - high molecular weight DNA
     - urine
+    - PBMC
 analyte_processing_details:
   type: string
   required: False

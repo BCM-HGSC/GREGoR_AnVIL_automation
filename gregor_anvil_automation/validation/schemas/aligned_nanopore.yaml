@@ -56,7 +56,6 @@ sex_concordance:
   allowed:
     - "TRUE"
     - "FALSE"
-    - NA
   coerce: uppercase
 num_reads:
   type: string

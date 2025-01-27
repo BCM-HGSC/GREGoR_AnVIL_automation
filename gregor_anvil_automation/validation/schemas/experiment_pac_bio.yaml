@@ -1,0 +1,108 @@
+experiment_pac_bio_id:
+  type: string
+  required: True
+  check_with: must_start_with_bcm
+analyte_id:
+  type: string
+  required: True
+experiment_sample_id:
+  type: string
+  required: False
+seq_library_prep_kit_method:
+  type: string
+  required: True
+  allowed:
+    - SMRTbell prep kit 3.0
+    - SMRTbell prep kit - Revio 1.0
+    - HiFI express template prep kit 2.0
+fragmentation_method:
+  type: string
+  required: False
+experiment_type:
+  type: string
+  required: True
+  allowed:
+    - targeted
+    - genome
+    - fiberseq
+    - isoseq
+    - masseq
+targeted_regions_method:
+  type: string
+  required: False
+targeted_region_bed_file:
+  type: string
+  required: False
+date_data_generation:
+  type: string
+  required: False
+sequencing_platform:
+  type: string
+  required: False
+  allowed:
+    - PacBio Revio
+    - PacBio Sequel IIe
+    - PacBio Sequel II
+was_barcoded:
+  type: string
+  required: True
+  allowed:
+    - "TRUE"
+    - "FALSE"
+barcode_kit:
+  type: string
+  required: False
+application_kit:
+  type: string
+  required: False
+smrtlink_server_version:
+  type: string
+  required: True
+instrument_ics_version:
+  type: string
+  required: True
+size_selection_method:
+  type: string
+  required: False
+library_size:
+  type: string
+  required: False
+smrt_cell_kit:
+  type: string
+  required: False
+smrt_cell_id:
+  type: string
+  required: False
+movie_name:
+  type: string
+  required: False
+polymerase_kit:
+  type: string
+  required: False
+sequencing_kit:
+  type: string
+  required: False
+movie_length_hours:
+  type: string
+  required: False
+includes_kinetics:
+  type: string
+  required: False
+  allowed:
+    - "TRUE"
+    - "FALSE"
+  coerce: uppercase
+includes_CpG_methylation:
+  type: string
+  required: False
+  allowed:
+    - "TRUE"
+    - "FALSE"
+  coerce: uppercase
+by_strand:
+  type: string
+  required: False
+  allowed:
+    - "TRUE"
+    - "FALSE"
+  coerce: uppercase

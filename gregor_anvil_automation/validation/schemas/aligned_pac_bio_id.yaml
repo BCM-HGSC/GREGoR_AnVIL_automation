@@ -1,0 +1,80 @@
+aligned_pac_bio_id:
+  type: string
+  required: True
+  check_with: must_start_with_bcm
+experiment_pac_bio_id:
+  type: string
+  required: True
+aligned_pac_bio_file:
+  type: string
+  required: True
+  check_with: is_gcp_path
+aligned_pac_bio_index_file:
+  type: string
+  required: True
+  check_with: is_gcp_path
+md5sum:
+  type: string
+  required: True
+reference_assembly:
+  type: string
+  required: True
+  allowed:
+    - chm13
+    - GRCh38_noalt
+    - GRCh38
+    - GRCh37
+    - NCBI36
+    - NCBI35
+    - NCBI34
+alignment_software:
+  type: string
+  required: True
+analysis_details:
+  type: string
+  required: False
+mean_coverage:
+  type: string
+  required: False
+genome_coverage:
+  type: string
+  required: False
+contamination:
+  type: string
+  required: False
+sex_concordance:
+  type: string
+  required: False
+  allowed:
+    - "TRUE"
+    - "FALSE"
+num_reads:
+  type: string
+  required: False
+num_bases:
+  type: string
+  required: False
+read_length_mean:
+  type: string
+  required: False
+num_aligned_reads:
+  type: string
+  required: False
+num_aligned_bases:
+  type: string
+  required: False
+aligned_read_length_mean:
+  type: string
+  required: False
+read_error_rate:
+  type: string
+  required: False
+mapped_reads_pct:
+  type: string
+  required: False
+methylation_called:
+  type: string
+  required: True
+  allowed:
+    - "TRUE"
+    - "FALSE"

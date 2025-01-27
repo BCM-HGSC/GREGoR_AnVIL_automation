@@ -44,10 +44,10 @@ primary_biosample:
     - "CL: 0000576"
     - "CL: 0000542"
     - "CL: 0000057"
-    - "UBERON: 0005291"
+    - "UBERON:0005291"
     - "CL: 0011020"
-    - "UBERON: 0002037"
-    - "UBERON: 0001133"
+    - "UBERON:0002037"
+    - "UBERON:0001133"
 primary_biosample_id:
   type: string
   required: False

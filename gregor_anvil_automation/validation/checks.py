@@ -72,3 +72,22 @@ def check_cross_references(ids: defaultdict, tables: list[Table], issues: list[I
                     row=None,
                 )
             )
+
+
+def check_pedigree_consistency(participant_table: Table):
+    """Checks pedigree consistency in `participant` table.
+    - If proband exist
+    Log warning"""
+    if not participant_table:
+        return
+    family_ids_with_probands = {
+        sample_row["family_id"]
+        for sample_row in participant_table
+        if sample_row["proband_relationship"] == "Self"
+    }
+    total_ids = set({sample_row["family_id"] for sample_row in participant_table})
+    if no_proband := total_ids - family_ids_with_probands:
+        logger.warning(
+            "The following family ids do not have a proband. Please consult with PM. ids: %s",
+            no_proband,
+        )

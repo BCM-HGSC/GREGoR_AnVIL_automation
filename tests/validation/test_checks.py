@@ -1,10 +1,15 @@
+import logging
 from collections import defaultdict
 
 import addict
 import pytest
 
 from gregor_anvil_automation.utils.issue import Issue
-from gregor_anvil_automation.validation.checks import check_cross_references, check_uniqueness
+from gregor_anvil_automation.validation.checks import (
+    check_cross_references,
+    check_uniqueness,
+    check_pedigree_consistency,
+)
 
 
 @pytest.fixture(name="uniqueness_sample_valid_2", scope="function")
@@ -240,3 +245,34 @@ def test_check_cross_table_ref_verify_table_skip():
     valid_tables = {"some-made-up-table": "test-madeup-id-001"}
     check_cross_references(ids, valid_tables, issues)
     assert not issues
+
+
+def test_check_pedigree_consistency_valid(caplog):
+    """
+    Test that each family has a proband.
+    """
+    data = [{"family_id": "BCM_FAM_TEST", "proband_relationship": "Self"}]
+    with caplog.at_level(logging.INFO):
+        check_pedigree_consistency(participant_table=data)
+        assert caplog.messages == []
+
+
+def test_check_pedigree_consistency_empty_list(caplog):
+    """
+    Test that an empty participant table (when not given) just returns
+    """
+    with caplog.at_level(logging.INFO):
+        check_pedigree_consistency(participant_table=[])
+        assert caplog.messages == []
+
+
+def test_check_pedigree_consistency_empty_invalid(caplog):
+    """
+    Test that if it is missing a proband, it logs a warning.
+    """
+    data = [{"family_id": "BCM_FAM_TEST", "proband_relationship": "Mother"}]
+    with caplog.at_level(logging.INFO):
+        check_pedigree_consistency(participant_table=data)
+        assert caplog.messages == [
+            "The following family ids do not have a proband. Please consult with PM. ids: {'BCM_FAM_TEST'}"
+        ]

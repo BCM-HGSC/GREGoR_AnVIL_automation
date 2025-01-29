@@ -13,7 +13,11 @@ from ..utils.utils import generate_file
 from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
 from ..validation.schema import get_schema
 from ..validation.sample import SampleValidator
-from ..validation.checks import check_cross_references, check_uniqueness
+from ..validation.checks import (
+    check_cross_references,
+    check_uniqueness,
+    check_pedigree_consistency,
+)
 from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
 
 
@@ -86,6 +90,8 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
     # Cross Reference Checks
     logger.info("Verifying Primary Table Foreign Key Existence")
     check_cross_references(ids, tables, issues)
+    # If participant table present, check pedigree consistency.
+    check_pedigree_consistency(tables.get("participant"))
 
 
 def normalize_and_validate_samples(

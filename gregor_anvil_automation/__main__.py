@@ -16,7 +16,7 @@ import addict
 from .utils.working_dir import get_working_dir
 from .utils.env import load_env_vars
 from . import __version__
-from .short_reads import validate
+from . import validate
 from .utils.utils import parse_yaml
 
 
@@ -45,17 +45,13 @@ def main() -> int:
 
 def run_command(config: addict.Dict, args, working_dir: Path) -> int:
     """Runs the command given by the user"""
-    # TODO: This will be updated once we have validation/upload workflows established
-    return_code = 0
-    if args.command == "short_reads":
-        logger.info("Running Short Read Validation")
-        return_code = validate.run(
-            config,
-            args.input_path,
-            args.batch_number,
-            working_dir,
-        )
-    return return_code
+    logger.info("Running Short Read Validation")
+    return validate.run(
+        config,
+        args.input_path,
+        args.batch_number,
+        working_dir,
+    )
 
 
 def command_line_parser() -> Namespace:
@@ -65,11 +61,6 @@ def command_line_parser() -> Namespace:
     )
     parser.add_argument(
         "--version", action="version", version=f"gregor_anvil_automation {__version__}"
-    )
-    parser.add_argument(
-        "command",
-        choices=["short_reads", "long_reads"],
-        help="Specifies type of submission to exceute",
     )
     parser.add_argument(
         "input_path",

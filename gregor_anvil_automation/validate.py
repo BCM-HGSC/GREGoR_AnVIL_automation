@@ -7,18 +7,18 @@ from addict import Dict
 from gregor_anvil_automation.utils.mappings import REFERENCE_SOURCE
 
 from gregor_anvil_automation.utils.utils import get_table_samples
-from ..utils.types import Sample, Table
-from ..utils.issue import Issue
-from ..utils.utils import generate_file
-from ..utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
-from ..validation.schema import get_schema
-from ..validation.sample import SampleValidator
-from ..validation.checks import (
+from .utils.types import Sample, Table
+from .utils.issue import Issue
+from .utils.utils import generate_file
+from .utils.email import send_email, ATTACHED_ISSUES_MSG_BODY, SUCCESS_MSG_BODY
+from .validation.schema import get_schema
+from .validation.sample import SampleValidator
+from .validation.checks import (
     check_cross_references,
     check_uniqueness,
     check_pedigree_consistency,
 )
-from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
+from .utils.mappings import HEADER_CASE_SENSITIVE_MAP
 
 
 logger = getLogger(__name__)

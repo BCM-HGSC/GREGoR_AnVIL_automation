@@ -5,20 +5,19 @@ a script by running:
 """
 
 from argparse import ArgumentParser, Namespace
-from logging import getLogger, INFO
-from pathlib import Path
-from os import environ
 from datetime import datetime
-import coloredlogs
+from logging import getLogger, INFO
+from os import environ
+from pathlib import Path
 
 import addict
+import coloredlogs
 
-from .utils.working_dir import get_working_dir
-from .utils.env import load_env_vars
 from . import __version__
 from . import validate
+from .utils.env import load_env_vars
 from .utils.utils import parse_yaml
-
+from .utils.working_dir import get_working_dir
 
 logger = getLogger(__name__)
 

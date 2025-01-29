@@ -34,7 +34,6 @@ def get_table_samples_by_directory(dir_path: Path) -> dict[str, list[Sample]]:
         if "xlsx" in file.suffix and "~" not in file.name:
             data[file.stem] = get_table_samples_by_excel(file)
         if "tsv" in file.suffix:
-            print(file)
             data[file.stem] = parse_file(file, "\t")
     return data
 

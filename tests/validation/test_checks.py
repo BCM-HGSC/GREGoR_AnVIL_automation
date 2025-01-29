@@ -116,7 +116,6 @@ def test_check_uniqueness_sample_issues_no_initial_issues(
     row = uniqueness_sample_invalid_3["row_number"]
     issues = []
     check_uniqueness(samples, table_name, issues)
-    print(issues)
     assert issues == [
         Issue(
             f"{value}",

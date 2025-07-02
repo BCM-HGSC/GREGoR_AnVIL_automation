@@ -6,9 +6,9 @@ aligned_nanopore_id:
 experiment_nanopore_id:
   type: string
   required: True
-  check_with:
-    - experiment_nanopore_id_start
-    - experiment_nanopore_id_end
+  # check_with:
+  #   - experiment_nanopore_id_start
+    # - experiment_nanopore_id_end
 aligned_nanopore_file:
   type: string
   required: True

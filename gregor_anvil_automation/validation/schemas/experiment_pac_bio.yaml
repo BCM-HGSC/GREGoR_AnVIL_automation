@@ -49,6 +49,7 @@ was_barcoded:
   allowed:
     - "TRUE"
     - "FALSE"
+  coerce: uppercase
 barcode_kit:
   type: string
   required: False

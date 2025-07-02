@@ -18,7 +18,7 @@ from ..validation.checks import (
     check_uniqueness,
     check_pedigree_consistency,
 )
-from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP
+from ..utils.mappings import HEADER_CASE_SENSITIVE_MAP, TABLE_NAMES
 
 
 logger = getLogger(__name__)
@@ -31,6 +31,8 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
     issues = []
     # Validate files
     logger.info("Validating Tables")
+    # Ensure table names are valid
+    fix_table_names(tables)
     validate_tables(
         batch_number=batch_number,
         issues=issues,
@@ -64,7 +66,7 @@ def run(config: Dict, input_path: Path, batch_number: str, working_dir: Path) ->
         generate_file(file_path, data_headers, table, "\t")
         file_paths.append(file_path)
     logger.info("Sending Table Files Email")
-    send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)
+    # send_email(config["email"], subject, SUCCESS_MSG_BODY, file_paths)
     return 0
 
 
@@ -73,6 +75,7 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
     ids = defaultdict(set)
     for table_name, samples in tables.items():
         # Validate sample by sample using cerberus
+        # Get the table name since file_name != table_name
         logger.info("Normalizing and Validating Samples for Table %s", table_name)
         samples = normalize_and_validate_samples(
             batch_number=batch_number,
@@ -92,6 +95,16 @@ def validate_tables(batch_number: str, issues: list[Issue], tables: list[Table])
     check_cross_references(ids, tables, issues)
     # If participant table present, check pedigree consistency.
     check_pedigree_consistency(tables.get("participant"))
+
+
+def fix_table_names(tables: list[Table]):
+    table_keys = tables.keys()
+    for table_name in TABLE_NAMES:
+        for key in table_keys:
+            if table_name in key:
+                tmp = tables.pop(key)
+                tables[table_name] = tmp
+                break
 
 
 def normalize_and_validate_samples(

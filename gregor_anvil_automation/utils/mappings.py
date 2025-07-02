@@ -1,5 +1,20 @@
 """Various mappings used throughout the application"""
 
+TABLE_NAMES = {
+    "aligned_dna_short_read",
+    "aligned_nanopore",
+    "aligned_pac_bio",
+    "aligned_rna_short_read",
+    "analyte",
+    "experiment_dna_short_read",
+    "experiment_nanopore",
+    "experiment_pac_bio",
+    "experiment_rna_short_read",
+    "family",
+    "genetic_findings",
+    "participant",
+    "phenotype",
+}
 ###################
 # HEADER MAPPINGS #
 ###################
